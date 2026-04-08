@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // ============================================================
 // RED LINE MARKETING — FULL MULTI-PAGE WEBSITE
@@ -1595,6 +1597,8 @@ export default function App() {
       <main>{renderPage()}</main>
       <CTABar navigate={navigate} />
       <Footer navigate={navigate} />
+      <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
