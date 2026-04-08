@@ -108,10 +108,13 @@ const Reveal = ({ children, delay = 0, style = {} }) => {
 // --- LOGO COMPONENT ---
 const Logo = ({ size = 42 }) => (
   <svg viewBox="0 0 48 48" width={size} height={size} xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="44" height="44" rx="8" fill="#0A0A0A" />
-    <path d="M12 34 L24 10 L36 34" stroke="#D41920" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    <line x1="16" y1="28" x2="32" y2="28" stroke="#D41920" strokeWidth="3" strokeLinecap="round" />
-    <circle cx="24" cy="36" r="3" fill="#D41920" />
+    <rect width="48" height="48" rx="12" fill="#0F0F0F" />
+    <rect x="0.5" y="0.5" width="47" height="47" rx="11.5" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+    <path d="M8 34 A18 18 0 0 1 40 34" stroke="rgba(255,255,255,0.1)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+    <path d="M38 16 A18 18 0 0 1 40 34" stroke="#D41920" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+    <line x1="24" y1="34" x2="34" y2="20" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="24" cy="34" r="3" fill="#D41920" />
+    <circle cx="24" cy="34" r="1.5" fill="#0F0F0F" />
   </svg>
 );
 
