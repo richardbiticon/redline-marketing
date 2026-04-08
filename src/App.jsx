@@ -1456,13 +1456,15 @@ export default function App() {
         .navbar-main { position: sticky !important; top: 0 !important; z-index: 1000 !important; }
         
         /* ===== WIDE SCREEN: constrain content width, backgrounds stay full-width ===== */
-        .section-pad,
-        .navbar-main,
-        .announcement-bar,
-        .cta-bar-main,
-        .footer-main {
-          padding-left: max(60px, calc(50vw - 660px)) !important;
-          padding-right: max(60px, calc(50vw - 660px)) !important;
+        @media (min-width: 1640px) {
+          .section-pad,
+          .navbar-main,
+          .announcement-bar,
+          .cta-bar-main,
+          .footer-main {
+            padding-left: calc(50vw - 660px) !important;
+            padding-right: calc(50vw - 660px) !important;
+          }
         }
         
         /* ===== TABLET: 1024px ===== */
