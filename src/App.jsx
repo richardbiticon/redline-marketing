@@ -107,16 +107,34 @@ const Reveal = ({ children, delay = 0, style = {} }) => {
   );
 };
 
-// --- LOGO COMPONENT ---
+// --- LOGO COMPONENT (All Volleyball AV mark) ---
 const Logo = ({ size = 42 }) => (
-  <svg viewBox="0 0 48 48" width={size} height={size} xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#0F0F0F" />
-    <rect x="0.5" y="0.5" width="47" height="47" rx="11.5" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
-    <path d="M8 34 A18 18 0 0 1 40 34" stroke="rgba(255,255,255,0.1)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    <path d="M38 16 A18 18 0 0 1 40 34" stroke="#D41920" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    <line x1="24" y1="34" x2="34" y2="20" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
-    <circle cx="24" cy="34" r="3" fill="#D41920" />
-    <circle cx="24" cy="34" r="1.5" fill="#0F0F0F" />
+  <svg viewBox="0 0 140 105" width={size * 1.33} height={size} xmlns="http://www.w3.org/2000/svg">
+    {/* Volleyball net - crosshatch pattern behind letters */}
+    <g stroke="#555" strokeWidth="1.4" fill="none" opacity="0.55">
+      <line x1="0" y1="90" x2="32" y2="8"/>
+      <line x1="13" y1="95" x2="45" y2="8"/>
+      <line x1="26" y1="95" x2="58" y2="8"/>
+      <line x1="39" y1="95" x2="71" y2="8"/>
+      <line x1="52" y1="95" x2="84" y2="8"/>
+      <line x1="0" y1="8" x2="32" y2="90"/>
+      <line x1="13" y1="8" x2="45" y2="95"/>
+      <line x1="26" y1="8" x2="58" y2="95"/>
+      <line x1="39" y1="8" x2="71" y2="95"/>
+      <line x1="52" y1="8" x2="84" y2="95"/>
+    </g>
+    {/* Letter A - bold, no crossbar */}
+    <path d="M42,4 L6,98 L22,98 L42,36 L58,98 L74,98 Z"
+          fill="#C41E3A" stroke="#4A0D15" strokeWidth="3" strokeLinejoin="round"/>
+    {/* Letter V - bold, overlapping */}
+    <path d="M54,4 L78,98 L94,98 L124,4 L108,4 L86,76 L70,4 Z"
+          fill="#C41E3A" stroke="#4A0D15" strokeWidth="3" strokeLinejoin="round"/>
+    {/* Volleyball */}
+    <circle cx="105" cy="32" r="18" fill="#FFFFFF" stroke="#333" strokeWidth="2"/>
+    <path d="M105,14 Q94,32 105,50" fill="none" stroke="#444" strokeWidth="1.4"/>
+    <path d="M105,14 Q116,32 105,50" fill="none" stroke="#444" strokeWidth="1.4"/>
+    <path d="M87,32 Q105,23 123,32" fill="none" stroke="#444" strokeWidth="1.4"/>
+    <path d="M87,32 Q105,41 123,32" fill="none" stroke="#444" strokeWidth="1.4"/>
   </svg>
 );
 
@@ -170,17 +188,14 @@ const Navbar = ({ currentPage, navigate }) => {
   ];
 
   return (
-    <nav className="navbar-main" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 160px", background: C.white, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.g200}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none", transition: "box-shadow 0.3s" }}>
+    <nav className="navbar-main" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 160px", background: C.black, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.blackMed}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.3)" : "none", transition: "box-shadow 0.3s" }}>
       <div onClick={() => navigate(PAGES.home)} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
         <Logo />
-        <div>
-          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, lineHeight: 1.1, letterSpacing: 0.5 }}>Red Line Digital</div>
-          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, color: C.g400, letterSpacing: 3, textTransform: "uppercase" }}>Accelerate Your Growth</div>
-        </div>
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, lineHeight: 1.1, letterSpacing: 1, textTransform: "uppercase" }}>All Volleyball</div>
       </div>
       <div className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 36 }}>
         {navItems.map((item) => (
-          <span key={item.page} onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: currentPage === item.page ? C.red : C.black, fontWeight: 500, fontSize: 15, borderBottom: currentPage === item.page ? `2px solid ${C.red}` : "2px solid transparent", paddingBottom: 4, transition: "all 0.2s" }}>
+          <span key={item.page} onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: currentPage === item.page ? C.red : C.white, fontWeight: 500, fontSize: 15, borderBottom: currentPage === item.page ? `2px solid ${C.red}` : "2px solid transparent", paddingBottom: 4, transition: "all 0.2s" }}>
             {item.label}
           </span>
         ))}
@@ -189,13 +204,13 @@ const Navbar = ({ currentPage, navigate }) => {
         <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Icon name="mail" size={20} color={C.white} />
         </div>
-        <span style={{ fontWeight: 700, fontSize: 15, color: C.black }}>Contact Us</span>
+        <span style={{ fontWeight: 700, fontSize: 15, color: C.white }}>Contact Us</span>
       </div>
       {/* Mobile hamburger */}
       <div className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} style={{ display: "none", flexDirection: "column", gap: 5, cursor: "pointer", zIndex: 1001, padding: 8 }}>
-        <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.black, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
-        <span style={{ width: 26, height: 3, background: C.black, borderRadius: 2, transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }} />
-        <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.black, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+        <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.white, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+        <span style={{ width: 26, height: 3, background: C.white, borderRadius: 2, transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }} />
+        <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.white, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
       </div>
       {/* Mobile menu panel */}
       {mobileOpen && (
@@ -235,17 +250,14 @@ const CTABar = ({ navigate }) => (
 
 // --- FOOTER ---
 const Footer = ({ navigate }) => (
-  <footer className="footer-main" style={{ background: C.g100, padding: "60px 160px 30px" }}>
-    <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.g200}` }}>
+  <footer className="footer-main" style={{ background: C.black, padding: "60px 160px 30px" }}>
+    <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.blackMed}` }}>
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
           <Logo size={36} />
-          <div>
-            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black }}>Red Line Digital</div>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, color: C.g400, letterSpacing: 2.5, textTransform: "uppercase" }}>Accelerate Your Growth</div>
-          </div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>All Volleyball</div>
         </div>
-        <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g500, marginBottom: 20 }}>AI-powered automotive marketing built by operators who ran campaigns for multimillion-dollar US companies. Every system we build is yours. No lock-ins. No black boxes.</p>
+        <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g400, marginBottom: 20 }}>Your one-stop shop for everything volleyball. Gear, training, leagues, and community — built for players who live the game.</p>
         <div style={{ display: "flex", gap: 12 }}>
           {["F", "IG"].map((s) => (
             <div key={s} style={{ width: 40, height: 40, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>{s}</div>
@@ -253,19 +265,19 @@ const Footer = ({ navigate }) => (
         </div>
       </div>
       <div>
-        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black, marginBottom: 20 }}>Links</div>
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 20 }}>Links</div>
         <div className="footer-links-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 40px" }}>
           {["About Us", "PPC for Dealers", "SMS & Email", "Dealer Web Design", "Reputation Mgmt", "Results", "Blog", "Contact"].map((l) => (
-            <span key={l} style={{ fontSize: 14, color: C.g500, cursor: "pointer" }}>{l}</span>
+            <span key={l} style={{ fontSize: 14, color: C.g400, cursor: "pointer" }}>{l}</span>
           ))}
         </div>
       </div>
       <div>
-        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black, marginBottom: 20 }}>Contact Us</div>
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 20 }}>Contact Us</div>
         {[
           { icon: "phone", text: "+1 (818) 305-5441" },
           { icon: "pin", text: "Philippines" },
-          { icon: "mail", text: "Contact@redlinedigital.com" },
+          { icon: "mail", text: "Contact@allvolleyball.com" },
         ].map((c) => (
           <div key={c.icon} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14 }}>
             <Icon name={c.icon} size={18} color={C.red} />
@@ -275,7 +287,7 @@ const Footer = ({ navigate }) => (
       </div>
     </div>
     <div className="footer-bottom" style={{ display: "flex", justifyContent: "space-between", paddingTop: 24, fontSize: 13, color: C.g400 }}>
-      <span>© 2026 Red Line Digital LLC. All Rights Reserved.</span>
+      <span>© 2026 All Volleyball. All Rights Reserved.</span>
       <div style={{ display: "flex", gap: 20 }}>
         <span style={{ cursor: "pointer" }}>Privacy Policy</span>
         <span style={{ cursor: "pointer" }}>Terms of Service</span>
@@ -893,7 +905,7 @@ const AboutPage = ({ navigate }) => (
       <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "100%", background: C.red, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.15 }} />
       <Reveal>
         <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>About Red Line Digital</div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>About All Volleyball</div>
           <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 60, fontWeight: 700, color: C.white, lineHeight: 1.1, marginBottom: 24 }}>We Built This Because <span style={{ color: C.redLight }}>We've Been on Your Side of the Table</span></h1>
           <p style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.75)", maxWidth: 600 }}>Our team spent years running marketing for companies in the US. We saw firsthand what works and what's just expensive noise. We brought those systems home to the Philippines and built them specifically for automotive businesses like yours.</p>
         </div>
@@ -1322,7 +1334,7 @@ const ContactPage = ({ navigate }) => (
             <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, marginBottom: 16 }}>Contact Information</h3>
             {[
               { icon: "phone", text: "+1 (818) 305-5441" },
-              { icon: "mail", text: "Contact@redlinedigital.com" },
+              { icon: "mail", text: "Contact@allvolleyball.com" },
               { icon: "pin", text: "Philippines" },
             ].map((c) => (
               <div key={c.icon} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
@@ -1398,7 +1410,7 @@ const BlogPostPage = ({ navigate }) => (
         <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, color: C.red, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2 }}>PPC</span>
         <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15, marginTop: 8, marginBottom: 16 }}>7 PPC Mistakes That Are Costing Your Dealership Thousands</h1>
         <div style={{ display: "flex", gap: 16, fontSize: 14, color: C.g400, marginBottom: 30 }}>
-          <span>Mar 28, 2026</span><span>·</span><span>6 min read</span><span>·</span><span>By Red Line Digital</span>
+          <span>Mar 28, 2026</span><span>·</span><span>6 min read</span><span>·</span><span>By All Volleyball</span>
         </div>
       </div>
     </section>
