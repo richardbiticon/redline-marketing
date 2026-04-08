@@ -169,7 +169,7 @@ const Navbar = ({ currentPage, navigate }) => {
       <div onClick={() => navigate(PAGES.home)} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
         <Logo />
         <div>
-          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, lineHeight: 1.1, letterSpacing: 0.5 }}>Red Line Marketing</div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, lineHeight: 1.1, letterSpacing: 0.5 }}>Red Line Digital</div>
           <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, color: C.g400, letterSpacing: 3, textTransform: "uppercase" }}>Accelerate Your Growth</div>
         </div>
       </div>
@@ -217,7 +217,7 @@ const Footer = ({ navigate }) => (
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
           <Logo size={36} />
           <div>
-            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black }}>Red Line Marketing</div>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black }}>Red Line Digital</div>
             <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, color: C.g400, letterSpacing: 2.5, textTransform: "uppercase" }}>Accelerate Your Growth</div>
           </div>
         </div>
@@ -241,7 +241,7 @@ const Footer = ({ navigate }) => (
         {[
           { icon: "phone", text: "+1 (818) 305-5441" },
           { icon: "pin", text: "Los Angeles, CA" },
-          { icon: "mail", text: "Contact@redlinemarketing.com" },
+          { icon: "mail", text: "Contact@redlinedigital.com" },
         ].map((c) => (
           <div key={c.icon} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14 }}>
             <Icon name={c.icon} size={18} color={C.red} />
@@ -251,7 +251,7 @@ const Footer = ({ navigate }) => (
       </div>
     </div>
     <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 24, fontSize: 13, color: C.g400 }}>
-      <span>© 2026 Red Line Marketing LLC. All Rights Reserved.</span>
+      <span>© 2026 Red Line Digital LLC. All Rights Reserved.</span>
       <div style={{ display: "flex", gap: 20 }}>
         <span style={{ cursor: "pointer" }}>Privacy Policy</span>
         <span style={{ cursor: "pointer" }}>Terms of Service</span>
@@ -856,7 +856,7 @@ const AboutPage = ({ navigate }) => (
       <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "100%", background: C.red, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.15 }} />
       <Reveal>
         <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>About Red Line Marketing</div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>About Red Line Digital</div>
           <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 60, fontWeight: 700, color: C.white, lineHeight: 1.1, marginBottom: 24 }}>We Built This Because <span style={{ color: C.redLight }}>We've Been on Your Side of the Table</span></h1>
           <p style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.75)", maxWidth: 600 }}>Our team spent years running marketing for companies in the US. We saw firsthand what works and what's just expensive noise. We brought those systems home to the Philippines and built them specifically for automotive businesses like yours.</p>
         </div>
@@ -1285,7 +1285,7 @@ const ContactPage = ({ navigate }) => (
             <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, marginBottom: 16 }}>Contact Information</h3>
             {[
               { icon: "phone", text: "+1 (818) 305-5441" },
-              { icon: "mail", text: "Contact@redlinemarketing.com" },
+              { icon: "mail", text: "Contact@redlinedigital.com" },
               { icon: "pin", text: "Philippines" },
             ].map((c) => (
               <div key={c.icon} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
@@ -1361,7 +1361,7 @@ const BlogPostPage = ({ navigate }) => (
         <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, color: C.red, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2 }}>PPC</span>
         <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15, marginTop: 8, marginBottom: 16 }}>7 PPC Mistakes That Are Costing Your Dealership Thousands</h1>
         <div style={{ display: "flex", gap: 16, fontSize: 14, color: C.g400, marginBottom: 30 }}>
-          <span>Mar 28, 2026</span><span>·</span><span>6 min read</span><span>·</span><span>By Red Line Marketing</span>
+          <span>Mar 28, 2026</span><span>·</span><span>6 min read</span><span>·</span><span>By Red Line Digital</span>
         </div>
       </div>
     </section>
