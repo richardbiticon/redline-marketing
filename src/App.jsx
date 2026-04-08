@@ -1462,11 +1462,7 @@ export default function App() {
         
         /* ===== TABLET: 1024px ===== */
         @media (max-width: 1024px) {
-          /* Force all sections to reasonable padding */
-          section:not([data-hero="true"]), footer { padding-left: 30px !important; padding-right: 30px !important; }
-          nav { padding-left: 24px !important; padding-right: 24px !important; }
-          
-          /* Hero: stack vertically */
+          /* Hero inner container: stack */
           section[data-hero="true"] > div:nth-child(5) {
             flex-direction: column !important;
             padding: 50px 30px 60px !important;
