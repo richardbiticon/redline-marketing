@@ -186,11 +186,25 @@ const Navbar = ({ currentPage, navigate }) => {
         </div>
         <span style={{ fontWeight: 700, fontSize: 15, color: C.black }}>Contact Us</span>
       </div>
-      <div className="mobile-toggle" onClick={() => navigate(PAGES.contact)} style={{ display: "none", cursor: "pointer" }}>
-        <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Icon name="mail" size={20} color={C.white} />
-        </div>
+      {/* Mobile hamburger */}
+      <div className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} style={{ display: "none", flexDirection: "column", gap: 5, cursor: "pointer", zIndex: 1001, padding: 8 }}>
+        <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.black, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+        <span style={{ width: 26, height: 3, background: C.black, borderRadius: 2, transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }} />
+        <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.black, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
       </div>
+      {/* Mobile menu panel */}
+      {mobileOpen && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: C.white, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 28 }}>
+          {navItems.map((item) => (
+            <span key={item.page} onClick={() => { navigate(item.page); setMobileOpen(false); }} style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: currentPage === item.page ? C.red : C.black, cursor: "pointer", textTransform: "uppercase", letterSpacing: 2 }}>
+              {item.label}
+            </span>
+          ))}
+          <div onClick={() => { navigate(PAGES.contact); setMobileOpen(false); }} style={{ marginTop: 12 }}>
+            <RedButton>Contact Us</RedButton>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
@@ -565,63 +579,66 @@ const HomePage = ({ navigate }) => {
   return (
     <>
       {/* HERO */}
-      <section data-hero="true" style={{ position: "relative", padding: "90px 60px 100px", display: "flex", alignItems: "center", gap: 80, minHeight: 600, overflow: "hidden", background: "#070707" }}>
+      <section data-hero="true" style={{ position: "relative", overflow: "hidden", background: "#070707" }}>
         {/* Heat glow - visible warmth */}
         <div style={{ position: "absolute", bottom: "-40%", left: "5%", width: 800, height: 800, background: "radial-gradient(circle, rgba(212,25,32,0.22) 0%, rgba(168,19,26,0.06) 50%, transparent 70%)", zIndex: 0 }} />
         
         {/* Single bold angular shape - frames the right side */}
         <div style={{ position: "absolute", top: 0, right: 0, width: "42%", height: "100%", background: `linear-gradient(175deg, rgba(212,25,32,0.07) 0%, rgba(212,25,32,0.02) 100%)`, clipPath: "polygon(25% 0, 100% 0, 100% 100%, 0 100%)", zIndex: 1 }} />
         
-        {/* Bottom accent line - thick enough to see */}
+        {/* Bottom accent line */}
         <div style={{ position: "absolute", bottom: 0, left: 0, width: "45%", height: 4, background: `linear-gradient(90deg, ${C.red}, transparent)`, zIndex: 3 }} />
         
         {/* Grain */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0.035, zIndex: 2, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
         
-        {/* Left content - clean 3-layer stack: headline, subtext, badges */}
-        <Reveal style={{ flex: 1.1, position: "relative", zIndex: 4 }}>
-          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 84, fontWeight: 700, lineHeight: 0.9, textTransform: "uppercase", letterSpacing: "-1px" }}>
-            <span style={{ color: C.white, display: "block" }}>Automotive</span>
-            <span style={{ color: C.white, display: "block" }}>Marketing</span>
-            <span style={{ color: C.red, display: "block", marginTop: 6 }}>That Moves.</span>
-          </h2>
-          <p style={{ marginTop: 28, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", maxWidth: 420 }}>Your business is solid. We make sure your marketing matches. AI-powered systems built for automotive in the Philippines.</p>
-          <div className="trust-badges" style={{ marginTop: 28, display: "flex", gap: 24, alignItems: "center" }}>
-            {["AI-Powered", "Full Ownership", "No Lock-ins"].map((tag) => (
-              <div key={tag} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ width: 5, height: 5, background: C.red, transform: "rotate(45deg)" }} />
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" }}>{tag}</span>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* Right form - red top accent connects it to brand */}
-        <Reveal delay={0.2} style={{ flex: 0.85, position: "relative", zIndex: 4, maxWidth: 460 }}>
-          <div style={{ borderRadius: 12, overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.4)" }}>
-            <div style={{ height: 4, background: C.red }} />
-            <div style={{ background: C.white, padding: "32px 32px 36px" }}>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>Book Your Discovery Call</h3>
-              <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-                <input placeholder="First Name" style={inputStyle} />
-                <input placeholder="Last Name" style={inputStyle} />
-              </div>
-              {["Company Email", "Phone Number", "Dealership Website URL"].map((p) => (
-                <input key={p} placeholder={p} style={{ ...inputStyle, marginBottom: 12 }} />
+        {/* Inner container */}
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "90px 60px 100px", display: "flex", alignItems: "center", gap: 60, minHeight: 600, position: "relative", zIndex: 4 }}>
+          {/* Left content */}
+          <Reveal style={{ flex: 1 }}>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 80, fontWeight: 700, lineHeight: 0.9, textTransform: "uppercase", letterSpacing: "-1px" }}>
+              <span style={{ color: C.white, display: "block" }}>Automotive</span>
+              <span style={{ color: C.white, display: "block" }}>Marketing</span>
+              <span style={{ color: C.red, display: "block", marginTop: 6 }}>That Moves.</span>
+            </h2>
+            <p style={{ marginTop: 28, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", maxWidth: 440 }}>Your business is solid. We make sure your marketing matches. AI-powered systems built for automotive in the Philippines.</p>
+            <div className="trust-badges" style={{ marginTop: 28, display: "flex", gap: 24, alignItems: "center" }}>
+              {["AI-Powered", "Full Ownership", "No Lock-ins"].map((tag) => (
+                <div key={tag} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 5, height: 5, background: C.red, transform: "rotate(45deg)" }} />
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" }}>{tag}</span>
+                </div>
               ))}
-              <select style={{ ...inputStyle, marginBottom: 12, color: C.g400 }}>
-                <option>Service/s Interested In</option>
-                <option>PPC for Dealerships</option>
-                <option>Automotive SEO</option>
-                <option>Social Media Management</option>
-                <option>Reputation Management</option>
-                <option>Website Design</option>
-                <option>SMS and Email Retention</option>
-              </select>
-              <button style={{ width: "100%", padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+
+          {/* Right form */}
+          <Reveal delay={0.2} style={{ flex: "0 0 440px", maxWidth: 440 }}>
+            <div style={{ borderRadius: 12, overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.4)" }}>
+              <div style={{ height: 4, background: C.red }} />
+              <div style={{ background: C.white, padding: "32px 32px 36px" }}>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>Book Your Discovery Call</h3>
+                <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                  <input placeholder="First Name" style={inputStyle} />
+                  <input placeholder="Last Name" style={inputStyle} />
+                </div>
+                {["Company Email", "Phone Number", "Dealership Website URL"].map((p) => (
+                  <input key={p} placeholder={p} style={{ ...inputStyle, marginBottom: 12 }} />
+                ))}
+                <select style={{ ...inputStyle, marginBottom: 12, color: C.g400 }}>
+                  <option>Service/s Interested In</option>
+                  <option>PPC for Dealerships</option>
+                  <option>Automotive SEO</option>
+                  <option>Social Media Management</option>
+                  <option>Reputation Management</option>
+                  <option>Website Design</option>
+                  <option>SMS and Email Retention</option>
+                </select>
+                <button style={{ width: "100%", padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* ============ WHAT MAKES AUTOMOTIVE MARKETING DIFFERENT ============ */}
@@ -1435,6 +1452,9 @@ export default function App() {
         input, select, button { font-family: inherit; }
         img { max-width: 100%; }
         
+        /* Ensure navbar stays sticky */
+        .navbar-main { position: sticky !important; top: 0 !important; z-index: 1000 !important; }
+        
         /* ===== DESKTOP FIX: Constrain max-width for ultra-wide screens ===== */
         main, nav, footer, .cta-bar-main, .announcement-bar {
           max-width: 100vw;
@@ -1443,18 +1463,18 @@ export default function App() {
         /* ===== TABLET: 1024px ===== */
         @media (max-width: 1024px) {
           /* Force all sections to reasonable padding */
-          section, footer { padding-left: 30px !important; padding-right: 30px !important; }
+          section:not([data-hero="true"]), footer { padding-left: 30px !important; padding-right: 30px !important; }
           nav { padding-left: 24px !important; padding-right: 24px !important; }
           
           /* Hero: stack vertically */
-          section[data-hero="true"] {
+          section[data-hero="true"] > div:nth-child(5) {
             flex-direction: column !important;
             padding: 50px 30px 60px !important;
             gap: 40px !important;
             min-height: auto !important;
           }
           section[data-hero="true"] h2 { font-size: 56px !important; }
-          section[data-hero="true"] > div:last-child { max-width: 100% !important; }
+          section[data-hero="true"] > div:nth-child(5) > div:last-child { max-width: 100% !important; flex: 1 1 100% !important; }
           
           /* All flex containers with gap 50-80: stack */
           .flex-section, .flex-section-reverse { 
@@ -1506,11 +1526,11 @@ export default function App() {
         
         /* ===== MOBILE: 768px ===== */
         @media (max-width: 768px) {
-          section, footer { padding-left: 20px !important; padding-right: 20px !important; }
+          section:not([data-hero="true"]), footer { padding-left: 20px !important; padding-right: 20px !important; }
           nav { padding-left: 16px !important; padding-right: 16px !important; }
           
           /* Hero */
-          section[data-hero="true"] { padding: 36px 20px 44px !important; gap: 32px !important; }
+          section[data-hero="true"] > div:nth-child(5) { padding: 36px 20px 44px !important; gap: 32px !important; }
           section[data-hero="true"] h2 { font-size: 44px !important; line-height: 0.95 !important; }
           
           /* All grids: single column */
@@ -1545,8 +1565,8 @@ export default function App() {
         /* ===== SMALL PHONE: 480px ===== */
         @media (max-width: 480px) {
           section[data-hero="true"] h2 { font-size: 36px !important; }
-          section[data-hero="true"] { padding: 28px 16px 36px !important; }
-          section, footer { padding-left: 16px !important; padding-right: 16px !important; }
+          section[data-hero="true"] > div:nth-child(5) { padding: 28px 16px 36px !important; }
+          section:not([data-hero="true"]), footer { padding-left: 16px !important; padding-right: 16px !important; }
           .section-title h2 { font-size: 28px !important; }
           .grid-4.stats-grid { grid-template-columns: 1fr 1fr !important; }
           .niche-tabs > div { flex: 0 0 calc(50% - 4px) !important; }
