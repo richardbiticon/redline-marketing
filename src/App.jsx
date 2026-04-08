@@ -465,7 +465,7 @@ const NicheShowcase = ({ navigate }) => {
   const progress = ((active + 1) / nicheData.length) * 100;
 
   return (
-    <section style={{ background: C.black, padding: "80px 160px 60px", position: "relative", overflow: "hidden" }}
+    <section className="section-pad" style={{ background: C.black, padding: "80px 160px 60px", position: "relative", overflow: "hidden" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -874,7 +874,7 @@ const HomePage = ({ navigate }) => {
 // ============================================================
 const AboutPage = ({ navigate }) => (
   <>
-    <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
+    <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "100%", background: C.red, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.15 }} />
       <Reveal>
         <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -991,7 +991,7 @@ const ServicesPage = ({ navigate }) => {
 
   return (
     <>
-      <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
+      <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: 0, right: 0, width: "45%", height: "70%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.12 }} />
         <Reveal>
           <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -1138,7 +1138,7 @@ const ServiceDetailPage = ({ page, navigate }) => {
   if (!data) return null;
   return (
     <>
-      <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
+      <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
         <Reveal>
           <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -1202,7 +1202,7 @@ const ResultsPage = ({ navigate }) => {
 
   return (
     <>
-      <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
+      <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: 0, left: 0, width: "40%", height: "70%", background: C.red, clipPath: "polygon(0 30%, 100% 0, 100% 100%, 0 100%)", opacity: 0.12 }} />
         <Reveal>
           <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -1269,7 +1269,7 @@ const ResultsPage = ({ navigate }) => {
 // ============================================================
 const ContactPage = ({ navigate }) => (
   <>
-    <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
+    <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
       <Reveal>
         <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
@@ -1335,7 +1335,7 @@ const blogPosts = [
 
 const BlogPage = ({ navigate }) => (
   <>
-    <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
+    <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "30%", height: "100%", background: C.red, clipPath: "polygon(50% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
       <Reveal>
         <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
@@ -1455,9 +1455,14 @@ export default function App() {
         /* Ensure navbar stays sticky */
         .navbar-main { position: sticky !important; top: 0 !important; z-index: 1000 !important; }
         
-        /* ===== DESKTOP FIX: Constrain max-width for ultra-wide screens ===== */
-        main, nav, footer, .cta-bar-main, .announcement-bar {
-          max-width: 100vw;
+        /* ===== WIDE SCREEN: constrain content width, backgrounds stay full-width ===== */
+        .section-pad,
+        .navbar-main,
+        .announcement-bar,
+        .cta-bar-main,
+        .footer-main {
+          padding-left: max(60px, calc(50vw - 660px)) !important;
+          padding-right: max(60px, calc(50vw - 660px)) !important;
         }
         
         /* ===== TABLET: 1024px ===== */
