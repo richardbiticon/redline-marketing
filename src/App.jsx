@@ -579,10 +579,17 @@ const NicheShowcase = ({ navigate }) => {
 // PAGE: HOME
 // ============================================================
 const HomePage = ({ navigate }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
+  const handleMouseMove = useCallback((e) => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (rect) setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
   return (
     <>
       {/* HERO */}
-      <section data-hero="true" style={{ position: "relative", overflow: "hidden", background: "#070707" }}>
+      <section data-hero="true" ref={heroRef} onMouseMove={handleMouseMove} style={{ position: "relative", overflow: "hidden", background: "#070707" }}>
         {/* Heat glow - visible warmth */}
         <div style={{ position: "absolute", bottom: "-40%", left: "5%", width: 800, height: 800, background: "radial-gradient(circle, rgba(212,25,32,0.22) 0%, rgba(168,19,26,0.06) 50%, transparent 70%)", zIndex: 0 }} />
         
@@ -595,6 +602,9 @@ const HomePage = ({ navigate }) => {
         {/* Grain */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0.035, zIndex: 2, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
         
+        {/* Cursor ripple glow */}
+        <div style={{ position: "absolute", left: mousePos.x - 300, top: mousePos.y - 300, width: 600, height: 600, background: "radial-gradient(circle, rgba(212,25,32,0.12) 0%, rgba(212,25,32,0.04) 35%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 2, transition: "left 0.15s ease-out, top 0.15s ease-out", willChange: "left, top" }} />
+
         {/* Inner container */}
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "90px 160px 100px", display: "flex", alignItems: "center", gap: 60, minHeight: 600, position: "relative", zIndex: 4 }}>
           {/* Left content */}
@@ -660,17 +670,17 @@ const HomePage = ({ navigate }) => {
             {
               icon: "M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z",
               title: "We Map the Full Buyer Journey and Build Your Presence at Every Step",
-              desc: "A typical automotive customer checks Google Maps, reads reviews, browses Facebook, compares 3 to 5 businesses, and visits websites before they ever pick up the phone. Most businesses only show up at one or two of those touchpoints. We build your visibility across all of them. Optimized Google Business profile with fresh photos and review strategy. High-converting landing pages for each service. Retargeting ads that keep your brand in front of them throughout their entire research phase. By the time they're ready to buy, your business already feels familiar.",
+              desc: "Customers check Google, read reviews, browse social media, and compare options before they ever call. Most businesses only show up at one or two of those touchpoints. We make sure you're visible at all of them — so by the time they're ready to buy, you already feel familiar.",
             },
             {
               icon: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z",
               title: "We Turn Attention Into Appointments With a System That Converts 24/7",
-              desc: "Getting traffic is step one. What separates businesses that grow from businesses that stay stuck is what happens after someone clicks. We build the full system: when a lead clicks your ad, they land on a page designed to convert, not just your homepage. When they message you, they get a response in under 60 seconds, day or night. If they go quiet, an automated sequence follows up three times over seven days. You wake up to booked appointments instead of unread messages.",
+              desc: "Traffic alone doesn't pay the bills. We build the full conversion system: dedicated landing pages, instant lead response, and automated follow-up sequences. You wake up to booked appointments instead of unread messages.",
             },
             {
               icon: "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z",
               title: "We Build the Kind of Trust Online That You've Already Built In Person",
-              desc: "Your reputation in your community is strong. People who've worked with you trust you. The challenge is translating that trust to someone who's never met you and is comparing you to five other options on their phone. We close that gap with review generation systems that grow your ratings consistently, professional social proof displayed across your website and ads, and a polished brand presence that matches the quality of what you actually deliver. When someone finds you online, they immediately get the same feeling your existing customers already have.",
+              desc: "People who know you trust you. The challenge is making strangers feel that same confidence online. We build that bridge with review systems, social proof, and a polished brand presence that matches what you actually deliver.",
             },
           ].map((insight, i) => (
             <Reveal key={i} delay={i * 0.1}>
