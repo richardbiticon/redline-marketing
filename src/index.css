@@ -10,8 +10,3 @@ html, body, #root {
   padding: 0;
   overflow-x: hidden;
 }
-
-#root > div {
-  max-width: 1000px;
-  margin: 0 auto;
-}
