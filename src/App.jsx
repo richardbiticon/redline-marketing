@@ -138,7 +138,7 @@ const C = {
 
 // --- ANNOUNCEMENT BAR ---
 const AnnouncementBar = () => (
-  <div className="announcement-bar" style={{ background: C.black, color: C.white, padding: "10px 100px", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 14, position: "relative" }}>
+  <div className="announcement-bar" style={{ background: C.black, color: C.white, padding: "10px 160px", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 14, position: "relative" }}>
     <div style={{ display: "flex", alignItems: "center", gap: 8, zIndex: 1 }}>
       <span>🔑</span>
       <span>The difference between a good automotive business and a fully booked one is usually just the system behind the marketing.</span>
@@ -165,7 +165,7 @@ const Navbar = ({ currentPage, navigate }) => {
   ];
 
   return (
-    <nav className="navbar-main" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 100px", background: C.white, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.g200}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none", transition: "box-shadow 0.3s" }}>
+    <nav className="navbar-main" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 160px", background: C.white, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.g200}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none", transition: "box-shadow 0.3s" }}>
       <div onClick={() => navigate(PAGES.home)} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
         <Logo />
         <div>
@@ -211,7 +211,7 @@ const Navbar = ({ currentPage, navigate }) => {
 
 // --- CTA BAR ---
 const CTABar = ({ navigate }) => (
-  <section className="cta-bar-main" style={{ background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 100px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30 }}>
+  <section className="cta-bar-main" style={{ background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 160px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30 }}>
     <div>
       <div style={{ fontFamily: "'Oswald', sans-serif", color: C.redLight, fontSize: 20, fontWeight: 600, marginBottom: 6 }}>Ready to See What Your Business Looks Like With the Right System?</div>
       <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white }}>Free Strategy Call. 30 Minutes. A Clear Plan.</div>
@@ -230,7 +230,7 @@ const CTABar = ({ navigate }) => (
 
 // --- FOOTER ---
 const Footer = ({ navigate }) => (
-  <footer className="footer-main" style={{ background: C.g100, padding: "60px 100px 30px" }}>
+  <footer className="footer-main" style={{ background: C.g100, padding: "60px 160px 30px" }}>
     <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.g200}` }}>
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
@@ -465,7 +465,7 @@ const NicheShowcase = ({ navigate }) => {
   const progress = ((active + 1) / nicheData.length) * 100;
 
   return (
-    <section style={{ background: C.black, padding: "80px 100px 60px", position: "relative", overflow: "hidden" }}
+    <section style={{ background: C.black, padding: "80px 160px 60px", position: "relative", overflow: "hidden" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -593,7 +593,7 @@ const HomePage = ({ navigate }) => {
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0.035, zIndex: 2, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
         
         {/* Inner container */}
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "90px 100px 100px", display: "flex", alignItems: "center", gap: 60, minHeight: 600, position: "relative", zIndex: 4 }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "90px 160px 100px", display: "flex", alignItems: "center", gap: 60, minHeight: 600, position: "relative", zIndex: 4 }}>
           {/* Left content */}
           <Reveal style={{ flex: 1 }}>
             <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 80, fontWeight: 700, lineHeight: 0.9, textTransform: "uppercase", letterSpacing: "-1px" }}>
@@ -642,7 +642,7 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ WHAT MAKES AUTOMOTIVE MARKETING DIFFERENT ============ */}
-      <section className="section-pad" style={{ padding: "80px 100px", background: C.white }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.white }}>
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>What Makes This Work</div>
@@ -697,7 +697,7 @@ const HomePage = ({ navigate }) => {
       <NicheShowcase navigate={navigate} />
 
       {/* ============ THE SYSTEM WE BUILD FOR YOU ============ */}
-      <section className="section-pad" style={{ padding: "80px 100px", background: C.black, position: "relative", overflow: "hidden" }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.black, position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(50% 0, 100% 0, 100% 100%, 10% 100%)", opacity: 0.06 }} />
 
         <Reveal>
@@ -761,7 +761,7 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ WHAT'S INCLUDED ============ */}
-      <section className="section-pad" style={{ padding: "80px 100px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.g100 }}>
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Monthly Deliverables</div>
@@ -792,7 +792,7 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ TRACK RECORD ============ */}
-      <section className="section-pad" style={{ padding: "80px 100px" }}>
+      <section className="section-pad" style={{ padding: "80px 160px" }}>
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Past Campaign Results</div>
@@ -838,7 +838,7 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ TRUST STATS ============ */}
-      <section className="section-pad" style={{ padding: "60px 100px", background: C.black }}>
+      <section className="section-pad" style={{ padding: "60px 160px", background: C.black }}>
         <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
           {[
             { num: "$12M+", label: "Ad Spend Managed" },
@@ -857,7 +857,7 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ FINAL CTA ============ */}
-      <section className="section-pad" style={{ padding: "80px 100px", background: C.white, textAlign: "center" }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.white, textAlign: "center" }}>
         <Reveal>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Let's Build Something</div>
           <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15, marginBottom: 16 }}>Your Business Deserves Marketing<br /><span style={{ color: C.red }}>That Matches How Good You Actually Are.</span></h2>
@@ -874,7 +874,7 @@ const HomePage = ({ navigate }) => {
 // ============================================================
 const AboutPage = ({ navigate }) => (
   <>
-    <section style={{ position: "relative", padding: "80px 100px", background: C.black, overflow: "hidden" }}>
+    <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "100%", background: C.red, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.15 }} />
       <Reveal>
         <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -886,7 +886,7 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* STORY */}
-    <section className="section-pad" style={{ padding: "80px 100px" }}>
+    <section className="section-pad" style={{ padding: "80px 160px" }}>
       <div className="flex-section" style={{ display: "flex", alignItems: "center", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <div style={{ aspectRatio: "4/3", maxWidth: 520, borderRadius: 14, background: `linear-gradient(135deg, ${C.black} 0%, ${C.redDark} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40, position: "relative", overflow: "hidden" }}>
@@ -910,7 +910,7 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* VALUES */}
-    <section className="section-pad" style={{ padding: "80px 100px", background: C.g100 }}>
+    <section className="section-pad" style={{ padding: "80px 160px", background: C.g100 }}>
       <Reveal><SectionTitle pre="How We Think" main="The Principles" accent="Behind Everything We Do" /></Reveal>
       <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
         {[
@@ -932,7 +932,7 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* STATS */}
-    <section className="section-pad" style={{ padding: "60px 100px", background: C.black }}>
+    <section className="section-pad" style={{ padding: "60px 160px", background: C.black }}>
       <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
         {[
           { num: "$12M+", label: "US Ad Spend Managed" },
@@ -951,7 +951,7 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* AI APPROACH */}
-    <section className="section-pad" style={{ padding: "80px 100px" }}>
+    <section className="section-pad" style={{ padding: "80px 160px" }}>
       <div className="flex-section" style={{ display: "flex", alignItems: "center", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>How We Work</div>
@@ -991,7 +991,7 @@ const ServicesPage = ({ navigate }) => {
 
   return (
     <>
-      <section style={{ position: "relative", padding: "80px 100px", background: C.black, overflow: "hidden" }}>
+      <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: 0, right: 0, width: "45%", height: "70%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.12 }} />
         <Reveal>
           <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -1002,7 +1002,7 @@ const ServicesPage = ({ navigate }) => {
         </Reveal>
       </section>
 
-      <section className="section-pad" style={{ padding: "80px 100px" }}>
+      <section className="section-pad" style={{ padding: "80px 160px" }}>
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
@@ -1020,7 +1020,7 @@ const ServicesPage = ({ navigate }) => {
       </section>
 
       {/* PROCESS */}
-      <section className="section-pad" style={{ padding: "80px 100px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.g100 }}>
         <Reveal><SectionTitle pre="How We Work" main="Our Proven" accent="4-Step Process" /></Reveal>
         <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, marginTop: 20 }}>
           {[
@@ -1138,7 +1138,7 @@ const ServiceDetailPage = ({ page, navigate }) => {
   if (!data) return null;
   return (
     <>
-      <section style={{ position: "relative", padding: "80px 100px", background: C.black, overflow: "hidden" }}>
+      <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
         <Reveal>
           <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -1152,14 +1152,14 @@ const ServiceDetailPage = ({ page, navigate }) => {
       </section>
 
       {/* STATS */}
-      <section className="section-pad" style={{ padding: "50px 100px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "50px 160px", background: C.g100 }}>
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${data.stats.length}, 1fr)`, gap: 20 }}>
           {data.stats.map((s, i) => <Reveal key={s.l} delay={i * 0.1}><StatCard number={s.n} label={s.l} /></Reveal>)}
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className="section-pad" style={{ padding: "80px 100px" }}>
+      <section className="section-pad" style={{ padding: "80px 160px" }}>
         <Reveal><SectionTitle pre="What's Included" main="Everything You Get" accent={`With ${data.title}`} /></Reveal>
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
           {data.features.map((f, i) => (
@@ -1177,7 +1177,7 @@ const ServiceDetailPage = ({ page, navigate }) => {
       </section>
 
       {/* CTA */}
-      <section className="section-pad" style={{ padding: "80px 100px", background: C.black, textAlign: "center" }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.black, textAlign: "center" }}>
         <Reveal>
           <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.white, marginBottom: 16 }}>Ready To Get Started?</h2>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.6)", marginBottom: 30, maxWidth: 500, margin: "0 auto 30px" }}>Schedule a free discovery call and we'll show you exactly how {data.title.toLowerCase()} can accelerate your dealership's growth.</p>
@@ -1202,7 +1202,7 @@ const ResultsPage = ({ navigate }) => {
 
   return (
     <>
-      <section style={{ position: "relative", padding: "80px 100px", background: C.black, overflow: "hidden" }}>
+      <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: 0, left: 0, width: "40%", height: "70%", background: C.red, clipPath: "polygon(0 30%, 100% 0, 100% 100%, 0 100%)", opacity: 0.12 }} />
         <Reveal>
           <div style={{ maxWidth: 700, position: "relative", zIndex: 1 }}>
@@ -1213,7 +1213,7 @@ const ResultsPage = ({ navigate }) => {
         </Reveal>
       </section>
 
-      <section className="section-pad" style={{ padding: "50px 100px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "50px 160px", background: C.g100 }}>
         <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
           {[{ n: "$12M+", l: "Ad Spend Managed" }, { n: "200+", l: "Campaigns Launched" }, { n: "5 Days", l: "Average Launch Time" }, { n: "100%", l: "Client Ownership" }].map((s, i) => (
             <Reveal key={s.l} delay={i * 0.1}><StatCard number={s.n} label={s.l} /></Reveal>
@@ -1221,7 +1221,7 @@ const ResultsPage = ({ navigate }) => {
         </div>
       </section>
 
-      <section className="section-pad" style={{ padding: "80px 100px" }}>
+      <section className="section-pad" style={{ padding: "80px 160px" }}>
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Case Studies</div>
@@ -1269,7 +1269,7 @@ const ResultsPage = ({ navigate }) => {
 // ============================================================
 const ContactPage = ({ navigate }) => (
   <>
-    <section style={{ position: "relative", padding: "80px 100px", background: C.black, overflow: "hidden" }}>
+    <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
       <Reveal>
         <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
@@ -1280,7 +1280,7 @@ const ContactPage = ({ navigate }) => (
       </Reveal>
     </section>
 
-    <section className="section-pad" style={{ padding: "80px 100px" }}>
+    <section className="section-pad" style={{ padding: "80px 160px" }}>
       <div className="flex-section" style={{ display: "flex", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <FormCard title="Schedule Your Free Strategy Call" />
@@ -1335,7 +1335,7 @@ const blogPosts = [
 
 const BlogPage = ({ navigate }) => (
   <>
-    <section style={{ position: "relative", padding: "80px 100px", background: C.black, overflow: "hidden" }}>
+    <section style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "30%", height: "100%", background: C.red, clipPath: "polygon(50% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
       <Reveal>
         <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
@@ -1346,7 +1346,7 @@ const BlogPage = ({ navigate }) => (
       </Reveal>
     </section>
 
-    <section className="section-pad" style={{ padding: "80px 100px" }}>
+    <section className="section-pad" style={{ padding: "80px 160px" }}>
       <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
         {blogPosts.map((post, i) => (
           <Reveal key={post.id} delay={i * 0.08}>
@@ -1377,7 +1377,7 @@ const BlogPage = ({ navigate }) => (
 // ============================================================
 const BlogPostPage = ({ navigate }) => (
   <>
-    <section style={{ padding: "60px 100px 0", maxWidth: 820, margin: "0 auto" }}>
+    <section style={{ padding: "60px 160px 0", maxWidth: 820, margin: "0 auto" }}>
       <span onClick={() => navigate(PAGES.blog)} style={{ fontSize: 14, color: C.red, cursor: "pointer", fontWeight: 600 }}>← Back to Blog</span>
       <div style={{ marginTop: 20 }}>
         <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, color: C.red, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2 }}>PPC</span>
