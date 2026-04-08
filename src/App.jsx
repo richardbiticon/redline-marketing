@@ -138,12 +138,12 @@ const C = {
 
 // --- ANNOUNCEMENT BAR ---
 const AnnouncementBar = () => (
-  <div style={{ background: C.black, color: C.white, padding: "10px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 14, position: "relative" }}>
+  <div className="announcement-bar" style={{ background: C.black, color: C.white, padding: "10px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 14, position: "relative" }}>
     <div style={{ display: "flex", alignItems: "center", gap: 8, zIndex: 1 }}>
       <span>🔑</span>
       <span>The difference between a good automotive business and a fully booked one is usually just the system behind the marketing.</span>
     </div>
-    <span style={{ fontWeight: 700, color: C.red, cursor: "pointer", letterSpacing: 0.5, zIndex: 1 }}>See How We Build It →</span>
+    <span className="announcement-hide-mobile" style={{ fontWeight: 700, color: C.red, cursor: "pointer", letterSpacing: 0.5, zIndex: 1, whiteSpace: "nowrap" }}>See How We Build It →</span>
   </div>
 );
 
@@ -165,7 +165,7 @@ const Navbar = ({ currentPage, navigate }) => {
   ];
 
   return (
-    <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 60px", background: C.white, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.g200}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none", transition: "box-shadow 0.3s" }}>
+    <nav className="navbar-main" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 60px", background: C.white, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.g200}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none", transition: "box-shadow 0.3s" }}>
       <div onClick={() => navigate(PAGES.home)} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
         <Logo />
         <div>
@@ -173,18 +173,23 @@ const Navbar = ({ currentPage, navigate }) => {
           <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, color: C.g400, letterSpacing: 3, textTransform: "uppercase" }}>Accelerate Your Growth</div>
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
+      <div className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 36 }}>
         {navItems.map((item) => (
           <span key={item.page} onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: currentPage === item.page ? C.red : C.black, fontWeight: 500, fontSize: 15, borderBottom: currentPage === item.page ? `2px solid ${C.red}` : "2px solid transparent", paddingBottom: 4, transition: "all 0.2s" }}>
             {item.label}
           </span>
         ))}
       </div>
-      <div onClick={() => navigate(PAGES.contact)} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+      <div onClick={() => navigate(PAGES.contact)} className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
         <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Icon name="mail" size={20} color={C.white} />
         </div>
         <span style={{ fontWeight: 700, fontSize: 15, color: C.black }}>Contact Us</span>
+      </div>
+      <div className="mobile-toggle" onClick={() => navigate(PAGES.contact)} style={{ display: "none", cursor: "pointer" }}>
+        <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Icon name="mail" size={20} color={C.white} />
+        </div>
       </div>
     </nav>
   );
@@ -192,7 +197,7 @@ const Navbar = ({ currentPage, navigate }) => {
 
 // --- CTA BAR ---
 const CTABar = ({ navigate }) => (
-  <section style={{ background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 60px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30 }}>
+  <section className="cta-bar-main" style={{ background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 60px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30 }}>
     <div>
       <div style={{ fontFamily: "'Oswald', sans-serif", color: C.redLight, fontSize: 20, fontWeight: 600, marginBottom: 6 }}>Ready to See What Your Business Looks Like With the Right System?</div>
       <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white }}>Free Strategy Call. 30 Minutes. A Clear Plan.</div>
@@ -211,8 +216,8 @@ const CTABar = ({ navigate }) => (
 
 // --- FOOTER ---
 const Footer = ({ navigate }) => (
-  <footer style={{ background: C.g100, padding: "60px 60px 30px" }}>
-    <div style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.g200}` }}>
+  <footer className="footer-main" style={{ background: C.g100, padding: "60px 60px 30px" }}>
+    <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.g200}` }}>
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
           <Logo size={36} />
@@ -230,7 +235,7 @@ const Footer = ({ navigate }) => (
       </div>
       <div>
         <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black, marginBottom: 20 }}>Links</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 40px" }}>
+        <div className="footer-links-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 40px" }}>
           {["About Us", "PPC for Dealers", "SMS & Email", "Dealer Web Design", "Reputation Mgmt", "Results", "Blog", "Contact"].map((l) => (
             <span key={l} style={{ fontSize: 14, color: C.g500, cursor: "pointer" }}>{l}</span>
           ))}
@@ -240,7 +245,7 @@ const Footer = ({ navigate }) => (
         <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black, marginBottom: 20 }}>Contact Us</div>
         {[
           { icon: "phone", text: "+1 (818) 305-5441" },
-          { icon: "pin", text: "Los Angeles, CA" },
+          { icon: "pin", text: "Philippines" },
           { icon: "mail", text: "Contact@redlinedigital.com" },
         ].map((c) => (
           <div key={c.icon} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14 }}>
@@ -250,7 +255,7 @@ const Footer = ({ navigate }) => (
         ))}
       </div>
     </div>
-    <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 24, fontSize: 13, color: C.g400 }}>
+    <div className="footer-bottom" style={{ display: "flex", justifyContent: "space-between", paddingTop: 24, fontSize: 13, color: C.g400 }}>
       <span>© 2026 Red Line Digital LLC. All Rights Reserved.</span>
       <div style={{ display: "flex", gap: 20 }}>
         <span style={{ cursor: "pointer" }}>Privacy Policy</span>
@@ -264,7 +269,7 @@ const Footer = ({ navigate }) => (
 const FormCard = ({ title = "Book Your Discovery Call" }) => (
   <div style={{ background: C.white, borderRadius: 12, padding: "36px 32px", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
     <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>{title}</h3>
-    <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+    <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
       <input placeholder="First Name" style={inputStyle} />
       <input placeholder="Last Name" style={inputStyle} />
     </div>
@@ -290,7 +295,7 @@ const inputStyle = {
 
 // --- SECTION TITLE ---
 const SectionTitle = ({ pre, main, accent, sub, light = false }) => (
-  <div style={{ textAlign: "center", marginBottom: 50 }}>
+  <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
     {pre && <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>{pre}</div>}
     <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: light ? C.white : C.black, lineHeight: 1.15 }}>{main} {accent && <span style={{ color: C.red }}>{accent}</span>}</h2>
     {sub && <p style={{ marginTop: 16, fontSize: 17, color: light ? "rgba(255,255,255,0.7)" : C.g500, maxWidth: 640, margin: "16px auto 0", lineHeight: 1.7 }}>{sub}</p>}
@@ -462,9 +467,9 @@ const NicheShowcase = ({ navigate }) => {
       </Reveal>
 
       {/* Main content area */}
-      <div style={{ display: "flex", gap: 50, alignItems: "stretch", position: "relative", zIndex: 1, minHeight: 360 }}>
+      <div className="niche-content" style={{ display: "flex", gap: 50, alignItems: "stretch", position: "relative", zIndex: 1, minHeight: 360 }}>
         {/* Left: Visual card */}
-        <div style={{
+        <div className="niche-visual" style={{
           flex: "0 0 420px",
           borderRadius: 16,
           background: niche.gradient,
@@ -509,7 +514,7 @@ const NicheShowcase = ({ navigate }) => {
       </div>
 
       {/* Tab selector */}
-      <div style={{ display: "flex", gap: 6, marginTop: 40, position: "relative", zIndex: 1 }}>
+      <div className="niche-tabs" style={{ display: "flex", gap: 6, marginTop: 40, position: "relative", zIndex: 1 }}>
         {nicheData.map((n, i) => (
           <div
             key={i}
@@ -560,7 +565,7 @@ const HomePage = ({ navigate }) => {
   return (
     <>
       {/* HERO */}
-      <section style={{ position: "relative", padding: "90px 60px 100px", display: "flex", alignItems: "center", gap: 80, minHeight: 600, overflow: "hidden", background: "#070707" }}>
+      <section data-hero="true" style={{ position: "relative", padding: "90px 60px 100px", display: "flex", alignItems: "center", gap: 80, minHeight: 600, overflow: "hidden", background: "#070707" }}>
         {/* Heat glow - visible warmth */}
         <div style={{ position: "absolute", bottom: "-40%", left: "5%", width: 800, height: 800, background: "radial-gradient(circle, rgba(212,25,32,0.22) 0%, rgba(168,19,26,0.06) 50%, transparent 70%)", zIndex: 0 }} />
         
@@ -581,7 +586,7 @@ const HomePage = ({ navigate }) => {
             <span style={{ color: C.red, display: "block", marginTop: 6 }}>That Moves.</span>
           </h2>
           <p style={{ marginTop: 28, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.5)", maxWidth: 420 }}>Your business is solid. We make sure your marketing matches. AI-powered systems built for automotive in the Philippines.</p>
-          <div style={{ marginTop: 28, display: "flex", gap: 24, alignItems: "center" }}>
+          <div className="trust-badges" style={{ marginTop: 28, display: "flex", gap: 24, alignItems: "center" }}>
             {["AI-Powered", "Full Ownership", "No Lock-ins"].map((tag) => (
               <div key={tag} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 5, height: 5, background: C.red, transform: "rotate(45deg)" }} />
@@ -597,7 +602,7 @@ const HomePage = ({ navigate }) => {
             <div style={{ height: 4, background: C.red }} />
             <div style={{ background: C.white, padding: "32px 32px 36px" }}>
               <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>Book Your Discovery Call</h3>
-              <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+              <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
                 <input placeholder="First Name" style={inputStyle} />
                 <input placeholder="Last Name" style={inputStyle} />
               </div>
@@ -620,9 +625,9 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ WHAT MAKES AUTOMOTIVE MARKETING DIFFERENT ============ */}
-      <section style={{ padding: "80px 60px", background: C.white }}>
+      <section className="section-pad" style={{ padding: "80px 60px", background: C.white }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
+          <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>What Makes This Work</div>
             <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>Automotive Buyers Think <span style={{ color: C.red }}>Differently. Your Marketing Should Too.</span></h2>
             <p style={{ marginTop: 16, fontSize: 17, color: C.g500, maxWidth: 620, margin: "16px auto 0", lineHeight: 1.7 }}>Selling a car or a service appointment is nothing like selling clothes or food. The decision is bigger, the research goes deeper, and trust matters more than anything. When you understand these dynamics, your marketing becomes a magnet instead of a megaphone.</p>
@@ -630,7 +635,7 @@ const HomePage = ({ navigate }) => {
         </Reveal>
 
         {/* Insight cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+        <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {[
             {
               icon: "M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z",
@@ -675,7 +680,7 @@ const HomePage = ({ navigate }) => {
       <NicheShowcase navigate={navigate} />
 
       {/* ============ THE SYSTEM WE BUILD FOR YOU ============ */}
-      <section style={{ padding: "80px 60px", background: C.black, position: "relative", overflow: "hidden" }}>
+      <section className="section-pad" style={{ padding: "80px 60px", background: C.black, position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(50% 0, 100% 0, 100% 100%, 10% 100%)", opacity: 0.06 }} />
 
         <Reveal>
@@ -688,7 +693,7 @@ const HomePage = ({ navigate }) => {
 
         {/* AI System Block */}
         <Reveal>
-          <div style={{ display: "flex", alignItems: "stretch", gap: 50, marginBottom: 60 }}>
+          <div className="flex-section" style={{ display: "flex", alignItems: "stretch", gap: 50, marginBottom: 60 }}>
             <div style={{ flex: "0 0 400px", borderRadius: 16, background: `linear-gradient(135deg, ${C.redDark} 0%, ${C.red} 100%)`, padding: 50, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, border: "2px solid rgba(255,255,255,0.1)", borderRadius: "50%" }} />
               <div style={{ position: "absolute", bottom: -30, left: -30, width: 140, height: 140, border: "2px solid rgba(255,255,255,0.06)", borderRadius: "50%" }} />
@@ -739,14 +744,14 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ WHAT'S INCLUDED ============ */}
-      <section style={{ padding: "80px 60px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "80px 60px", background: C.g100 }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
+          <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Monthly Deliverables</div>
             <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>Everything That's Included <span style={{ color: C.red }}>When You Work With Us</span></h2>
           </div>
         </Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+        <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {[
             { icon: "chart", title: "AI-Optimized Ad Campaigns", desc: "Google Search, Display, and Meta ads running on automated bid strategies that shift budget hourly toward the keywords and audiences driving real inquiries. Every ad links to a conversion-optimized landing page with tracking on every action." },
             { icon: "layers", title: "Real-Time Performance Dashboard", desc: "Cost per lead, return on ad spend, lead volume by source, conversion rates, and budget pacing. All live. Updated the moment something changes. Open it on your phone at midnight if you want." },
@@ -770,15 +775,15 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ TRACK RECORD ============ */}
-      <section style={{ padding: "80px 60px" }}>
+      <section className="section-pad" style={{ padding: "80px 60px" }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
+          <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Past Campaign Results</div>
             <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>What Our Systems <span style={{ color: C.red }}>Have Delivered</span></h2>
             <p style={{ marginTop: 16, fontSize: 15, color: C.g400, maxWidth: 520, margin: "16px auto 0", lineHeight: 1.6 }}>Client names protected under NDA. Full campaign details and strategy breakdowns available during your strategy call.</p>
           </div>
         </Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
+        <div className="grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
           {[
             { type: "Multi-Location Auto Group", bg: C.red, situation: "Six locations running disconnected campaigns. Rising cost per lead. No unified tracking across branches.", action: "Consolidated ad accounts under one AI-optimized system with live inventory feeds. Rebuilt all six websites with unified brand architecture and centralized lead routing.", results: ["218% more monthly leads", "42% lower cost per lead", "7-figure revenue increase in year one"] },
             { type: "Independent Pre-Owned Dealer", bg: C.black, situation: "Online reputation at 3.2 stars. High-quality customers choosing competitors based on reviews alone.", action: "Deployed automated post-transaction review requests via SMS. Built a response management system for every review. Added dynamic review widgets across the website.", results: ["3.2 to 4.7 stars in 5 months", "340% increase in review volume", "28% more walk-in traffic"] },
@@ -816,8 +821,8 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ TRUST STATS ============ */}
-      <section style={{ padding: "60px 60px", background: C.black }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
+      <section className="section-pad" style={{ padding: "60px 60px", background: C.black }}>
+        <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
           {[
             { num: "$12M+", label: "Ad Spend Managed" },
             { num: "200+", label: "Campaigns Launched" },
@@ -835,7 +840,7 @@ const HomePage = ({ navigate }) => {
       </section>
 
       {/* ============ FINAL CTA ============ */}
-      <section style={{ padding: "80px 60px", background: C.white, textAlign: "center" }}>
+      <section className="section-pad" style={{ padding: "80px 60px", background: C.white, textAlign: "center" }}>
         <Reveal>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Let's Build Something</div>
           <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15, marginBottom: 16 }}>Your Business Deserves Marketing<br /><span style={{ color: C.red }}>That Matches How Good You Actually Are.</span></h2>
@@ -864,8 +869,8 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* STORY */}
-    <section style={{ padding: "80px 60px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 60 }}>
+    <section className="section-pad" style={{ padding: "80px 60px" }}>
+      <div className="flex-section" style={{ display: "flex", alignItems: "center", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <div style={{ aspectRatio: "4/3", maxWidth: 520, borderRadius: 14, background: `linear-gradient(135deg, ${C.black} 0%, ${C.redDark} 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40, position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, border: "2px solid rgba(255,255,255,0.06)", borderRadius: "50%" }} />
@@ -888,9 +893,9 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* VALUES */}
-    <section style={{ padding: "80px 60px", background: C.g100 }}>
+    <section className="section-pad" style={{ padding: "80px 60px", background: C.g100 }}>
       <Reveal><SectionTitle pre="How We Think" main="The Principles" accent="Behind Everything We Do" /></Reveal>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
+      <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
         {[
           { icon: "shield", title: "You Own Everything", desc: "Your ad accounts. Your data. Your automations. Your website. All in your name. If you leave, you take everything with you. We don't hold anything hostage." },
           { icon: "target", title: "Results Over Activity", desc: "We don't count meetings held or reports sent. We count leads generated, customers gained, and money earned. If the numbers don't move, we change the approach." },
@@ -910,8 +915,8 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* STATS */}
-    <section style={{ padding: "60px 60px", background: C.black }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
+    <section className="section-pad" style={{ padding: "60px 60px", background: C.black }}>
+      <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
         {[
           { num: "$12M+", label: "US Ad Spend Managed" },
           { num: "200+", label: "Campaigns Launched" },
@@ -929,8 +934,8 @@ const AboutPage = ({ navigate }) => (
     </section>
 
     {/* AI APPROACH */}
-    <section style={{ padding: "80px 60px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 60 }}>
+    <section className="section-pad" style={{ padding: "80px 60px" }}>
+      <div className="flex-section" style={{ display: "flex", alignItems: "center", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>How We Work</div>
           <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.black, lineHeight: 1.15, marginBottom: 20 }}>AI Systems <span style={{ color: C.red }}>You Can Actually Understand</span></h2>
@@ -980,8 +985,8 @@ const ServicesPage = ({ navigate }) => {
         </Reveal>
       </section>
 
-      <section style={{ padding: "80px 60px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
+      <section className="section-pad" style={{ padding: "80px 60px" }}>
+        <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
               <div onClick={() => navigate(s.page)} style={{ padding: 36, background: C.white, borderRadius: 14, border: `1px solid ${C.g200}`, cursor: "pointer", height: "100%", transition: "all 0.3s", position: "relative", overflow: "hidden" }}>
@@ -998,9 +1003,9 @@ const ServicesPage = ({ navigate }) => {
       </section>
 
       {/* PROCESS */}
-      <section style={{ padding: "80px 60px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "80px 60px", background: C.g100 }}>
         <Reveal><SectionTitle pre="How We Work" main="Our Proven" accent="4-Step Process" /></Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, marginTop: 20 }}>
+        <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, marginTop: 20 }}>
           {[
             { step: "01", title: "Discovery & Audit", desc: "We deep-dive into your dealership: market, competitors, current digital presence, CRM data, and growth targets." },
             { step: "02", title: "Custom Strategy", desc: "We build a tailored marketing plan with channel mix, budget allocation, creative direction, and KPI benchmarks." },
@@ -1130,16 +1135,16 @@ const ServiceDetailPage = ({ page, navigate }) => {
       </section>
 
       {/* STATS */}
-      <section style={{ padding: "50px 60px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "50px 60px", background: C.g100 }}>
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${data.stats.length}, 1fr)`, gap: 20 }}>
           {data.stats.map((s, i) => <Reveal key={s.l} delay={i * 0.1}><StatCard number={s.n} label={s.l} /></Reveal>)}
         </div>
       </section>
 
       {/* FEATURES */}
-      <section style={{ padding: "80px 60px" }}>
+      <section className="section-pad" style={{ padding: "80px 60px" }}>
         <Reveal><SectionTitle pre="What's Included" main="Everything You Get" accent={`With ${data.title}`} /></Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
+        <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
           {data.features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.08}>
               <div style={{ padding: 32, borderRadius: 14, border: `1px solid ${C.g200}`, background: C.white, height: "100%" }}>
@@ -1155,7 +1160,7 @@ const ServiceDetailPage = ({ page, navigate }) => {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: "80px 60px", background: C.black, textAlign: "center" }}>
+      <section className="section-pad" style={{ padding: "80px 60px", background: C.black, textAlign: "center" }}>
         <Reveal>
           <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.white, marginBottom: 16 }}>Ready To Get Started?</h2>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.6)", marginBottom: 30, maxWidth: 500, margin: "0 auto 30px" }}>Schedule a free discovery call and we'll show you exactly how {data.title.toLowerCase()} can accelerate your dealership's growth.</p>
@@ -1191,17 +1196,17 @@ const ResultsPage = ({ navigate }) => {
         </Reveal>
       </section>
 
-      <section style={{ padding: "50px 60px", background: C.g100 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
+      <section className="section-pad" style={{ padding: "50px 60px", background: C.g100 }}>
+        <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
           {[{ n: "$12M+", l: "Ad Spend Managed" }, { n: "200+", l: "Campaigns Launched" }, { n: "5 Days", l: "Average Launch Time" }, { n: "100%", l: "Client Ownership" }].map((s, i) => (
             <Reveal key={s.l} delay={i * 0.1}><StatCard number={s.n} label={s.l} /></Reveal>
           ))}
         </div>
       </section>
 
-      <section style={{ padding: "80px 60px" }}>
+      <section className="section-pad" style={{ padding: "80px 60px" }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 50 }}>
+          <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Case Studies</div>
             <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>What Happened When <span style={{ color: C.red }}>We Stepped In</span></h2>
             <p style={{ marginTop: 16, fontSize: 15, color: C.g400, maxWidth: 480, margin: "16px auto 0", lineHeight: 1.6 }}>Client names protected under NDA. Full details available during your strategy call.</p>
@@ -1210,8 +1215,8 @@ const ResultsPage = ({ navigate }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
           {caseStudies.map((cs, i) => (
             <Reveal key={cs.type} delay={i * 0.1}>
-              <div style={{ display: "flex", borderRadius: 16, overflow: "hidden", background: C.white, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
-                <div style={{ width: 280, background: cs.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 30, flexShrink: 0 }}>
+              <div className="case-card" style={{ display: "flex", borderRadius: 16, overflow: "hidden", background: C.white, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
+                <div className="case-card-sidebar" style={{ width: 280, background: cs.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 30, flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>Confidential Client</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 24, fontWeight: 700, color: C.white, textAlign: "center" }}>{cs.type}</div>
                 </div>
@@ -1258,8 +1263,8 @@ const ContactPage = ({ navigate }) => (
       </Reveal>
     </section>
 
-    <section style={{ padding: "80px 60px" }}>
-      <div style={{ display: "flex", gap: 60 }}>
+    <section className="section-pad" style={{ padding: "80px 60px" }}>
+      <div className="flex-section" style={{ display: "flex", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <FormCard title="Schedule Your Free Strategy Call" />
         </Reveal>
@@ -1324,8 +1329,8 @@ const BlogPage = ({ navigate }) => (
       </Reveal>
     </section>
 
-    <section style={{ padding: "80px 60px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
+    <section className="section-pad" style={{ padding: "80px 60px" }}>
+      <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
         {blogPosts.map((post, i) => (
           <Reveal key={post.id} delay={i * 0.08}>
             <div onClick={() => navigate(PAGES.blogPost)} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.g200}`, cursor: "pointer", background: C.white, height: "100%", display: "flex", flexDirection: "column" }}>
@@ -1421,8 +1426,113 @@ export default function App() {
   };
 
   return (
-    <div style={{ fontFamily: "'Barlow', sans-serif", color: C.black, background: C.white, minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Barlow', sans-serif", color: C.black, background: C.white, minHeight: "100vh", overflowX: "hidden" }}>
       <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      <style>{`
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body, #root { width: 100%; margin: 0; padding: 0; overflow-x: hidden; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        input, select, button { font-family: inherit; }
+        
+        /* ===== RESPONSIVE SYSTEM ===== */
+        @media (max-width: 1024px) {
+          /* Hero */
+          section[data-hero] { flex-direction: column !important; padding: 50px 30px 60px !important; gap: 40px !important; min-height: auto !important; }
+          section[data-hero] h2 { font-size: 60px !important; }
+          
+          /* Two-column layouts become single column */
+          .flex-section { flex-direction: column !important; gap: 40px !important; padding: 60px 30px !important; }
+          .flex-section-reverse { flex-direction: column !important; gap: 40px !important; padding: 60px 30px !important; }
+          .flex-section > div, .flex-section-reverse > div { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; }
+          
+          /* Grids: 3-col to 2-col */
+          .grid-3 { grid-template-columns: 1fr 1fr !important; }
+          .grid-4 { grid-template-columns: 1fr 1fr !important; }
+          
+          /* Speed comparison */
+          .speed-grid { grid-template-columns: 1fr !important; }
+          .speed-vs { display: none !important; }
+          .speed-left { border-radius: 16px !important; }
+          .speed-right { border-radius: 16px !important; }
+          
+          /* General padding reduction */
+          .section-pad { padding: 60px 30px !important; }
+          
+          /* Navbar */
+          .nav-links-desktop { display: none !important; }
+          .mobile-toggle { display: flex !important; }
+          
+          /* Footer grid */
+          .footer-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+          
+          /* Portfolio grid */
+          .portfolio-grid { grid-template-columns: 1fr 1fr !important; }
+          .portfolio-span { grid-row: auto !important; }
+          
+          /* Case study cards */
+          .case-card { flex-direction: column !important; }
+          .case-card-sidebar { width: 100% !important; padding: 24px !important; }
+          
+          /* Niche showcase */
+          .niche-content { flex-direction: column !important; }
+          .niche-visual { flex: 1 1 100% !important; min-height: 250px !important; }
+          .niche-tabs { flex-wrap: wrap !important; }
+        }
+        
+        @media (max-width: 768px) {
+          /* Hero further adjustments */
+          section[data-hero] { padding: 40px 20px 50px !important; }
+          section[data-hero] h2 { font-size: 48px !important; }
+          
+          /* All grids to single column */
+          .grid-3 { grid-template-columns: 1fr !important; }
+          .grid-4 { grid-template-columns: 1fr 1fr !important; }
+          .grid-2 { grid-template-columns: 1fr !important; }
+          
+          /* Section padding */
+          .section-pad { padding: 50px 20px !important; }
+          
+          /* Section titles */
+          .section-title h2 { font-size: 36px !important; }
+          
+          /* Stats */
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          
+          /* Navbar */
+          .navbar-main { padding: 12px 20px !important; }
+          
+          /* Footer */
+          .footer-main { padding: 40px 20px 20px !important; }
+          .footer-links-grid { grid-template-columns: 1fr 1fr !important; }
+          
+          /* CTA bar */
+          .cta-bar-main { flex-direction: column !important; text-align: center !important; padding: 40px 20px !important; gap: 24px !important; }
+          
+          /* Announcement bar */
+          .announcement-bar { font-size: 12px !important; padding: 8px 16px !important; }
+          .announcement-hide-mobile { display: none !important; }
+          
+          /* Trust badges */
+          .trust-badges { flex-direction: column !important; gap: 12px !important; }
+          
+          /* Form inputs */
+          .form-row { flex-direction: column !important; }
+          
+          /* Niche tabs */
+          .niche-tabs > div { flex: 0 0 calc(25% - 6px) !important; }
+        }
+        
+        @media (max-width: 480px) {
+          section[data-hero] h2 { font-size: 40px !important; }
+          section[data-hero] { padding: 30px 16px 40px !important; }
+          .section-pad { padding: 40px 16px !important; }
+          .section-title h2 { font-size: 30px !important; }
+          .grid-4 { grid-template-columns: 1fr !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .footer-bottom { flex-direction: column !important; gap: 10px !important; text-align: center !important; }
+          .niche-tabs > div { flex: 0 0 calc(50% - 6px) !important; }
+        }
+      `}</style>
       <AnnouncementBar />
       <Navbar currentPage={page} navigate={navigate} />
       <main>{renderPage()}</main>
