@@ -1,26 +1,37 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Routes, Route, useNavigate, useParams, useLocation, Navigate } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // ============================================================
-// RED LINE MARKETING — FULL MULTI-PAGE WEBSITE
+// ALL VOLLEYBALL — FULL MULTI-PAGE WEBSITE
 // ============================================================
 
 // --- ROUTING ---
 const PAGES = {
-  home: "home",
-  about: "about",
-  services: "services",
-  servicePPC: "service-ppc",
-  serviceWeb: "service-web",
-  serviceSMS: "service-sms",
-  serviceReputation: "service-reputation",
-  serviceSEO: "service-seo",
-  serviceSocial: "service-social",
-  results: "results",
-  blog: "blog",
-  blogPost: "blog-post",
-  contact: "contact",
+  home: "/",
+  about: "/about",
+  services: "/services",
+  servicePPC: "/services/ppc",
+  serviceWeb: "/services/web-design",
+  serviceSMS: "/services/sms-email",
+  serviceReputation: "/services/reputation",
+  serviceSEO: "/services/seo",
+  serviceSocial: "/services/social-media",
+  results: "/results",
+  blog: "/blog",
+  blogPost: "/blog/post",
+  contact: "/contact",
+};
+
+// Map service URL slugs to PAGES keys for ServiceDetailPage
+const SERVICE_SLUG_MAP = {
+  "ppc": PAGES.servicePPC,
+  "web-design": PAGES.serviceWeb,
+  "sms-email": PAGES.serviceSMS,
+  "reputation": PAGES.serviceReputation,
+  "seo": PAGES.serviceSEO,
+  "social-media": PAGES.serviceSocial,
 };
 
 // --- ICONS (reusable SVGs) ---
@@ -171,7 +182,9 @@ const AnnouncementBar = () => (
 );
 
 // --- NAVBAR ---
-const Navbar = ({ currentPage, navigate }) => {
+const Navbar = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {
@@ -194,11 +207,14 @@ const Navbar = ({ currentPage, navigate }) => {
         <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, lineHeight: 1.1, letterSpacing: 1, textTransform: "uppercase" }}>All Volleyball</div>
       </div>
       <div className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 36 }}>
-        {navItems.map((item) => (
-          <span key={item.page} onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: currentPage === item.page ? C.red : C.white, fontWeight: 500, fontSize: 15, borderBottom: currentPage === item.page ? `2px solid ${C.red}` : "2px solid transparent", paddingBottom: 4, transition: "all 0.2s" }}>
-            {item.label}
-          </span>
-        ))}
+        {navItems.map((item) => {
+          const isActive = pathname === item.page || (item.page !== PAGES.home && pathname.startsWith(item.page));
+          return (
+            <span key={item.page} onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: isActive ? C.red : C.white, fontWeight: 500, fontSize: 15, borderBottom: isActive ? `2px solid ${C.red}` : "2px solid transparent", paddingBottom: 4, transition: "all 0.2s" }}>
+              {item.label}
+            </span>
+          );
+        })}
       </div>
       <div onClick={() => navigate(PAGES.contact)} className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
         <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -215,11 +231,14 @@ const Navbar = ({ currentPage, navigate }) => {
       {/* Mobile menu panel */}
       {mobileOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: C.white, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 28 }}>
-          {navItems.map((item) => (
-            <span key={item.page} onClick={() => { navigate(item.page); setMobileOpen(false); }} style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: currentPage === item.page ? C.red : C.black, cursor: "pointer", textTransform: "uppercase", letterSpacing: 2 }}>
-              {item.label}
-            </span>
-          ))}
+          {navItems.map((item) => {
+            const isActive = pathname === item.page || (item.page !== PAGES.home && pathname.startsWith(item.page));
+            return (
+              <span key={item.page} onClick={() => { navigate(item.page); setMobileOpen(false); }} style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: isActive ? C.red : C.black, cursor: "pointer", textTransform: "uppercase", letterSpacing: 2 }}>
+                {item.label}
+              </span>
+            );
+          })}
           <div onClick={() => { navigate(PAGES.contact); setMobileOpen(false); }} style={{ marginTop: 12 }}>
             <RedButton>Contact Us</RedButton>
           </div>
@@ -230,7 +249,9 @@ const Navbar = ({ currentPage, navigate }) => {
 };
 
 // --- CTA BAR ---
-const CTABar = ({ navigate }) => (
+const CTABar = () => {
+  const navigate = useNavigate();
+  return (
   <section className="cta-bar-main" style={{ background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 160px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30 }}>
     <div>
       <div style={{ fontFamily: "'Oswald', sans-serif", color: C.redLight, fontSize: 20, fontWeight: 600, marginBottom: 6 }}>Ready to See What Your Business Looks Like With the Right System?</div>
@@ -246,10 +267,13 @@ const CTABar = ({ navigate }) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 // --- FOOTER ---
-const Footer = ({ navigate }) => (
+const Footer = () => {
+  const navigate = useNavigate();
+  return (
   <footer className="footer-main" style={{ background: C.black, padding: "60px 160px 30px" }}>
     <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.blackMed}` }}>
       <div>
@@ -294,31 +318,66 @@ const Footer = ({ navigate }) => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
-// --- FORM CARD ---
-const FormCard = ({ title = "Book Your Discovery Call" }) => (
-  <div style={{ background: C.white, borderRadius: 12, padding: "36px 32px", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
-    <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>{title}</h3>
-    <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-      <input placeholder="First Name" style={inputStyle} />
-      <input placeholder="Last Name" style={inputStyle} />
+// --- FORM CARD (with save to localStorage) ---
+const FORM_STORAGE_KEY = "avb_form_data";
+
+const FormCard = ({ title = "Book Your Discovery Call", inline = false }) => {
+  const [form, setForm] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(FORM_STORAGE_KEY)) || {}; } catch { return {}; }
+  });
+  const [saved, setSaved] = useState(false);
+
+  const update = (field, value) => {
+    const next = { ...form, [field]: value };
+    setForm(next);
+    localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(next));
+  };
+
+  const handleSave = () => {
+    localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(form));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleSubmit = () => {
+    localStorage.removeItem(FORM_STORAGE_KEY);
+    setForm({});
+    setSaved(false);
+  };
+
+  const wrapper = inline ? {} : { background: C.white, borderRadius: 12, padding: "36px 32px", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" };
+
+  return (
+    <div style={wrapper}>
+      <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>{title}</h3>
+      <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+        <input placeholder="First Name" value={form.firstName || ""} onChange={(e) => update("firstName", e.target.value)} style={inputStyle} />
+        <input placeholder="Last Name" value={form.lastName || ""} onChange={(e) => update("lastName", e.target.value)} style={inputStyle} />
+      </div>
+      {[["Company Email", "email"], ["Phone Number", "phone"], ["Dealership Website URL", "website"]].map(([label, key]) => (
+        <input key={key} placeholder={label} value={form[key] || ""} onChange={(e) => update(key, e.target.value)} style={{ ...inputStyle, marginBottom: 12 }} />
+      ))}
+      <select value={form.service || ""} onChange={(e) => update("service", e.target.value)} style={{ ...inputStyle, marginBottom: 12, color: form.service ? C.black : C.g400 }}>
+        <option value="">Service/s Interested In</option>
+        <option value="PPC for Dealerships">PPC for Dealerships</option>
+        <option value="Automotive SEO">Automotive SEO</option>
+        <option value="Social Media Management">Social Media Management</option>
+        <option value="Reputation Management">Reputation Management</option>
+        <option value="Website Design">Website Design</option>
+        <option value="SMS & Email Retention">SMS & Email Retention</option>
+      </select>
+      <div style={{ display: "flex", gap: 12 }}>
+        <button onClick={handleSave} style={{ flex: 1, padding: 16, background: C.blackSoft, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", cursor: "pointer" }}>
+          {saved ? "SAVED!" : "SAVE DRAFT"}
+        </button>
+        <button onClick={handleSubmit} style={{ flex: 2, padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
+      </div>
     </div>
-    {["Company Email", "Phone Number", "Dealership Website URL"].map((p) => (
-      <input key={p} placeholder={p} style={{ ...inputStyle, marginBottom: 12 }} />
-    ))}
-    <select style={{ ...inputStyle, marginBottom: 12, color: C.g400 }}>
-      <option>Service/s Interested In</option>
-      <option>PPC for Dealerships</option>
-      <option>Automotive SEO</option>
-      <option>Social Media Management</option>
-      <option>Reputation Management</option>
-      <option>Website Design</option>
-      <option>SMS & Email Retention</option>
-    </select>
-    <button style={{ width: "100%", padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
-  </div>
-);
+  );
+};
 
 const inputStyle = {
   width: "100%", padding: "14px 16px", border: `2px solid ${C.g200}`, borderRadius: 8, fontFamily: "'Barlow', sans-serif", fontSize: 14, color: C.black, outline: "none", background: C.white,
@@ -592,7 +651,8 @@ const NicheShowcase = ({ navigate }) => {
 // ============================================================
 // PAGE: HOME
 // ============================================================
-const HomePage = ({ navigate }) => {
+const HomePage = () => {
+  const navigate = useNavigate();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
   const handleMouseMove = useCallback((e) => {
@@ -644,24 +704,7 @@ const HomePage = ({ navigate }) => {
             <div style={{ borderRadius: 12, overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.4)" }}>
               <div style={{ height: 4, background: C.red }} />
               <div style={{ background: C.white, padding: "32px 32px 36px" }}>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>Book Your Discovery Call</h3>
-                <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-                  <input placeholder="First Name" style={inputStyle} />
-                  <input placeholder="Last Name" style={inputStyle} />
-                </div>
-                {["Company Email", "Phone Number", "Dealership Website URL"].map((p) => (
-                  <input key={p} placeholder={p} style={{ ...inputStyle, marginBottom: 12 }} />
-                ))}
-                <select style={{ ...inputStyle, marginBottom: 12, color: C.g400 }}>
-                  <option>Service/s Interested In</option>
-                  <option>PPC for Dealerships</option>
-                  <option>Automotive SEO</option>
-                  <option>Social Media Management</option>
-                  <option>Reputation Management</option>
-                  <option>Website Design</option>
-                  <option>SMS and Email Retention</option>
-                </select>
-                <button style={{ width: "100%", padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
+                <FormCard inline />
               </div>
             </div>
           </Reveal>
@@ -899,7 +942,9 @@ const HomePage = ({ navigate }) => {
 // ============================================================
 // PAGE: ABOUT
 // ============================================================
-const AboutPage = ({ navigate }) => (
+const AboutPage = () => {
+  const navigate = useNavigate();
+  return (
   <>
     <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "100%", background: C.red, clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.15 }} />
@@ -1002,11 +1047,13 @@ const AboutPage = ({ navigate }) => (
       </div>
     </section>
   </>
-);
+  );
+};
 // ============================================================
 // PAGE: SERVICES
 // ============================================================
-const ServicesPage = ({ navigate }) => {
+const ServicesPage = () => {
+  const navigate = useNavigate();
   const services = [
     { title: "PPC Advertising", desc: "Precision-targeted Google Ads and Facebook campaigns that drive high-intent car shoppers directly to your VDPs and lead forms.", icon: "chart", page: PAGES.servicePPC },
     { title: "Dealer Website Design", desc: "Conversion-optimized, mobile-first websites with VDP integration, trade-in tools, financing calculators, and real-time inventory feeds.", icon: "layers", page: PAGES.serviceWeb },
@@ -1160,8 +1207,11 @@ const serviceData = {
   },
 };
 
-const ServiceDetailPage = ({ page, navigate }) => {
-  const data = serviceData[page];
+const ServiceDetailPage = () => {
+  const navigate = useNavigate();
+  const { slug } = useParams();
+  const page = SERVICE_SLUG_MAP[slug];
+  const data = page ? serviceData[page] : null;
   if (!data) return null;
   return (
     <>
@@ -1219,7 +1269,8 @@ const ServiceDetailPage = ({ page, navigate }) => {
 // ============================================================
 // PAGE: RESULTS
 // ============================================================
-const ResultsPage = ({ navigate }) => {
+const ResultsPage = () => {
+  const navigate = useNavigate();
   const caseStudies = [
     { type: "Multi-Location Auto Group", bg: C.red, situation: "Leads were dropping across six locations. Cost per lead kept climbing. Each branch ran disconnected campaigns with no shared strategy.", action: "Consolidated all ad accounts, launched AI-optimized campaigns with inventory feeds, rebuilt all six websites under one unified system.", results: ["218% more monthly leads", "42% lower cost per lead", "7-figure revenue increase in year one"] },
     { type: "Independent Pre-Owned Dealer", bg: C.black, situation: "Online rating was 3.2 stars. Quality customers avoided the business based on reviews alone.", action: "Built automated review requests after every transaction, handled professional responses to every review, and added review highlights to the website.", results: ["3.2 to 4.7 stars in 5 months", "340% more reviews", "28% increase in walk-in traffic"] },
@@ -1294,7 +1345,9 @@ const ResultsPage = ({ navigate }) => {
 // ============================================================
 // PAGE: CONTACT
 // ============================================================
-const ContactPage = ({ navigate }) => (
+const ContactPage = () => {
+  const navigate = useNavigate();
+  return (
   <>
     <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(40% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
@@ -1347,7 +1400,8 @@ const ContactPage = ({ navigate }) => (
       </div>
     </section>
   </>
-);
+  );
+};
 // ============================================================
 // PAGE: BLOG
 // ============================================================
@@ -1360,7 +1414,9 @@ const blogPosts = [
   { id: 6, title: "Local SEO for Dealerships: Ranking in the Maps Pack", category: "SEO", date: "Feb 21, 2026", excerpt: "The Google Maps 3-pack drives more dealer traffic than any other search feature. Here's exactly how to claim your spot.", readTime: "10 min" },
 ];
 
-const BlogPage = ({ navigate }) => (
+const BlogPage = () => {
+  const navigate = useNavigate();
+  return (
   <>
     <section className="section-pad" style={{ position: "relative", padding: "80px 160px", background: C.black, overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, right: 0, width: "30%", height: "100%", background: C.red, clipPath: "polygon(50% 0, 100% 0, 100% 100%, 0 100%)", opacity: 0.1 }} />
@@ -1397,12 +1453,15 @@ const BlogPage = ({ navigate }) => (
       </div>
     </section>
   </>
-);
+  );
+};
 
 // ============================================================
 // PAGE: BLOG POST (sample)
 // ============================================================
-const BlogPostPage = ({ navigate }) => (
+const BlogPostPage = () => {
+  const navigate = useNavigate();
+  return (
   <>
     <section style={{ padding: "60px 160px 0", maxWidth: 820, margin: "0 auto" }}>
       <span onClick={() => navigate(PAGES.blog)} style={{ fontSize: 14, color: C.red, cursor: "pointer", fontWeight: 600 }}>← Back to Blog</span>
@@ -1437,37 +1496,21 @@ const BlogPostPage = ({ navigate }) => (
       </div>
     </article>
   </>
-);
+  );
+};
 // ============================================================
 // MAIN APP
 // ============================================================
-export default function App() {
-  const [page, setPage] = useState(PAGES.home);
-
-  const navigate = useCallback((p) => {
-    setPage(p);
+// Scroll to top on route change
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  }, [pathname]);
+  return null;
+}
 
-  const renderPage = () => {
-    switch (page) {
-      case PAGES.home: return <HomePage navigate={navigate} />;
-      case PAGES.about: return <AboutPage navigate={navigate} />;
-      case PAGES.services: return <ServicesPage navigate={navigate} />;
-      case PAGES.servicePPC:
-      case PAGES.serviceWeb:
-      case PAGES.serviceSMS:
-      case PAGES.serviceReputation:
-      case PAGES.serviceSEO:
-      case PAGES.serviceSocial:
-        return <ServiceDetailPage page={page} navigate={navigate} />;
-      case PAGES.results: return <ResultsPage navigate={navigate} />;
-      case PAGES.blog: return <BlogPage navigate={navigate} />;
-      case PAGES.blogPost: return <BlogPostPage navigate={navigate} />;
-      case PAGES.contact: return <ContactPage navigate={navigate} />;
-      default: return <HomePage navigate={navigate} />;
-    }
-  };
+export default function App() {
 
   return (
     <div style={{ fontFamily: "'Barlow', sans-serif", color: C.black, background: C.white, minHeight: "100vh", overflowX: "hidden" }}>
@@ -1604,11 +1647,24 @@ export default function App() {
           .announcement-bar { display: none !important; }
         }
       `}</style>
+      <ScrollToTop />
       <AnnouncementBar />
-      <Navbar currentPage={page} navigate={navigate} />
-      <main>{renderPage()}</main>
-      <CTABar navigate={navigate} />
-      <Footer navigate={navigate} />
+      <Navbar />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services/:slug" element={<ServiceDetailPage />} />
+          <Route path="/results" element={<ResultsPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/post" element={<BlogPostPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      <CTABar />
+      <Footer />
       <Analytics />
       <SpeedInsights />
     </div>
