@@ -218,6 +218,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      <div className="speed-lane speed-lane-red" style={{ position: "absolute", left: 0, right: 0, bottom: 0 }} />
     </nav>
   );
 };
@@ -226,7 +227,10 @@ const Navbar = () => {
 const CTABar = () => {
   const navigate = useNavigate();
   return (
-  <section className="cta-bar-main" style={{ background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 160px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30 }}>
+  <>
+  <div className="checkered-divider" />
+  <section className="cta-bar-main" style={{ position: "relative", background: `linear-gradient(135deg, ${C.black} 60%, ${C.redDark} 100%)`, padding: "50px 160px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 30, overflow: "hidden" }}>
+    <div className="racing-track-bg" />
     <div>
       <div style={{ fontFamily: "'Oswald', sans-serif", color: C.redLight, fontSize: 20, fontWeight: 600, marginBottom: 6 }}>Ready to See What Your Business Looks Like With the Right System?</div>
       <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white }}>Free Strategy Call. 30 Minutes. A Clear Plan.</div>
@@ -240,7 +244,9 @@ const CTABar = () => {
         <div style={{ fontSize: 22, fontWeight: 700 }}>Discovery Call</div>
       </div>
     </div>
+    <div className="speed-lane" style={{ position: "absolute", left: 0, right: 0, bottom: 0 }} />
   </section>
+  </>
   );
 };
 
@@ -248,7 +254,8 @@ const CTABar = () => {
 const Footer = () => {
   const navigate = useNavigate();
   return (
-  <footer className="footer-main" style={{ background: C.black, padding: "60px 160px 30px" }}>
+  <footer className="footer-main" style={{ position: "relative", background: C.black, padding: "60px 160px 30px" }}>
+    <div className="speed-lane" style={{ position: "absolute", left: 0, right: 0, top: 0 }} />
     <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.5fr 2fr 1.2fr", gap: 60, paddingBottom: 40, borderBottom: `1px solid ${C.blackMed}` }}>
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
