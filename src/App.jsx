@@ -218,7 +218,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      <div className="speed-lane speed-lane-red" style={{ position: "absolute", left: 0, right: 0, bottom: 0 }} />
     </nav>
   );
 };
@@ -309,24 +308,15 @@ const FormCard = ({ title = "Book Your Discovery Call", inline = false }) => {
   const [form, setForm] = useState(() => {
     try { return JSON.parse(localStorage.getItem(FORM_STORAGE_KEY)) || {}; } catch { return {}; }
   });
-  const [saved, setSaved] = useState(false);
-
   const update = (field, value) => {
     const next = { ...form, [field]: value };
     setForm(next);
     localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(next));
   };
 
-  const handleSave = () => {
-    localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(form));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
-
   const handleSubmit = () => {
     localStorage.removeItem(FORM_STORAGE_KEY);
     setForm({});
-    setSaved(false);
   };
 
   const wrapper = inline ? {} : { background: C.white, borderRadius: 12, padding: "36px 32px", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" };
@@ -350,12 +340,7 @@ const FormCard = ({ title = "Book Your Discovery Call", inline = false }) => {
         <option value="Website Design">Website Design</option>
         <option value="SMS & Email Retention">SMS & Email Retention</option>
       </select>
-      <div style={{ display: "flex", gap: 12 }}>
-        <button onClick={handleSave} style={{ flex: 1, padding: 16, background: C.blackSoft, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", cursor: "pointer" }}>
-          {saved ? "SAVED!" : "SAVE DRAFT"}
-        </button>
-        <button onClick={handleSubmit} style={{ flex: 2, padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
-      </div>
+      <button onClick={handleSubmit} style={{ width: "100%", padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
     </div>
   );
 };
