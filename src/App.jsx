@@ -492,7 +492,7 @@ const nicheData = [
     desc: "Franchise dealers need a steady pipeline of qualified buyers. We build campaigns around model launches, incentive programs, and conquest strategies that pull shoppers away from competing brands and into your showroom.",
     stat: "40%",
     statLabel: "More Qualified Leads",
-    image: UNSPLASH("1494976388531-d1058494cdd8"),
+    image: UNSPLASH("1617531653332-bd46c24f2068"),
     gradient: `linear-gradient(135deg, #0A0A0A 0%, #A8131A 100%)`,
   },
   {
@@ -501,7 +501,7 @@ const nicheData = [
     desc: "Pre-owned inventory moves fast when the right buyer sees it. We target in-market shoppers by make, model, price range, and location so your lot turns faster and your margins stay healthy.",
     stat: "3.2x",
     statLabel: "Faster Lot Turn Rate",
-    image: UNSPLASH("1503376780353-7e6692767b70"),
+    image: UNSPLASH("1543465077-db45d34b88a5"),
     gradient: `linear-gradient(135deg, #1A1A1A 0%, #D41920 100%)`,
   },
   {
