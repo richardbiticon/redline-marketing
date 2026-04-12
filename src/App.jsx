@@ -259,9 +259,9 @@ const Footer = () => {
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
           <Logo size={36} />
-          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>All Volleyball</div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Red Line Marketing</div>
         </div>
-        <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g400, marginBottom: 20 }}>Your one-stop shop for everything volleyball. Gear, training, leagues, and community — built for players who live the game.</p>
+        <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g400, marginBottom: 20 }}>AI-powered marketing systems built for automotive businesses in the Philippines</p>
         <div style={{ display: "flex", gap: 12 }}>
           {["F", "IG"].map((s) => (
             <div key={s} style={{ width: 40, height: 40, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>{s}</div>
@@ -281,7 +281,7 @@ const Footer = () => {
         {[
           { icon: "phone", text: "+1 (818) 305-5441" },
           { icon: "pin", text: "Philippines" },
-          { icon: "mail", text: "Contact@allvolleyball.com" },
+          { icon: "mail", text: "Contact@redlinemarketing.ph" },
         ].map((c) => (
           <div key={c.icon} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14 }}>
             <Icon name={c.icon} size={18} color={C.red} />
@@ -291,7 +291,7 @@ const Footer = () => {
       </div>
     </div>
     <div className="footer-bottom" style={{ display: "flex", justifyContent: "space-between", paddingTop: 24, fontSize: 13, color: C.g400 }}>
-      <span>© 2026 All Volleyball. All Rights Reserved.</span>
+      <span>© 2026 Red Line Marketing. All Rights Reserved.</span>
       <div style={{ display: "flex", gap: 20 }}>
         <span style={{ cursor: "pointer" }}>Privacy Policy</span>
         <span style={{ cursor: "pointer" }}>Terms of Service</span>
