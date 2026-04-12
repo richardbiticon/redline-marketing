@@ -686,14 +686,22 @@ const HomePage = () => {
     <>
       {/* HERO */}
       <section className="carbon-fiber" data-hero="true" ref={heroRef} onMouseMove={handleMouseMove} style={{ position: "relative", overflow: "hidden" }}>
-        {/* Heat glow - visible warmth */}
-        <div style={{ position: "absolute", bottom: "-40%", left: "5%", width: 800, height: 800, background: "radial-gradient(circle, rgba(212,25,32,0.22) 0%, rgba(168,19,26,0.06) 50%, transparent 70%)", zIndex: 0 }} />
-        
-        {/* Single bold angular shape - frames the right side */}
-        <div style={{ position: "absolute", top: 0, right: 0, width: "42%", height: "100%", background: `linear-gradient(175deg, rgba(212,25,32,0.07) 0%, rgba(212,25,32,0.02) 100%)`, clipPath: "polygon(25% 0, 100% 0, 100% 100%, 0 100%)", zIndex: 1 }} />
-        
-        {/* Bottom accent line */}
-        <div style={{ position: "absolute", bottom: 0, left: 0, width: "45%", height: 4, background: `linear-gradient(90deg, ${C.red}, transparent)`, zIndex: 3 }} />
+        {/* === DASHBOARD GLOW ORBS === */}
+        {/* Primary engine glow — bottom-left, large, warm deep red */}
+        <div style={{ position: "absolute", bottom: "-30%", left: "-8%", width: 900, height: 900, background: "radial-gradient(circle, rgba(180,18,22,0.30) 0%, rgba(120,10,14,0.10) 40%, transparent 68%)", filter: "blur(40px)", zIndex: 0 }} />
+        {/* Instrument cluster glow — center-bottom, crimson wash */}
+        <div style={{ position: "absolute", bottom: "-15%", left: "35%", width: 700, height: 700, background: "radial-gradient(circle, rgba(140,12,18,0.22) 0%, rgba(90,8,12,0.06) 45%, transparent 70%)", filter: "blur(50px)", zIndex: 0 }} />
+        {/* Ambient console glow — top-right, subtle ruby */}
+        <div style={{ position: "absolute", top: "-20%", right: "-5%", width: 650, height: 650, background: "radial-gradient(circle, rgba(160,14,20,0.16) 0%, rgba(100,8,12,0.04) 50%, transparent 72%)", filter: "blur(60px)", zIndex: 0 }} />
+        {/* Gauge backlight — mid-left, tight warm accent */}
+        <div style={{ position: "absolute", top: "30%", left: "10%", width: 400, height: 400, background: "radial-gradient(circle, rgba(200,22,28,0.12) 0%, rgba(140,12,16,0.03) 50%, transparent 70%)", filter: "blur(35px)", zIndex: 0 }} />
+        {/* Distant cabin glow — top-center, very soft */}
+        <div style={{ position: "absolute", top: "-10%", left: "50%", transform: "translateX(-50%)", width: 1000, height: 500, background: "radial-gradient(ellipse, rgba(100,8,12,0.10) 0%, rgba(50,4,6,0.03) 50%, transparent 75%)", filter: "blur(70px)", zIndex: 0 }} />
+        {/* Tachometer edge — right-center, small focused */}
+        <div style={{ position: "absolute", top: "50%", right: "12%", width: 300, height: 300, background: "radial-gradient(circle, rgba(220,30,35,0.10) 0%, transparent 65%)", filter: "blur(30px)", zIndex: 0 }} />
+
+        {/* Bottom accent line — dashboard trim */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, width: "55%", height: 3, background: `linear-gradient(90deg, rgba(180,18,22,0.8) 0%, ${C.red} 30%, rgba(180,18,22,0.3) 70%, transparent 100%)`, zIndex: 3 }} />
         
         {/* Grain */}
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0.035, zIndex: 2, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
@@ -1555,17 +1563,14 @@ export default function App() {
         .dash-form select:hover { border-color: #3a3a3a; }
         .dash-submit:hover { box-shadow: 0 12px 32px rgba(212,25,32,0.55); transform: translateY(-1px); }
 
-        /* Carbon fiber texture for hero */
+        /* Dashboard glow — sports car interior at night */
         .carbon-fiber {
-          background-color: #0a0a0a;
+          background-color: #050505;
           background-image:
-            linear-gradient(135deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),
-            linear-gradient(135deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),
-            linear-gradient(45deg, rgba(0,0,0,0.5) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.5) 75%),
-            linear-gradient(45deg, rgba(0,0,0,0.5) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.5) 75%),
-            radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
-          background-size: 6px 6px, 6px 6px, 6px 6px, 6px 6px, 100% 100%;
-          background-position: 0 0, 3px 3px, 0 0, 3px 3px, 0 0;
+            radial-gradient(ellipse 90% 80% at 20% 105%, rgba(140,12,18,0.35) 0%, rgba(80,6,10,0.12) 40%, transparent 70%),
+            radial-gradient(ellipse 70% 60% at 85% 15%, rgba(120,10,15,0.18) 0%, rgba(60,4,8,0.05) 45%, transparent 75%),
+            radial-gradient(ellipse 50% 50% at 50% 50%, rgba(20,8,10,0.6) 0%, transparent 80%),
+            radial-gradient(circle at 50% 100%, rgba(180,20,25,0.08) 0%, transparent 50%);
         }
 
         /* ===== WIDE SCREEN: constrain content, backgrounds stay full-width ===== */
