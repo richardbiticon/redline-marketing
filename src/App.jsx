@@ -118,6 +118,42 @@ const Reveal = ({ children, delay = 0, style = {} }) => {
   );
 };
 
+// Count-up animated number. Parses leading digits from `value` (e.g. "$12M+", "200+", "5 Days", "100%")
+// and animates from 0 to target when scrolled into view, preserving prefix/suffix.
+const CountUp = ({ value, duration = 1800, style }) => {
+  const match = String(value).match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/);
+  const prefix = match ? match[1] : "";
+  const target = match ? parseFloat(match[2]) : 0;
+  const suffix = match ? match[3] : "";
+  const isInt = Number.isInteger(target);
+  const ref = useRef(null);
+  const [display, setDisplay] = useState(0);
+  const startedRef = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !match) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !startedRef.current) {
+        startedRef.current = true;
+        const start = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          setDisplay(target * eased);
+          if (p < 1) requestAnimationFrame(tick);
+          else setDisplay(target);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration, match]);
+  if (!match) return <span style={style}>{value}</span>;
+  const shown = isInt ? Math.floor(display) : display.toFixed(1);
+  return <span ref={ref} style={style}>{prefix}{shown}{suffix}</span>;
+};
+
 // --- LOGO COMPONENT (All Volleyball AV mark) ---
 const Logo = ({ size = 42 }) => (
   <img src="/logo.svg" width={size} height={size} alt="Logo" />
@@ -132,6 +168,10 @@ const C = {
   blackSoft: "#1A1A1A",
   blackMed: "#2A2A2A",
   white: "#FFFFFF",
+  bgDark: "#0a0a0a",
+  bgDark2: "#111111",
+  bgCard: "#111111",
+  bgCardAlt: "#1a1a1a",
   g100: "#F5F5F5",
   g200: "#E8E8E8",
   g300: "#CCCCCC",
@@ -199,12 +239,12 @@ const Navbar = () => {
       {/* Mobile hamburger */}
       <div className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} style={{ display: "none", flexDirection: "column", gap: 5, cursor: "pointer", zIndex: 1001, padding: 8 }}>
         <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.white, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
-        <span style={{ width: 26, height: 3, background: C.white, borderRadius: 2, transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }} />
+        <span style={{ width: 26, height: 3, background: C.bgCard, borderRadius: 2, transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }} />
         <span style={{ width: 26, height: 3, background: mobileOpen ? C.red : C.white, borderRadius: 2, transition: "all 0.3s", transform: mobileOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
       </div>
       {/* Mobile menu panel */}
       {mobileOpen && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: C.white, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 28 }}>
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: C.bgCard, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 28 }}>
           {navItems.map((item) => {
             const isActive = pathname === item.page || (item.page !== PAGES.home && pathname.startsWith(item.page));
             return (
@@ -285,7 +325,7 @@ const Footer = () => {
         ].map((c) => (
           <div key={c.icon} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14 }}>
             <Icon name={c.icon} size={18} color={C.red} />
-            <span style={{ fontSize: 14, color: C.g500, lineHeight: 1.5 }}>{c.text}</span>
+            <span style={{ fontSize: 14, color: C.g300, lineHeight: 1.5 }}>{c.text}</span>
           </div>
         ))}
       </div>
@@ -319,11 +359,21 @@ const FormCard = ({ title = "Book Your Discovery Call", inline = false }) => {
     setForm({});
   };
 
-  const wrapper = inline ? {} : { background: C.white, borderRadius: 12, padding: "36px 32px", boxShadow: "0 20px 60px rgba(0,0,0,0.15)" };
+  const wrapper = inline ? {} : {
+    background: "linear-gradient(180deg, #141414 0%, #0e0e0e 100%)",
+    borderRadius: 14,
+    padding: "36px 32px",
+    border: `1px solid ${C.blackMed}`,
+    boxShadow: "0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)",
+    position: "relative",
+    overflow: "hidden",
+  };
 
   return (
-    <div style={wrapper}>
-      <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 24, color: C.black }}>{title}</h3>
+    <div className="dash-form" style={wrapper}>
+      {!inline && <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, ${C.red}, transparent)` }} />}
+      <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, textAlign: "center", marginBottom: 8, color: C.white, letterSpacing: 1, textTransform: "uppercase" }}>{title}</h3>
+      <div style={{ width: 48, height: 2, background: C.red, margin: "0 auto 24px" }} />
       <div className="form-row" style={{ display: "flex", gap: 12, marginBottom: 12 }}>
         <input placeholder="First Name" value={form.firstName || ""} onChange={(e) => update("firstName", e.target.value)} style={inputStyle} />
         <input placeholder="Last Name" value={form.lastName || ""} onChange={(e) => update("lastName", e.target.value)} style={inputStyle} />
@@ -331,30 +381,36 @@ const FormCard = ({ title = "Book Your Discovery Call", inline = false }) => {
       {[["Company Email", "email"], ["Phone Number", "phone"], ["Dealership Website URL", "website"]].map(([label, key]) => (
         <input key={key} placeholder={label} value={form[key] || ""} onChange={(e) => update(key, e.target.value)} style={{ ...inputStyle, marginBottom: 12 }} />
       ))}
-      <select value={form.service || ""} onChange={(e) => update("service", e.target.value)} style={{ ...inputStyle, marginBottom: 12, color: form.service ? C.black : C.g400 }}>
-        <option value="">Service/s Interested In</option>
-        <option value="PPC for Dealerships">PPC for Dealerships</option>
-        <option value="Automotive SEO">Automotive SEO</option>
-        <option value="Social Media Management">Social Media Management</option>
-        <option value="Reputation Management">Reputation Management</option>
-        <option value="Website Design">Website Design</option>
-        <option value="SMS & Email Retention">SMS & Email Retention</option>
+      <select value={form.service || ""} onChange={(e) => update("service", e.target.value)} style={{ ...inputStyle, marginBottom: 16, color: form.service ? C.white : C.g400 }}>
+        <option value="" style={{ background: C.bgCard, color: C.g400 }}>Service/s Interested In</option>
+        {["PPC for Dealerships","Automotive SEO","Social Media Management","Reputation Management","Website Design","SMS & Email Retention"].map((o) => (
+          <option key={o} value={o} style={{ background: C.bgCard, color: C.white }}>{o}</option>
+        ))}
       </select>
-      <button onClick={handleSubmit} style={{ width: "100%", padding: 16, background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer" }}>SCHEDULE TODAY</button>
+      <button onClick={handleSubmit} className="dash-submit" style={{ width: "100%", padding: 16, background: `linear-gradient(180deg, ${C.red} 0%, ${C.redDark} 100%)`, color: C.white, border: `1px solid ${C.redLight}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", boxShadow: "0 8px 24px rgba(212,25,32,0.35)", transition: "all 0.25s" }}>SCHEDULE TODAY</button>
     </div>
   );
 };
 
 const inputStyle = {
-  width: "100%", padding: "14px 16px", border: `2px solid ${C.g200}`, borderRadius: 8, fontFamily: "'Barlow', sans-serif", fontSize: 14, color: C.black, outline: "none", background: C.white,
+  width: "100%",
+  padding: "14px 16px",
+  border: `1px solid ${C.blackMed}`,
+  borderRadius: 8,
+  fontFamily: "'Barlow', sans-serif",
+  fontSize: 14,
+  color: C.white,
+  outline: "none",
+  background: "#0a0a0a",
+  transition: "border-color 0.25s, box-shadow 0.25s",
 };
 
 // --- SECTION TITLE ---
 const SectionTitle = ({ pre, main, accent, sub, light = false }) => (
   <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
     {pre && <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>{pre}</div>}
-    <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: light ? C.white : C.black, lineHeight: 1.15 }}>{main} {accent && <span style={{ color: C.red }}>{accent}</span>}</h2>
-    {sub && <p style={{ marginTop: 16, fontSize: 17, color: light ? "rgba(255,255,255,0.7)" : C.g500, maxWidth: 640, margin: "16px auto 0", lineHeight: 1.7 }}>{sub}</p>}
+    <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>{main} {accent && <span style={{ color: C.red }}>{accent}</span>}</h2>
+    {sub && <p style={{ marginTop: 16, fontSize: 17, color: "rgba(255,255,255,0.7)", maxWidth: 640, margin: "16px auto 0", lineHeight: 1.7 }}>{sub}</p>}
   </div>
 );
 
@@ -374,8 +430,8 @@ const OutlineButton = ({ children, onClick }) => (
 // --- STAT CARD ---
 const StatCard = ({ number, label }) => (
   <div style={{ textAlign: "center", padding: "24px 16px" }}>
-    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.red, lineHeight: 1 }}>{number}</div>
-    <div style={{ fontSize: 15, color: C.g500, marginTop: 8, fontWeight: 500 }}>{label}</div>
+    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.red, lineHeight: 1 }}><CountUp value={number} /></div>
+    <div style={{ fontSize: 15, color: C.g300, marginTop: 8, fontWeight: 500 }}>{label}</div>
   </div>
 );
 
@@ -629,7 +685,7 @@ const HomePage = () => {
   return (
     <>
       {/* HERO */}
-      <section data-hero="true" ref={heroRef} onMouseMove={handleMouseMove} style={{ position: "relative", overflow: "hidden", background: "#070707" }}>
+      <section className="carbon-fiber" data-hero="true" ref={heroRef} onMouseMove={handleMouseMove} style={{ position: "relative", overflow: "hidden" }}>
         {/* Heat glow - visible warmth */}
         <div style={{ position: "absolute", bottom: "-40%", left: "5%", width: 800, height: 800, background: "radial-gradient(circle, rgba(212,25,32,0.22) 0%, rgba(168,19,26,0.06) 50%, transparent 70%)", zIndex: 0 }} />
         
@@ -669,7 +725,7 @@ const HomePage = () => {
           <Reveal delay={0.2} style={{ flex: "0 0 440px", maxWidth: 440 }}>
             <div style={{ borderRadius: 12, overflow: "hidden", boxShadow: "0 24px 80px rgba(0,0,0,0.4)" }}>
               <div style={{ height: 4, background: C.red }} />
-              <div style={{ background: C.white, padding: "32px 32px 36px" }}>
+              <div style={{ background: C.bgCard, padding: "32px 32px 36px" }}>
                 <FormCard inline />
               </div>
             </div>
@@ -678,12 +734,12 @@ const HomePage = () => {
       </section>
 
       {/* ============ WHAT MAKES AUTOMOTIVE MARKETING DIFFERENT ============ */}
-      <section className="section-pad" style={{ padding: "80px 160px", background: C.white }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.bgCard }}>
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>What Makes This Work</div>
-            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>Automotive Buyers Think <span style={{ color: C.red }}>Differently. Your Marketing Should Too.</span></h2>
-            <p style={{ marginTop: 16, fontSize: 17, color: C.g500, maxWidth: 620, margin: "16px auto 0", lineHeight: 1.7 }}>Selling a car or a service appointment is nothing like selling clothes or food. The decision is bigger, the research goes deeper, and trust matters more than anything. When you understand these dynamics, your marketing becomes a magnet instead of a megaphone.</p>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>Automotive Buyers Think <span style={{ color: C.red }}>Differently. Your Marketing Should Too.</span></h2>
+            <p style={{ marginTop: 16, fontSize: 17, color: C.g300, maxWidth: 620, margin: "16px auto 0", lineHeight: 1.7 }}>Selling a car or a service appointment is nothing like selling clothes or food. The decision is bigger, the research goes deeper, and trust matters more than anything. When you understand these dynamics, your marketing becomes a magnet instead of a megaphone.</p>
           </div>
         </Reveal>
 
@@ -707,12 +763,12 @@ const HomePage = () => {
             },
           ].map((insight, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div style={{ padding: 36, background: C.g100, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
+              <div style={{ padding: 36, background: C.bgDark, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
                 <div style={{ width: 44, height: 44, borderRadius: 10, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
                   <svg viewBox="0 0 24 24" width={20} height={20} fill={C.red} xmlns="http://www.w3.org/2000/svg"><path d={insight.icon} /></svg>
                 </div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black, marginBottom: 10, lineHeight: 1.25 }}>{insight.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.75, color: C.g500 }}>{insight.desc}</p>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 10, lineHeight: 1.25 }}>{insight.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.75, color: C.g300 }}>{insight.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -797,11 +853,11 @@ const HomePage = () => {
       </section>
 
       {/* ============ WHAT'S INCLUDED ============ */}
-      <section className="section-pad" style={{ padding: "80px 160px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.bgDark }}>
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Monthly Deliverables</div>
-            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>Everything That's Included <span style={{ color: C.red }}>When You Work With Us</span></h2>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>Everything That's Included <span style={{ color: C.red }}>When You Work With Us</span></h2>
           </div>
         </Reveal>
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
@@ -814,13 +870,13 @@ const HomePage = () => {
             { icon: "mail", title: "Automated Lead Capture + Follow-Up", desc: "Every lead from Facebook, your website, or your ads gets an instant automated reply that qualifies them and collects their info. If they go quiet, the system follows up 3 times over 7 days. All on autopilot." },
           ].map((item, i) => (
             <Reveal key={item.title} delay={i * 0.08}>
-              <div style={{ padding: 32, borderRadius: 14, background: C.white, height: "100%", position: "relative", overflow: "hidden", border: `1px solid ${C.g200}` }}>
+              <div style={{ padding: 32, borderRadius: 14, background: C.bgCard, height: "100%", position: "relative", overflow: "hidden", border: `1px solid ${C.blackMed}` }}>
                 <div style={{ position: "absolute", top: 0, left: 0, width: 4, height: "100%", background: C.red, borderRadius: "4px 0 0 4px" }} />
                 <div style={{ width: 48, height: 48, borderRadius: 10, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                   <Icon name={item.icon} size={22} color={C.red} />
                 </div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, marginBottom: 10 }}>{item.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.75, color: C.g500 }}>{item.desc}</p>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginBottom: 10 }}>{item.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.75, color: C.g300 }}>{item.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -832,7 +888,7 @@ const HomePage = () => {
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Past Campaign Results</div>
-            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>What Our Systems <span style={{ color: C.red }}>Have Delivered</span></h2>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>What Our Systems <span style={{ color: C.red }}>Have Delivered</span></h2>
             <p style={{ marginTop: 16, fontSize: 15, color: C.g400, maxWidth: 520, margin: "16px auto 0", lineHeight: 1.6 }}>Client names protected under NDA. Full campaign details and strategy breakdowns available during your strategy call.</p>
           </div>
         </Reveal>
@@ -844,7 +900,7 @@ const HomePage = () => {
             { type: "Franchise Service Center", bg: C.redDark, situation: "Single-digit repeat customer rate. Most first-time buyers never returned for service or upgrades.", action: "Built automated retention system: service interval reminders, equity-based upgrade offers, post-purchase nurture sequences, and reactivation campaigns for dormant customers.", results: ["38% service retention improvement", "Repeat buyers: 8% to 22%", "$1.8M incremental revenue"] },
           ].map((cs, i) => (
             <Reveal key={cs.type} delay={i * 0.1}>
-              <div style={{ borderRadius: 16, overflow: "hidden", background: C.white, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
+              <div style={{ borderRadius: 16, overflow: "hidden", background: C.bgCard, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
                 <div style={{ background: cs.bg, padding: "24px 32px" }}>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 2 }}>Confidential Client</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginTop: 4 }}>{cs.type}</div>
@@ -852,11 +908,11 @@ const HomePage = () => {
                 <div style={{ padding: 32 }}>
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>Situation</div>
-                    <p style={{ fontSize: 14, color: C.g500, lineHeight: 1.6 }}>{cs.situation}</p>
+                    <p style={{ fontSize: 14, color: C.g300, lineHeight: 1.6 }}>{cs.situation}</p>
                   </div>
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>What We Built</div>
-                    <p style={{ fontSize: 14, color: C.g500, lineHeight: 1.6 }}>{cs.action}</p>
+                    <p style={{ fontSize: 14, color: C.g300, lineHeight: 1.6 }}>{cs.action}</p>
                   </div>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>Results</div>
@@ -884,7 +940,7 @@ const HomePage = () => {
           ].map((s, i) => (
             <Reveal key={s.label} delay={i * 0.1}>
               <div style={{ textAlign: "center", padding: "24px 16px" }}>
-                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.red, lineHeight: 1 }}>{s.num}</div>
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.red, lineHeight: 1 }}><CountUp value={s.num} /></div>
                 <div style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", marginTop: 8, fontWeight: 500 }}>{s.label}</div>
               </div>
             </Reveal>
@@ -893,11 +949,11 @@ const HomePage = () => {
       </section>
 
       {/* ============ FINAL CTA ============ */}
-      <section className="section-pad" style={{ padding: "80px 160px", background: C.white, textAlign: "center" }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.bgCard, textAlign: "center" }}>
         <Reveal>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Let's Build Something</div>
-          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15, marginBottom: 16 }}>Your Business Deserves Marketing<br /><span style={{ color: C.red }}>That Matches How Good You Actually Are.</span></h2>
-          <p style={{ fontSize: 17, color: C.g500, maxWidth: 600, margin: "0 auto 30px", lineHeight: 1.7 }}>Book a free strategy call and we'll walk through your business together. We'll look at your Google presence, your social platforms, and your current setup. Then we'll show you exactly what a fully built system looks like for your specific business. 30 minutes. No cost. You leave with a clear picture of what's possible.</p>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 16 }}>Your Business Deserves Marketing<br /><span style={{ color: C.red }}>That Matches How Good You Actually Are.</span></h2>
+          <p style={{ fontSize: 17, color: C.g300, maxWidth: 600, margin: "0 auto 30px", lineHeight: 1.7 }}>Book a free strategy call and we'll walk through your business together. We'll look at your Google presence, your social platforms, and your current setup. Then we'll show you exactly what a fully built system looks like for your specific business. 30 minutes. No cost. You leave with a clear picture of what's possible.</p>
           <RedButton large onClick={() => navigate(PAGES.contact)}>Book Your Free Strategy Call</RedButton>
         </Reveal>
       </section>
@@ -939,16 +995,16 @@ const AboutPage = () => {
         </Reveal>
         <Reveal delay={0.15} style={{ flex: 1 }}>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>Our Story</div>
-          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.black, lineHeight: 1.15, marginBottom: 20 }}>We Took What Works <span style={{ color: C.red }}>and Rebuilt It for Here</span></h2>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g500, marginBottom: 20 }}>We managed real ad budgets for US companies. Not trial projects or small experiments. Real campaigns where the numbers had to work or the client walked. That kind of pressure teaches you what actually drives results and what's just busywork.</p>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g500, marginBottom: 20 }}>We took those exact strategies, systems, and AI workflows and built a service for automotive businesses here in the Philippines. Same level of thinking. Same performance standards. But structured for how things actually work locally.</p>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g500 }}>And we do something most marketing providers refuse to do: we give you full ownership. Every system we build is yours. Every account is in your name. You can see everything we do. If you ever decide to move on, you keep all of it.</p>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 20 }}>We Took What Works <span style={{ color: C.red }}>and Rebuilt It for Here</span></h2>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g300, marginBottom: 20 }}>We managed real ad budgets for US companies. Not trial projects or small experiments. Real campaigns where the numbers had to work or the client walked. That kind of pressure teaches you what actually drives results and what's just busywork.</p>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g300, marginBottom: 20 }}>We took those exact strategies, systems, and AI workflows and built a service for automotive businesses here in the Philippines. Same level of thinking. Same performance standards. But structured for how things actually work locally.</p>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g300 }}>And we do something most marketing providers refuse to do: we give you full ownership. Every system we build is yours. Every account is in your name. You can see everything we do. If you ever decide to move on, you keep all of it.</p>
         </Reveal>
       </div>
     </section>
 
     {/* VALUES */}
-    <section className="section-pad" style={{ padding: "80px 160px", background: C.g100 }}>
+    <section className="section-pad" style={{ padding: "80px 160px", background: C.bgDark }}>
       <Reveal><SectionTitle pre="How We Think" main="The Principles" accent="Behind Everything We Do" /></Reveal>
       <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
         {[
@@ -957,12 +1013,12 @@ const AboutPage = () => {
           { icon: "car", title: "Automotive Only", desc: "We don't spread thin across different industries. Automotive is our entire focus. Every system, every template, every workflow is built for how your customers actually buy." },
         ].map((v, i) => (
           <Reveal key={v.title} delay={i * 0.12}>
-            <div style={{ padding: 36, background: C.white, borderRadius: 14, border: `1px solid ${C.g200}`, height: "100%" }}>
+            <div style={{ padding: 36, background: C.bgCard, borderRadius: 14, border: `1px solid ${C.blackMed}`, height: "100%" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(212,25,32,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
                 <Icon name={v.icon} size={26} color={C.red} />
               </div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 24, fontWeight: 700, color: C.black, marginBottom: 12 }}>{v.title}</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.7, color: C.g500 }}>{v.desc}</p>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 24, fontWeight: 700, color: C.white, marginBottom: 12 }}>{v.title}</h3>
+              <p style={{ fontSize: 15, lineHeight: 1.7, color: C.g300 }}>{v.desc}</p>
             </div>
           </Reveal>
         ))}
@@ -980,7 +1036,7 @@ const AboutPage = () => {
         ].map((s, i) => (
           <Reveal key={s.label} delay={i * 0.1}>
             <div style={{ textAlign: "center", padding: "24px 16px" }}>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.red, lineHeight: 1 }}>{s.num}</div>
+              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.red, lineHeight: 1 }}><CountUp value={s.num} /></div>
               <div style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", marginTop: 8, fontWeight: 500 }}>{s.label}</div>
             </div>
           </Reveal>
@@ -993,10 +1049,10 @@ const AboutPage = () => {
       <div className="flex-section" style={{ display: "flex", alignItems: "center", gap: 60 }}>
         <Reveal style={{ flex: 1 }}>
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>How We Work</div>
-          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.black, lineHeight: 1.15, marginBottom: 20 }}>AI Systems <span style={{ color: C.red }}>You Can Actually Understand</span></h2>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g500, marginBottom: 20 }}>A lot of people throw around the word "AI" to sound impressive. Most of the time it just means they copy-paste your request into some tool and charge extra for it. That's not us.</p>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g500, marginBottom: 20 }}>We build real AI-powered workflows that handle your campaign optimization, lead scoring, creative testing, and performance tracking. These systems run around the clock and get better over time.</p>
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g500, marginBottom: 30 }}>The important part: you can see everything. Every automation, every trigger, every decision. Nothing is hidden. And if you ever want to run things yourself, it's all set up in a way you can take over.</p>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 42, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 20 }}>AI Systems <span style={{ color: C.red }}>You Can Actually Understand</span></h2>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g300, marginBottom: 20 }}>A lot of people throw around the word "AI" to sound impressive. Most of the time it just means they copy-paste your request into some tool and charge extra for it. That's not us.</p>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g300, marginBottom: 20 }}>We build real AI-powered workflows that handle your campaign optimization, lead scoring, creative testing, and performance tracking. These systems run around the clock and get better over time.</p>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: C.g300, marginBottom: 30 }}>The important part: you can see everything. Every automation, every trigger, every decision. Nothing is hidden. And if you ever want to run things yourself, it's all set up in a way you can take over.</p>
           <RedButton onClick={() => navigate(PAGES.contact)}>See It In Action</RedButton>
         </Reveal>
         <Reveal delay={0.15} style={{ flex: 1 }}>
@@ -1046,12 +1102,12 @@ const ServicesPage = () => {
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
-              <div onClick={() => navigate(s.page)} style={{ padding: 36, background: C.white, borderRadius: 14, border: `1px solid ${C.g200}`, cursor: "pointer", height: "100%", transition: "all 0.3s", position: "relative", overflow: "hidden" }}>
+              <div onClick={() => navigate(s.page)} style={{ padding: 36, background: C.bgCard, borderRadius: 14, border: `1px solid ${C.blackMed}`, cursor: "pointer", height: "100%", transition: "all 0.3s", position: "relative", overflow: "hidden" }}>
                 <div style={{ width: 56, height: 56, borderRadius: 12, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
                   <Icon name={s.icon} size={24} color={C.red} />
                 </div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.black, marginBottom: 14 }}>{s.title}</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.7, color: C.g500, marginBottom: 20 }}>{s.desc}</p>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, marginBottom: 14 }}>{s.title}</h3>
+                <p style={{ fontSize: 15, lineHeight: 1.7, color: C.g300, marginBottom: 20 }}>{s.desc}</p>
                 <span style={{ color: C.red, fontWeight: 600, fontSize: 15 }}>Learn More →</span>
               </div>
             </Reveal>
@@ -1060,7 +1116,7 @@ const ServicesPage = () => {
       </section>
 
       {/* PROCESS */}
-      <section className="section-pad" style={{ padding: "80px 160px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "80px 160px", background: C.bgDark }}>
         <Reveal><SectionTitle pre="How We Work" main="Our Proven" accent="4-Step Process" /></Reveal>
         <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, marginTop: 20 }}>
           {[
@@ -1070,10 +1126,10 @@ const ServicesPage = () => {
             { step: "04", title: "Report & Scale", desc: "Monthly reporting with transparent ROI tracking. We double down on what's working and scale your results." },
           ].map((s, i) => (
             <Reveal key={s.step} delay={i * 0.1}>
-              <div style={{ padding: 32, background: C.white, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
+              <div style={{ padding: 32, background: C.bgCard, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
                 <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.red, opacity: 0.2, lineHeight: 1 }}>{s.step}</div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, marginTop: 12, marginBottom: 12 }}>{s.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g500 }}>{s.desc}</p>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginTop: 12, marginBottom: 12 }}>{s.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g300 }}>{s.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -1195,7 +1251,7 @@ const ServiceDetailPage = () => {
       </section>
 
       {/* STATS */}
-      <section className="section-pad" style={{ padding: "50px 160px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "50px 160px", background: C.bgDark }}>
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${data.stats.length}, 1fr)`, gap: 20 }}>
           {data.stats.map((s, i) => <Reveal key={s.l} delay={i * 0.1}><StatCard number={s.n} label={s.l} /></Reveal>)}
         </div>
@@ -1207,12 +1263,12 @@ const ServiceDetailPage = () => {
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
           {data.features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.08}>
-              <div style={{ padding: 32, borderRadius: 14, border: `1px solid ${C.g200}`, background: C.white, height: "100%" }}>
+              <div style={{ padding: 32, borderRadius: 14, border: `1px solid ${C.blackMed}`, background: C.bgCard, height: "100%" }}>
                 <div style={{ width: 40, height: 40, borderRadius: 8, background: C.red, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                   <Icon name="check" size={18} color={C.white} />
                 </div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.black, marginBottom: 10 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g500 }}>{f.desc}</p>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 10 }}>{f.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g300 }}>{f.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -1257,7 +1313,7 @@ const ResultsPage = () => {
         </Reveal>
       </section>
 
-      <section className="section-pad" style={{ padding: "50px 160px", background: C.g100 }}>
+      <section className="section-pad" style={{ padding: "50px 160px", background: C.bgDark }}>
         <div className="grid-4 stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
           {[{ n: "$12M+", l: "Ad Spend Managed" }, { n: "200+", l: "Campaigns Launched" }, { n: "5 Days", l: "Average Launch Time" }, { n: "100%", l: "Client Ownership" }].map((s, i) => (
             <Reveal key={s.l} delay={i * 0.1}><StatCard number={s.n} label={s.l} /></Reveal>
@@ -1269,14 +1325,14 @@ const ResultsPage = () => {
         <Reveal>
           <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
             <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Case Studies</div>
-            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15 }}>What Happened When <span style={{ color: C.red }}>We Stepped In</span></h2>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>What Happened When <span style={{ color: C.red }}>We Stepped In</span></h2>
             <p style={{ marginTop: 16, fontSize: 15, color: C.g400, maxWidth: 480, margin: "16px auto 0", lineHeight: 1.6 }}>Client names protected under NDA. Full details available during your strategy call.</p>
           </div>
         </Reveal>
         <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
           {caseStudies.map((cs, i) => (
             <Reveal key={cs.type} delay={i * 0.1}>
-              <div className="case-card" style={{ display: "flex", borderRadius: 16, overflow: "hidden", background: C.white, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
+              <div className="case-card" style={{ display: "flex", borderRadius: 16, overflow: "hidden", background: C.bgCard, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
                 <div className="case-card-sidebar" style={{ width: 280, background: cs.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 30, flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>Confidential Client</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 24, fontWeight: 700, color: C.white, textAlign: "center" }}>{cs.type}</div>
@@ -1284,11 +1340,11 @@ const ResultsPage = () => {
                 <div style={{ padding: 36, flex: 1 }}>
                   <div style={{ marginBottom: 16 }}>
                     <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 2 }}>Situation</span>
-                    <p style={{ fontSize: 15, color: C.g500, marginTop: 6, lineHeight: 1.6 }}>{cs.situation}</p>
+                    <p style={{ fontSize: 15, color: C.g300, marginTop: 6, lineHeight: 1.6 }}>{cs.situation}</p>
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 2 }}>What We Did</span>
-                    <p style={{ fontSize: 15, color: C.g500, marginTop: 6, lineHeight: 1.6 }}>{cs.action}</p>
+                    <p style={{ fontSize: 15, color: C.g300, marginTop: 6, lineHeight: 1.6 }}>{cs.action}</p>
                   </div>
                   <div>
                     <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 2 }}>Results</span>
@@ -1332,7 +1388,7 @@ const ContactPage = () => {
           <FormCard title="Schedule Your Free Strategy Call" />
         </Reveal>
         <Reveal delay={0.15} style={{ flex: 1 }}>
-          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.black, marginBottom: 30 }}>Here's What <span style={{ color: C.red }}>You're Getting Into</span></h2>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white, marginBottom: 30 }}>Here's What <span style={{ color: C.red }}>You're Getting Into</span></h2>
           {[
             "A free, honest audit of your current marketing setup",
             "Full ownership of every account and system we build for you",
@@ -1345,12 +1401,12 @@ const ContactPage = () => {
               <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
                 <Icon name="check" size={16} color={C.white} />
               </div>
-              <span style={{ fontSize: 16, color: C.g500, lineHeight: 1.6 }}>{item}</span>
+              <span style={{ fontSize: 16, color: C.g300, lineHeight: 1.6 }}>{item}</span>
             </div>
           ))}
 
-          <div style={{ marginTop: 40, padding: 28, background: C.g100, borderRadius: 12 }}>
-            <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, marginBottom: 16 }}>Contact Information</h3>
+          <div style={{ marginTop: 40, padding: 28, background: C.bgDark, borderRadius: 12 }}>
+            <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginBottom: 16 }}>Contact Information</h3>
             {[
               { icon: "phone", text: "+1 (818) 305-5441" },
               { icon: "mail", text: "Contact@allvolleyball.com" },
@@ -1358,7 +1414,7 @@ const ContactPage = () => {
             ].map((c) => (
               <div key={c.icon} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
                 <Icon name={c.icon} size={20} color={C.red} />
-                <span style={{ fontSize: 15, color: C.g500 }}>{c.text}</span>
+                <span style={{ fontSize: 15, color: C.g300 }}>{c.text}</span>
               </div>
             ))}
           </div>
@@ -1399,7 +1455,7 @@ const BlogPage = () => {
       <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
         {blogPosts.map((post, i) => (
           <Reveal key={post.id} delay={i * 0.08}>
-            <div onClick={() => navigate(PAGES.blogPost)} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.g200}`, cursor: "pointer", background: C.white, height: "100%", display: "flex", flexDirection: "column" }}>
+            <div onClick={() => navigate(PAGES.blogPost)} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.blackMed}`, cursor: "pointer", background: C.bgCard, height: "100%", display: "flex", flexDirection: "column" }}>
               <div style={{ height: 180, background: i % 2 === 0 ? `linear-gradient(135deg, ${C.black} 0%, ${C.redDark} 100%)` : `linear-gradient(135deg, ${C.red} 0%, ${C.redDark} 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Oswald', sans-serif", color: "rgba(255,255,255,0.15)", fontSize: 48 }}>{post.category}</span>
               </div>
@@ -1409,8 +1465,8 @@ const BlogPage = () => {
                   <span style={{ color: C.g400 }}>{post.date}</span>
                   <span style={{ color: C.g400 }}>{post.readTime} read</span>
                 </div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.black, marginBottom: 12, lineHeight: 1.3 }}>{post.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g500, flex: 1 }}>{post.excerpt}</p>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginBottom: 12, lineHeight: 1.3 }}>{post.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g300, flex: 1 }}>{post.excerpt}</p>
                 <span style={{ color: C.red, fontWeight: 600, fontSize: 14, marginTop: 16 }}>Read Article →</span>
               </div>
             </div>
@@ -1433,7 +1489,7 @@ const BlogPostPage = () => {
       <span onClick={() => navigate(PAGES.blog)} style={{ fontSize: 14, color: C.red, cursor: "pointer", fontWeight: 600 }}>← Back to Blog</span>
       <div style={{ marginTop: 20 }}>
         <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, color: C.red, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2 }}>PPC</span>
-        <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.black, lineHeight: 1.15, marginTop: 8, marginBottom: 16 }}>7 PPC Mistakes That Are Costing Your Dealership Thousands</h1>
+        <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15, marginTop: 8, marginBottom: 16 }}>7 PPC Mistakes That Are Costing Your Dealership Thousands</h1>
         <div style={{ display: "flex", gap: 16, fontSize: 14, color: C.g400, marginBottom: 30 }}>
           <span>Mar 28, 2026</span><span>·</span><span>6 min read</span><span>·</span><span>By All Volleyball</span>
         </div>
@@ -1451,8 +1507,8 @@ const BlogPostPage = () => {
         { heading: "5. Running the Same Ads Year-Round", body: "Seasonality matters enormously in automotive. Your messaging, offers, and budget allocation should shift based on model-year changeovers, holiday sales events, tax refund season, and local market conditions. Static campaigns leave performance on the table." },
       ].map((s) => (
         <div key={s.heading} style={{ marginBottom: 36 }}>
-          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: C.black, marginBottom: 14 }}>{s.heading}</h2>
-          <p style={{ fontSize: 16, lineHeight: 1.85, color: C.g500 }}>{s.body}</p>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: C.white, marginBottom: 14 }}>{s.heading}</h2>
+          <p style={{ fontSize: 16, lineHeight: 1.85, color: C.g300 }}>{s.body}</p>
         </div>
       ))}
       <div style={{ marginTop: 40, padding: 36, background: C.black, borderRadius: 14, textAlign: "center" }}>
@@ -1479,7 +1535,7 @@ function ScrollToTop() {
 export default function App() {
 
   return (
-    <div style={{ fontFamily: "'Barlow', sans-serif", color: C.black, background: C.white, minHeight: "100vh", overflowX: "clip" }}>
+    <div style={{ fontFamily: "'Barlow', sans-serif", color: C.white, background: C.bgDark, minHeight: "100vh", overflowX: "clip" }}>
       <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <style>{`
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1487,7 +1543,31 @@ export default function App() {
         body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         input, select, button { font-family: inherit; }
         img { max-width: 100%; }
-        
+
+        /* Dashboard-style form inputs */
+        .dash-form input::placeholder { color: #666; }
+        .dash-form input:focus,
+        .dash-form select:focus {
+          border-color: ${C.red} !important;
+          box-shadow: 0 0 0 3px rgba(212,25,32,0.18), 0 0 18px rgba(212,25,32,0.35) !important;
+        }
+        .dash-form input:hover,
+        .dash-form select:hover { border-color: #3a3a3a; }
+        .dash-submit:hover { box-shadow: 0 12px 32px rgba(212,25,32,0.55); transform: translateY(-1px); }
+
+        /* Carbon fiber texture for hero */
+        .carbon-fiber {
+          background-color: #0a0a0a;
+          background-image:
+            linear-gradient(135deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),
+            linear-gradient(135deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),
+            linear-gradient(45deg, rgba(0,0,0,0.5) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.5) 75%),
+            linear-gradient(45deg, rgba(0,0,0,0.5) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.5) 75%),
+            radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
+          background-size: 6px 6px, 6px 6px, 6px 6px, 6px 6px, 100% 100%;
+          background-position: 0 0, 3px 3px, 0 0, 3px 3px, 0 0;
+        }
+
         /* ===== WIDE SCREEN: constrain content, backgrounds stay full-width ===== */
         @media (min-width: 1640px) {
           .section-pad,
