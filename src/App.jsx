@@ -492,7 +492,7 @@ const nicheData = [
     desc: "Franchise dealers need a steady pipeline of qualified buyers. We build campaigns around model launches, incentive programs, and conquest strategies that pull shoppers away from competing brands and into your showroom.",
     stat: "40%",
     statLabel: "More Qualified Leads",
-    image: UNSPLASH("1562519819-016930ada31c"),
+    image: UNSPLASH("1494976388531-d1058494cdd8"),
     gradient: `linear-gradient(135deg, #0A0A0A 0%, #A8131A 100%)`,
   },
   {
@@ -528,7 +528,7 @@ const nicheData = [
     desc: "Selling to businesses means longer sales cycles and bigger deals. We generate qualified fleet inquiries from logistics companies, contractors, and municipal buyers through targeted B2B campaigns.",
     stat: "$2.4M",
     statLabel: "Avg Fleet Deal Pipeline",
-    image: UNSPLASH("1586768035292-84283b7ad163"),
+    image: UNSPLASH("1541899481282-d53bffe3c35d"),
     gradient: `linear-gradient(135deg, #1A1A1A 0%, #A8131A 100%)`,
   },
   {
@@ -555,7 +555,7 @@ const nicheData = [
     desc: "Seasonal demand swings make smart marketing critical. We run hyper-local campaigns timed to weather patterns, mileage milestones, and seasonal tire changeovers to keep your bays full year-round.",
     stat: "94%",
     statLabel: "Bay Utilization Rate",
-    image: UNSPLASH("1632823471565-1ecdf5c6da77"),
+    image: UNSPLASH("1619642751034-765dfdf7c58e"),
     gradient: `linear-gradient(135deg, #1A1A1A 0%, #FF2D35 100%)`,
   },
 ];
@@ -575,15 +575,7 @@ const NicheShowcase = ({ navigate }) => {
     }, 300);
   }, []);
 
-  useEffect(() => {
-    if (paused) return;
-    timerRef.current = setInterval(() => {
-      goTo((prev) => prev);
-    }, 4500);
-    return () => clearInterval(timerRef.current);
-  }, [paused, goTo]);
-
-  // Manual auto-advance using active state
+  // Single auto-advance timer
   useEffect(() => {
     if (paused) return;
     const interval = setInterval(() => {
@@ -599,10 +591,6 @@ const NicheShowcase = ({ navigate }) => {
   const handleSelect = (i) => {
     setPaused(true);
     goTo(i);
-    setTimeout(() => {
-      setActive(i);
-      setTransitioning(false);
-    }, 300);
     // Resume auto-rotation after 8 seconds of inactivity
     setTimeout(() => setPaused(false), 8000);
   };
