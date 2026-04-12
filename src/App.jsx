@@ -1479,17 +1479,14 @@ function ScrollToTop() {
 export default function App() {
 
   return (
-    <div style={{ fontFamily: "'Barlow', sans-serif", color: C.black, background: C.white, minHeight: "100vh", overflowX: "hidden" }}>
+    <div style={{ fontFamily: "'Barlow', sans-serif", color: C.black, background: C.white, minHeight: "100vh", overflowX: "clip" }}>
       <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <style>{`
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body, #root { width: 100%; margin: 0; padding: 0; overflow-x: hidden; }
+        html, body, #root { width: 100%; margin: 0; padding: 0; overflow-x: clip; }
         body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         input, select, button { font-family: inherit; }
         img { max-width: 100%; }
-        
-        /* Ensure navbar stays sticky */
-        .navbar-main { position: sticky !important; top: 0 !important; z-index: 1000 !important; }
         
         /* ===== WIDE SCREEN: constrain content, backgrounds stay full-width ===== */
         @media (min-width: 1640px) {
