@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Routes, Route, useNavigate, useParams, useLocation, Navigate } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { motion, useInView } from "framer-motion";
 
 // ============================================================
 // ALL VOLLEYBALL — FULL MULTI-PAGE WEBSITE
@@ -96,6 +97,34 @@ const Icon = ({ name, size = 24, color = "currentColor", style = {} }) => (
 );
 
 // --- SCROLL ANIMATION HOOK ---
+// --- FRAMER MOTION SCROLL REVEAL ---
+const revealVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1], delay },
+  }),
+};
+
+const Reveal = ({ children, delay = 0, style = {} }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
+  return (
+    <motion.div
+      ref={ref}
+      variants={revealVariants}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      custom={delay}
+      style={style}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// Kept for CountUp's internal IntersectionObserver usage
 function useScrollReveal() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -108,15 +137,6 @@ function useScrollReveal() {
   }, []);
   return [ref, visible];
 }
-
-const Reveal = ({ children, delay = 0, style = {} }) => {
-  const [ref, visible] = useScrollReveal();
-  return (
-    <div ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(36px)", transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`, ...style }}>
-      {children}
-    </div>
-  );
-};
 
 // Count-up animated number. Parses leading digits from `value` (e.g. "$12M+", "200+", "5 Days", "100%")
 // and animates from 0 to target when scrolled into view, preserving prefix/suffix.
@@ -414,17 +434,42 @@ const SectionTitle = ({ pre, main, accent, sub, light = false }) => (
   </div>
 );
 
+// --- HOVER CARD WRAPPER (lift on hover) ---
+const HoverCard = ({ children, style = {}, onClick, className }) => (
+  <motion.div
+    className={className}
+    onClick={onClick}
+    whileHover={{ y: -6, boxShadow: "0 16px 48px rgba(0,0,0,0.25)" }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    style={{ ...style }}
+  >
+    {children}
+  </motion.div>
+);
+
 // --- RED BUTTON ---
 const RedButton = ({ children, onClick, large = false }) => (
-  <button onClick={onClick} style={{ padding: large ? "18px 40px" : "14px 28px", background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: large ? 18 : 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase", display: "inline-flex", alignItems: "center", gap: 8 }}>
+  <motion.button
+    onClick={onClick}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.97 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    style={{ padding: large ? "18px 40px" : "14px 28px", background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: large ? 18 : 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase", display: "inline-flex", alignItems: "center", gap: 8 }}
+  >
     {children}
-  </button>
+  </motion.button>
 );
 
 const OutlineButton = ({ children, onClick }) => (
-  <button onClick={onClick} style={{ padding: "14px 28px", background: "transparent", color: C.red, border: `2px solid ${C.red}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase" }}>
+  <motion.button
+    onClick={onClick}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.97 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    style={{ padding: "14px 28px", background: "transparent", color: C.red, border: `2px solid ${C.red}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase" }}
+  >
     {children}
-  </button>
+  </motion.button>
 );
 
 // --- STAT CARD ---
@@ -878,14 +923,14 @@ const HomePage = () => {
             { icon: "mail", title: "Automated Lead Capture + Follow-Up", desc: "Every lead from Facebook, your website, or your ads gets an instant automated reply that qualifies them and collects their info. If they go quiet, the system follows up 3 times over 7 days. All on autopilot." },
           ].map((item, i) => (
             <Reveal key={item.title} delay={i * 0.08}>
-              <div style={{ padding: 32, borderRadius: 14, background: C.bgCard, height: "100%", position: "relative", overflow: "hidden", border: `1px solid ${C.blackMed}` }}>
+              <HoverCard style={{ padding: 32, borderRadius: 14, background: C.bgCard, height: "100%", position: "relative", overflow: "hidden", border: `1px solid ${C.blackMed}` }}>
                 <div style={{ position: "absolute", top: 0, left: 0, width: 4, height: "100%", background: C.red, borderRadius: "4px 0 0 4px" }} />
                 <div style={{ width: 48, height: 48, borderRadius: 10, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                   <Icon name={item.icon} size={22} color={C.red} />
                 </div>
                 <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginBottom: 10 }}>{item.title}</h3>
                 <p style={{ fontSize: 14, lineHeight: 1.75, color: C.g300 }}>{item.desc}</p>
-              </div>
+              </HoverCard>
             </Reveal>
           ))}
         </div>
@@ -908,7 +953,7 @@ const HomePage = () => {
             { type: "Franchise Service Center", bg: C.redDark, situation: "Single-digit repeat customer rate. Most first-time buyers never returned for service or upgrades.", action: "Built automated retention system: service interval reminders, equity-based upgrade offers, post-purchase nurture sequences, and reactivation campaigns for dormant customers.", results: ["38% service retention improvement", "Repeat buyers: 8% to 22%", "$1.8M incremental revenue"] },
           ].map((cs, i) => (
             <Reveal key={cs.type} delay={i * 0.1}>
-              <div style={{ borderRadius: 16, overflow: "hidden", background: C.bgCard, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
+              <HoverCard style={{ borderRadius: 16, overflow: "hidden", background: C.bgCard, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
                 <div style={{ background: cs.bg, padding: "24px 32px" }}>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 2 }}>Confidential Client</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginTop: 4 }}>{cs.type}</div>
@@ -931,7 +976,7 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </HoverCard>
             </Reveal>
           ))}
         </div>
@@ -1021,13 +1066,13 @@ const AboutPage = () => {
           { icon: "car", title: "Automotive Only", desc: "We don't spread thin across different industries. Automotive is our entire focus. Every system, every template, every workflow is built for how your customers actually buy." },
         ].map((v, i) => (
           <Reveal key={v.title} delay={i * 0.12}>
-            <div style={{ padding: 36, background: C.bgCard, borderRadius: 14, border: `1px solid ${C.blackMed}`, height: "100%" }}>
+            <HoverCard style={{ padding: 36, background: C.bgCard, borderRadius: 14, border: `1px solid ${C.blackMed}`, height: "100%" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(212,25,32,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
                 <Icon name={v.icon} size={26} color={C.red} />
               </div>
               <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 24, fontWeight: 700, color: C.white, marginBottom: 12 }}>{v.title}</h3>
               <p style={{ fontSize: 15, lineHeight: 1.7, color: C.g300 }}>{v.desc}</p>
-            </div>
+            </HoverCard>
           </Reveal>
         ))}
       </div>
@@ -1110,14 +1155,14 @@ const ServicesPage = () => {
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
-              <div onClick={() => navigate(s.page)} style={{ padding: 36, background: C.bgCard, borderRadius: 14, border: `1px solid ${C.blackMed}`, cursor: "pointer", height: "100%", transition: "all 0.3s", position: "relative", overflow: "hidden" }}>
+              <HoverCard onClick={() => navigate(s.page)} style={{ padding: 36, background: C.bgCard, borderRadius: 14, border: `1px solid ${C.blackMed}`, cursor: "pointer", height: "100%", position: "relative", overflow: "hidden" }}>
                 <div style={{ width: 56, height: 56, borderRadius: 12, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
                   <Icon name={s.icon} size={24} color={C.red} />
                 </div>
                 <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, marginBottom: 14 }}>{s.title}</h3>
                 <p style={{ fontSize: 15, lineHeight: 1.7, color: C.g300, marginBottom: 20 }}>{s.desc}</p>
                 <span style={{ color: C.red, fontWeight: 600, fontSize: 15 }}>Learn More →</span>
-              </div>
+              </HoverCard>
             </Reveal>
           ))}
         </div>
@@ -1134,11 +1179,11 @@ const ServicesPage = () => {
             { step: "04", title: "Report & Scale", desc: "Monthly reporting with transparent ROI tracking. We double down on what's working and scale your results." },
           ].map((s, i) => (
             <Reveal key={s.step} delay={i * 0.1}>
-              <div style={{ padding: 32, background: C.bgCard, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
+              <HoverCard style={{ padding: 32, background: C.bgCard, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
                 <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.red, opacity: 0.2, lineHeight: 1 }}>{s.step}</div>
                 <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginTop: 12, marginBottom: 12 }}>{s.title}</h3>
                 <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g300 }}>{s.desc}</p>
-              </div>
+              </HoverCard>
             </Reveal>
           ))}
         </div>
@@ -1271,13 +1316,13 @@ const ServiceDetailPage = () => {
         <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30, marginTop: 20 }}>
           {data.features.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.08}>
-              <div style={{ padding: 32, borderRadius: 14, border: `1px solid ${C.blackMed}`, background: C.bgCard, height: "100%" }}>
+              <HoverCard style={{ padding: 32, borderRadius: 14, border: `1px solid ${C.blackMed}`, background: C.bgCard, height: "100%" }}>
                 <div style={{ width: 40, height: 40, borderRadius: 8, background: C.red, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                   <Icon name="check" size={18} color={C.white} />
                 </div>
                 <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 10 }}>{f.title}</h3>
                 <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g300 }}>{f.desc}</p>
-              </div>
+              </HoverCard>
             </Reveal>
           ))}
         </div>
@@ -1340,7 +1385,7 @@ const ResultsPage = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
           {caseStudies.map((cs, i) => (
             <Reveal key={cs.type} delay={i * 0.1}>
-              <div className="case-card" style={{ display: "flex", borderRadius: 16, overflow: "hidden", background: C.bgCard, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
+              <HoverCard className="case-card" style={{ display: "flex", borderRadius: 16, overflow: "hidden", background: C.bgCard, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}>
                 <div className="case-card-sidebar" style={{ width: 280, background: cs.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 30, flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>Confidential Client</div>
                   <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 24, fontWeight: 700, color: C.white, textAlign: "center" }}>{cs.type}</div>
@@ -1363,7 +1408,7 @@ const ResultsPage = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </HoverCard>
             </Reveal>
           ))}
         </div>
@@ -1463,7 +1508,7 @@ const BlogPage = () => {
       <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 30 }}>
         {blogPosts.map((post, i) => (
           <Reveal key={post.id} delay={i * 0.08}>
-            <div onClick={() => navigate(PAGES.blogPost)} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.blackMed}`, cursor: "pointer", background: C.bgCard, height: "100%", display: "flex", flexDirection: "column" }}>
+            <HoverCard onClick={() => navigate(PAGES.blogPost)} style={{ borderRadius: 14, overflow: "hidden", border: `1px solid ${C.blackMed}`, cursor: "pointer", background: C.bgCard, height: "100%", display: "flex", flexDirection: "column" }}>
               <div style={{ height: 180, background: i % 2 === 0 ? `linear-gradient(135deg, ${C.black} 0%, ${C.redDark} 100%)` : `linear-gradient(135deg, ${C.red} 0%, ${C.redDark} 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Oswald', sans-serif", color: "rgba(255,255,255,0.15)", fontSize: 48 }}>{post.category}</span>
               </div>
@@ -1477,7 +1522,7 @@ const BlogPage = () => {
                 <p style={{ fontSize: 14, lineHeight: 1.7, color: C.g300, flex: 1 }}>{post.excerpt}</p>
                 <span style={{ color: C.red, fontWeight: 600, fontSize: 14, marginTop: 16 }}>Read Article →</span>
               </div>
-            </div>
+            </HoverCard>
           </Reveal>
         ))}
       </div>
@@ -1561,7 +1606,7 @@ export default function App() {
         }
         .dash-form input:hover,
         .dash-form select:hover { border-color: #3a3a3a; }
-        .dash-submit:hover { box-shadow: 0 12px 32px rgba(212,25,32,0.55); transform: translateY(-1px); }
+        .dash-submit:hover { box-shadow: 0 12px 32px rgba(212,25,32,0.55); transform: scale(1.04); transition: all 0.3s ease; }
 
         /* Dashboard glow — sports car interior at night */
         .carbon-fiber {
