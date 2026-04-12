@@ -177,8 +177,8 @@ const Navbar = () => {
   return (
     <nav className="navbar-main" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 160px", background: C.black, position: "sticky", top: 0, zIndex: 1000, borderBottom: `1px solid ${C.blackMed}`, boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.3)" : "none", transition: "box-shadow 0.3s" }}>
       <div onClick={() => navigate(PAGES.home)} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
-        <Logo />
-        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, lineHeight: 1.1, letterSpacing: 1, textTransform: "uppercase" }}>All Volleyball</div>
+        <Logo size={72} />
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, lineHeight: 1.1, letterSpacing: 1, textTransform: "uppercase" }}>Red Line Marketing</div>
       </div>
       <div className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 36 }}>
         {navItems.map((item) => {
