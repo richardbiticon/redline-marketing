@@ -438,6 +438,8 @@ const StatCard = ({ number, label }) => (
 // ============================================================
 // NICHE SHOWCASE — Auto-Rotating Automotive Sub-Industries
 // ============================================================
+const UNSPLASH = (id) => `https://images.unsplash.com/photo-${id}?w=1200&auto=format&fit=crop&q=80`;
+
 const nicheData = [
   {
     tag: "FRANCHISE DEALERS",
@@ -445,8 +447,8 @@ const nicheData = [
     desc: "Franchise dealers need a steady pipeline of qualified buyers. We build campaigns around model launches, incentive programs, and conquest strategies that pull shoppers away from competing brands and into your showroom.",
     stat: "40%",
     statLabel: "More Qualified Leads",
+    image: UNSPLASH("1562519819-016930ada31c"),
     gradient: `linear-gradient(135deg, #0A0A0A 0%, #A8131A 100%)`,
-    iconPath: "M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z",
   },
   {
     tag: "PRE-OWNED",
@@ -454,8 +456,8 @@ const nicheData = [
     desc: "Pre-owned inventory moves fast when the right buyer sees it. We target in-market shoppers by make, model, price range, and location so your lot turns faster and your margins stay healthy.",
     stat: "3.2x",
     statLabel: "Faster Lot Turn Rate",
+    image: UNSPLASH("1503376780353-7e6692767b70"),
     gradient: `linear-gradient(135deg, #1A1A1A 0%, #D41920 100%)`,
-    iconPath: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z",
   },
   {
     tag: "COLLISION",
@@ -463,8 +465,8 @@ const nicheData = [
     desc: "Insurance work keeps the lights on, but direct-to-consumer repairs build your brand. We drive local visibility and trust so you become the first call after every fender bender.",
     stat: "85%",
     statLabel: "Local Search Dominance",
+    image: UNSPLASH("1625047509248-ec889cbff17f"),
     gradient: `linear-gradient(135deg, #2A2A2A 0%, #A8131A 100%)`,
-    iconPath: "M22 18v-2H8V4h2L7 1 4 4h2v2H2v2h4v8c0 1.1.9 2 2 2h8l4 4h2v-2h-2zM10 8h6v6h2V8c0-1.1-.9-2-2-2h-6v2z",
   },
   {
     tag: "PARTS & ACCESSORIES",
@@ -472,8 +474,8 @@ const nicheData = [
     desc: "Whether you sell online or in-store, we put your parts catalog in front of DIY mechanics, enthusiasts, and fleet buyers actively searching for what you stock.",
     stat: "280%",
     statLabel: "E-Commerce Revenue Growth",
+    image: UNSPLASH("1486262715619-67b85e0b08d3"),
     gradient: `linear-gradient(135deg, #0A0A0A 0%, #FF2D35 100%)`,
-    iconPath: "M19.8 18.4L14 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81H9.04c-.42 0-.65.48-.39.81L10 6.5v4.17L4.2 18.4c-.49.66-.02 1.6.8 1.6h14c.82 0 1.29-.94.8-1.6z",
   },
   {
     tag: "FLEET SALES",
@@ -481,8 +483,8 @@ const nicheData = [
     desc: "Selling to businesses means longer sales cycles and bigger deals. We generate qualified fleet inquiries from logistics companies, contractors, and municipal buyers through targeted B2B campaigns.",
     stat: "$2.4M",
     statLabel: "Avg Fleet Deal Pipeline",
+    image: UNSPLASH("1586768035292-84283b7ad163"),
     gradient: `linear-gradient(135deg, #1A1A1A 0%, #A8131A 100%)`,
-    iconPath: "M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z",
   },
   {
     tag: "POWERSPORTS",
@@ -490,8 +492,8 @@ const nicheData = [
     desc: "Riders are passionate and brand-loyal. We tap into enthusiast communities with content-driven campaigns that build your reputation and fill your showroom with serious buyers.",
     stat: "5x",
     statLabel: "Social Engagement Rate",
+    image: UNSPLASH("1558981806-ec527fa84c39"),
     gradient: `linear-gradient(135deg, #2A2A2A 0%, #D41920 100%)`,
-    iconPath: "M19 7c0-1.1-.9-2-2-2h-3c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2V7h-1zM6 20.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm12 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z",
   },
   {
     tag: "DETAILING",
@@ -499,8 +501,8 @@ const nicheData = [
     desc: "Recurring revenue is the name of the game. We build local dominance with review generation, Google Maps optimization, and membership-focused campaigns that keep customers coming back monthly.",
     stat: "62%",
     statLabel: "Membership Conversion Rate",
+    image: UNSPLASH("1607860108855-64acf2078ed9"),
     gradient: `linear-gradient(135deg, #0A0A0A 0%, #A8131A 100%)`,
-    iconPath: "M17 1l.59 1.41L19 3l-1.41.59L17 5l-.59-1.41L15 3l1.41-.59L17 1zm-7 4l1.17 2.83L14 9l-2.83 1.17L10 13l-1.17-2.83L6 9l2.83-1.17L10 5zm7 4l.59 1.41L19 11l-1.41.59L17 13l-.59-1.41L15 11l1.41-.59L17 9zM3 21h18v2H3v-2z",
   },
   {
     tag: "SERVICE CENTERS",
@@ -508,8 +510,8 @@ const nicheData = [
     desc: "Seasonal demand swings make smart marketing critical. We run hyper-local campaigns timed to weather patterns, mileage milestones, and seasonal tire changeovers to keep your bays full year-round.",
     stat: "94%",
     statLabel: "Bay Utilization Rate",
+    image: UNSPLASH("1632823471565-1ecdf5c6da77"),
     gradient: `linear-gradient(135deg, #1A1A1A 0%, #FF2D35 100%)`,
-    iconPath: "M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33 0 1.38 1.12 2.5 2.5 2.5.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77zM12 10H6V5h6v5z",
   },
 ];
 
@@ -517,6 +519,7 @@ const NicheShowcase = ({ navigate }) => {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
+  const [imgErrors, setImgErrors] = useState({});
   const timerRef = useRef(null);
 
   const goTo = useCallback((index) => {
@@ -585,29 +588,26 @@ const NicheShowcase = ({ navigate }) => {
           flex: "0 0 420px",
           borderRadius: 16,
           background: niche.gradient,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 50,
           position: "relative",
           overflow: "hidden",
+          minHeight: 360,
           opacity: transitioning ? 0 : 1,
           transform: transitioning ? "scale(0.96)" : "scale(1)",
           transition: "opacity 0.3s ease, transform 0.3s ease",
         }}>
-          {/* Large icon */}
-          <svg viewBox="0 0 24 24" width={90} height={90} fill="rgba(255,255,255,0.12)" xmlns="http://www.w3.org/2000/svg">
-            <path d={niche.iconPath} />
-          </svg>
-          {/* Stat */}
-          <div style={{ marginTop: 30, textAlign: "center" }}>
-            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 56, fontWeight: 700, color: C.white, lineHeight: 1 }}>{niche.stat}</div>
-            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginTop: 6, fontWeight: 500, letterSpacing: 0.5 }}>{niche.statLabel}</div>
+          {niche.image && !imgErrors[active] && (
+            <img
+              src={niche.image}
+              alt={niche.title}
+              onError={() => setImgErrors((e) => ({ ...e, [active]: true }))}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          )}
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(180,0,0,0.85) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)" }} />
+          <div style={{ position: "absolute", left: 0, right: 0, bottom: "8%", textAlign: "center", padding: "0 24px" }}>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 800, color: "#ffffff", lineHeight: 1, textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>{niche.stat}</div>
+            <div style={{ fontSize: "clamp(0.75rem, 1.2vw, 1rem)", fontWeight: 400, color: "rgba(255,255,255,0.85)", marginTop: 8, letterSpacing: 0.5 }}>{niche.statLabel}</div>
           </div>
-          {/* Corner decoration */}
-          <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, border: "2px solid rgba(255,255,255,0.06)", borderRadius: "50%" }} />
-          <div style={{ position: "absolute", bottom: -40, left: -40, width: 160, height: 160, border: "2px solid rgba(255,255,255,0.04)", borderRadius: "50%" }} />
         </div>
 
         {/* Right: Copy */}
