@@ -1614,8 +1614,10 @@ export default function App() {
         }
       `}</style>
       <ScrollToTop />
-      <AnnouncementBar />
-      <Navbar />
+      <div style={{ position: "sticky", top: 0, zIndex: 1000 }}>
+        <AnnouncementBar />
+        <Navbar />
+      </div>
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
