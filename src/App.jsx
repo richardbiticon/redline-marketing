@@ -120,33 +120,7 @@ const Reveal = ({ children, delay = 0, style = {} }) => {
 
 // --- LOGO COMPONENT (All Volleyball AV mark) ---
 const Logo = ({ size = 42 }) => (
-  <svg viewBox="0 0 140 105" width={size * 1.33} height={size} xmlns="http://www.w3.org/2000/svg">
-    {/* Volleyball net - crosshatch pattern behind letters */}
-    <g stroke="#555" strokeWidth="1.4" fill="none" opacity="0.55">
-      <line x1="0" y1="90" x2="32" y2="8"/>
-      <line x1="13" y1="95" x2="45" y2="8"/>
-      <line x1="26" y1="95" x2="58" y2="8"/>
-      <line x1="39" y1="95" x2="71" y2="8"/>
-      <line x1="52" y1="95" x2="84" y2="8"/>
-      <line x1="0" y1="8" x2="32" y2="90"/>
-      <line x1="13" y1="8" x2="45" y2="95"/>
-      <line x1="26" y1="8" x2="58" y2="95"/>
-      <line x1="39" y1="8" x2="71" y2="95"/>
-      <line x1="52" y1="8" x2="84" y2="95"/>
-    </g>
-    {/* Letter A - bold, no crossbar */}
-    <path d="M42,4 L6,98 L22,98 L42,36 L58,98 L74,98 Z"
-          fill="#C41E3A" stroke="#4A0D15" strokeWidth="3" strokeLinejoin="round"/>
-    {/* Letter V - bold, overlapping */}
-    <path d="M54,4 L78,98 L94,98 L124,4 L108,4 L86,76 L70,4 Z"
-          fill="#C41E3A" stroke="#4A0D15" strokeWidth="3" strokeLinejoin="round"/>
-    {/* Volleyball */}
-    <circle cx="105" cy="32" r="18" fill="#FFFFFF" stroke="#333" strokeWidth="2"/>
-    <path d="M105,14 Q94,32 105,50" fill="none" stroke="#444" strokeWidth="1.4"/>
-    <path d="M105,14 Q116,32 105,50" fill="none" stroke="#444" strokeWidth="1.4"/>
-    <path d="M87,32 Q105,23 123,32" fill="none" stroke="#444" strokeWidth="1.4"/>
-    <path d="M87,32 Q105,41 123,32" fill="none" stroke="#444" strokeWidth="1.4"/>
-  </svg>
+  <img src="/logo.svg" width={size} height={size} alt="Logo" />
 );
 
 // --- STYLES ---
