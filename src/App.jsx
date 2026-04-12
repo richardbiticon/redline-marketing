@@ -184,7 +184,7 @@ const Navbar = () => {
         {navItems.map((item) => {
           const isActive = pathname === item.page || (item.page !== PAGES.home && pathname.startsWith(item.page));
           return (
-            <span key={item.page} onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: isActive ? C.red : C.white, fontWeight: 500, fontSize: 15, borderBottom: isActive ? `2px solid ${C.red}` : "2px solid transparent", paddingBottom: 4, transition: "all 0.2s" }}>
+            <span key={item.page} className="nav-item" onClick={() => navigate(item.page)} style={{ cursor: "pointer", color: isActive ? C.red : C.white, fontWeight: 500, fontSize: 15, paddingBottom: 4 }}>
               {item.label}
             </span>
           );
