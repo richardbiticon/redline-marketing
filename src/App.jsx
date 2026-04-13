@@ -1009,55 +1009,52 @@ const HomePage = () => {
       </section>
 
       {/* ============ WHAT MAKES AUTOMOTIVE MARKETING DIFFERENT ============ */}
-      <section className="section-pad" style={{ padding: "80px 160px", background: C.bgCard }}>
+      <section className="section-pad" style={{ padding: "100px 160px", background: C.bgCard, position: "relative", overflow: "hidden" }}>
+        {/* Subtle background accent */}
+        <div style={{ position: "absolute", top: "10%", right: "-5%", width: 500, height: 500, background: "radial-gradient(circle, rgba(212,25,32,0.04) 0%, transparent 65%)", pointerEvents: "none" }} />
+
+        {/* Pullquote — formerly the bottom note, now elevated as the section opener */}
         <Reveal>
-          <div className="section-title" style={{ textAlign: "center", marginBottom: 50 }}>
-            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>What Makes This Work</div>
-            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>Automotive Buyers Think <span style={{ color: C.red }}>Differently. Your Marketing Should Too.</span></h2>
-            <p style={{ marginTop: 16, fontSize: 17, color: C.g300, maxWidth: 620, margin: "16px auto 0", lineHeight: 1.7 }}>Selling a car or a service appointment is nothing like selling clothes or food. The decision is bigger, the research goes deeper, and trust matters more than anything. When you understand these dynamics, your marketing becomes a magnet instead of a megaphone.</p>
+          <div style={{ maxWidth: 820, margin: "0 auto 70px", textAlign: "center", position: "relative" }}>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 20 }}>What Makes This Work</div>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 28 }}>Automotive Buyers Think <span style={{ color: C.red }}>Differently.</span><br />Your Marketing Should Too.</h2>
+            <div style={{ width: 60, height: 3, background: C.red, margin: "0 auto 28px", borderRadius: 2 }} />
+            <p style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.55)", fontStyle: "italic", maxWidth: 680, margin: "0 auto" }}>You can do the basics yourself, but when money is on the line, you want a specialist. Marketing that drives consistent revenue needs its own system, its own tools, and people who do this every single day. That's what we are for your marketing.</p>
           </div>
         </Reveal>
 
-        {/* Insight cards */}
-        <div className="grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+        {/* Vertical numbered points */}
+        <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexDirection: "column", gap: 0 }}>
           {[
             {
-              icon: "M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z",
-              title: "We Map the Full Buyer Journey and Build Your Presence at Every Step",
-              desc: "Customers check Google, read reviews, browse social media, and compare options before they ever call. Most businesses only show up at one or two of those touchpoints. We make sure you're visible at all of them — so by the time they're ready to buy, you already feel familiar.",
+              num: "01",
+              headline: "We Own Every Touchpoint in the Buyer Journey",
+              desc: "Your customers check Google, read reviews, scroll social media, and compare options long before they call. We make sure you show up at every single one of those moments — so when they're ready, you're already familiar.",
             },
             {
-              icon: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z",
-              title: "We Turn Attention Into Appointments With a System That Converts 24/7",
-              desc: "Traffic alone doesn't pay the bills. We build the full conversion system: dedicated landing pages, instant lead response, and automated follow-up sequences. You wake up to booked appointments instead of unread messages.",
+              num: "02",
+              headline: "We Turn Attention Into Booked Appointments",
+              desc: "Traffic means nothing without conversion. We build the full system — dedicated landing pages, instant lead response, and automated follow-up sequences that work while you sleep.",
             },
             {
-              icon: "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z",
-              title: "We Build the Kind of Trust Online That You've Already Built In Person",
-              desc: "People who know you trust you. The challenge is making strangers feel that same confidence online. We build that bridge with review systems, social proof, and a polished brand presence that matches what you actually deliver.",
+              num: "03",
+              headline: "We Build Trust at Scale",
+              desc: "People who know you already trust you. The challenge is making strangers feel that same confidence online. We close that gap with review systems, social proof, and a brand presence that matches what you actually deliver.",
             },
-          ].map((insight, i) => (
-            <Reveal key={i} delay={i * 0.1}>
-              <div style={{ padding: 36, background: C.bgDark, borderRadius: 14, borderTop: `4px solid ${C.red}`, height: "100%" }}>
-                <div style={{ width: 44, height: 44, borderRadius: 10, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                  <svg viewBox="0 0 24 24" width={20} height={20} fill={C.red} xmlns="http://www.w3.org/2000/svg"><path d={insight.icon} /></svg>
+          ].map((point, i) => (
+            <Reveal key={i} delay={i * 0.12}>
+              <div style={{ display: "flex", gap: 36, padding: "44px 0", borderBottom: i < 2 ? `1px solid rgba(255,255,255,0.06)` : "none", alignItems: "flex-start" }}>
+                {/* Large number */}
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 72, fontWeight: 700, color: "rgba(212,25,32,0.15)", lineHeight: 1, flexShrink: 0, width: 90, textAlign: "right", paddingTop: 2 }}>{point.num}</div>
+                {/* Content with red left border */}
+                <div style={{ borderLeft: `3px solid ${C.red}`, paddingLeft: 28, flex: 1 }}>
+                  <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: C.white, lineHeight: 1.2, marginBottom: 12 }}>{point.headline}</h3>
+                  <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,0.5)", maxWidth: 560 }}>{point.desc}</p>
                 </div>
-                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 10, lineHeight: 1.25 }}>{insight.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.75, color: C.g300 }}>{insight.desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
-
-        {/* Small relatable note */}
-        <Reveal delay={0.2}>
-          <div style={{ marginTop: 40, padding: "28px 36px", background: C.black, borderRadius: 12, display: "flex", alignItems: "center", gap: 20 }}>
-            <div style={{ width: 48, height: 48, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <Icon name="users" size={22} color={C.white} />
-            </div>
-            <p style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.7)" }}>A lot of business owners have their assistant or a general VA handling marketing on the side. That's a smart way to start. But marketing that actually drives consistent revenue needs its own dedicated system, its own tools, and people who do this every single day. Think of it the same way you'd think about accounting or legal. You can do the basics yourself, but when money is on the line, you want a specialist. That's what we are for your marketing.</p>
-          </div>
-        </Reveal>
       </section>
 
       {/* NICHE SHOWCASE */}
