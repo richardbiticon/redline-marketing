@@ -481,6 +481,240 @@ const StatCard = ({ number, label }) => (
 );
 
 // ============================================================
+// TOOL STACK — Marketing Tools We Deploy
+// ============================================================
+const FAVICON = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+const toolCategories = [
+  { id: "advertising", label: "Paid Ads", color: "#4285F4" },
+  { id: "seo", label: "SEO", color: "#47C96B" },
+  { id: "crm", label: "CRM & Sales", color: "#FF7A59" },
+  { id: "email", label: "Email & SMS", color: "#FFE01B" },
+  { id: "social", label: "Social Media", color: "#E1306C" },
+  { id: "analytics", label: "Analytics", color: "#F9AB00" },
+  { id: "automation", label: "Automation", color: "#FF6D00" },
+  { id: "content", label: "Content & AI", color: "#CC9B7A" },
+  { id: "web", label: "Web & Design", color: "#0ACF83" },
+  { id: "reputation", label: "Reviews", color: "#00B67A" },
+];
+
+const marketingTools = [
+  // ADVERTISING (10)
+  { name: "Google Ads", domain: "ads.google.com", cat: "advertising", desc: "We run search, display, Performance Max, and vehicle listing ads across Google's network. For dealerships, we build campaigns around high-intent keywords like 'buy SUV near me' and tie every click to a trackable conversion. Bid strategies adjust hourly based on real performance data." },
+  { name: "Meta Ads", domain: "facebook.com", cat: "advertising", desc: "Facebook and Instagram ads targeting in-market car buyers by location, income, vehicle ownership, and browsing behavior. We run dynamic inventory ads that show your actual stock to shoppers within your market radius. Retargeting brings back visitors who browsed but didn't inquire." },
+  { name: "TikTok Ads", domain: "tiktok.com", cat: "advertising", desc: "Short-form video ads that showcase walkarounds, customer deliveries, and behind-the-scenes content. TikTok's algorithm reaches younger buyers actively researching their first or next vehicle. We create scroll-stopping creative that drives showroom visits and test drive bookings." },
+  { name: "Microsoft Ads", domain: "ads.microsoft.com", cat: "advertising", desc: "Bing captures 30% of desktop search traffic — often from older, higher-income demographics that buy premium vehicles. We mirror your best Google campaigns here at lower CPCs. Many dealerships overlook this channel, which means less competition and cheaper leads for you." },
+  { name: "YouTube Ads", domain: "youtube.com", cat: "advertising", desc: "Pre-roll and in-feed video ads on YouTube put your inventory and brand story in front of buyers researching models, watching reviews, and comparing options. We target by vehicle interest, competitor channels, and local geography to drive qualified showroom traffic." },
+  { name: "LinkedIn Ads", domain: "linkedin.com", cat: "advertising", desc: "B2B targeting for fleet sales, commercial vehicle deals, and corporate partnerships. LinkedIn lets us reach decision-makers at logistics companies, construction firms, and municipal buyers actively looking to expand or replace their vehicle fleet." },
+  { name: "Twitter / X Ads", domain: "x.com", cat: "advertising", desc: "Promoted posts targeting automotive enthusiasts, car culture communities, and local audiences. We use X for event promotions, model launch announcements, and real-time engagement campaigns that build brand personality and drive conversation around your dealership." },
+  { name: "Waze Ads", domain: "waze.com", cat: "advertising", desc: "Location-based ads that appear when drivers are near your dealership or service center. Waze pins and promoted search put your business on the map — literally — catching people already on the road and ready to stop in." },
+  { name: "Taboola", domain: "taboola.com", cat: "advertising", desc: "Native content ads on premium publisher sites that drive top-of-funnel awareness. We use Taboola to distribute educational content like buying guides and comparison articles that position your dealership as a trusted resource before the shopper ever searches for you." },
+  { name: "AdRoll", domain: "adroll.com", cat: "advertising", desc: "Cross-platform retargeting that follows your website visitors across the web and social media. When someone browses your inventory but leaves, AdRoll keeps your dealership top-of-mind until they're ready to come back and inquire." },
+
+  // SEO (7)
+  { name: "SEMrush", domain: "semrush.com", cat: "seo", desc: "Our primary research platform for keyword strategy, competitor analysis, and site auditing. We use SEMrush to identify which search terms your competitors rank for, find content gaps in your market, and track your rankings across hundreds of automotive keywords weekly." },
+  { name: "Ahrefs", domain: "ahrefs.com", cat: "seo", desc: "Deep backlink analysis and content gap research. Ahrefs shows us exactly where your competitors earn links and authority, so we can build a link-building strategy that elevates your domain authority and pushes you above rival dealerships in organic search." },
+  { name: "Screaming Frog", domain: "screamingfrog.co.uk", cat: "seo", desc: "Technical site crawler that audits every page of your website for broken links, duplicate content, missing meta tags, slow-loading pages, and crawlability issues. We run this monthly to ensure Google can properly index your inventory and service pages." },
+  { name: "Google Search Console", domain: "search.google.com", cat: "seo", desc: "Direct data from Google on how your site performs in search: impressions, clicks, average position, and indexing status. We monitor this daily to catch ranking drops early, submit new inventory pages for fast indexing, and optimize underperforming content." },
+  { name: "Moz", domain: "moz.com", cat: "seo", desc: "Local SEO authority tracking and citation management. Moz helps us ensure your dealership's name, address, and phone number are consistent across every directory, which is critical for ranking in Google's local 3-pack for searches like 'car dealer near me.'" },
+  { name: "Surfer SEO", domain: "surferseo.com", cat: "seo", desc: "AI-powered content optimization that analyzes top-ranking pages and tells us exactly what your content needs — word count, headings, keyword density, and structure. Every blog post and landing page we write is Surfer-optimized before it goes live." },
+  { name: "BrightLocal", domain: "brightlocal.com", cat: "seo", desc: "Local search rank tracking across multiple locations and citation auditing. For multi-location dealerships, BrightLocal monitors how each branch performs in local search and identifies directory listings that need updating or creating." },
+
+  // CRM & SALES (6)
+  { name: "HubSpot", domain: "hubspot.com", cat: "crm", desc: "Full-stack CRM with marketing automation, email sequences, deal pipelines, and reporting. We set up HubSpot to capture every lead from your website, ads, and social media into one system with automated follow-up sequences that nurture prospects through to showroom visits." },
+  { name: "Salesforce", domain: "salesforce.com", cat: "crm", desc: "Enterprise-grade CRM for large dealer groups managing thousands of leads across multiple locations. We integrate Salesforce with your ad platforms and website so every inquiry is tracked, scored, and routed to the right salesperson with full attribution data." },
+  { name: "Zoho CRM", domain: "zoho.com", cat: "crm", desc: "Cost-effective CRM suite for independent dealers who need lead management, email automation, and pipeline tracking without enterprise pricing. We configure Zoho with custom deal stages that match your sales process — from inquiry to test drive to delivered." },
+  { name: "Pipedrive", domain: "pipedrive.com", cat: "crm", desc: "Visual sales pipeline built for simplicity. Pipedrive shows your team exactly where every deal stands, what follow-ups are overdue, and which leads are going cold. We set it up with automations that move deals forward and alert reps when it's time to act." },
+  { name: "DealerSocket", domain: "dealersocket.com", cat: "crm", desc: "Automotive-specific CRM designed for dealership workflows including desking, F&I, and service retention. We integrate DealerSocket with your digital campaigns so online leads flow directly into your existing sales process without double entry." },
+  { name: "Freshsales", domain: "freshworks.com", cat: "crm", desc: "AI-powered lead scoring and deal management that helps your sales team focus on the hottest prospects. We configure Freshsales with automotive-specific scoring rules — so a lead who viewed 5 inventory pages and requested a quote gets priority over a casual browser." },
+
+  // EMAIL & SMS (6)
+  { name: "Mailchimp", domain: "mailchimp.com", cat: "email", desc: "Email marketing for dealership newsletters, service reminders, and promotional campaigns. We build automated sequences for post-purchase follow-ups, seasonal service promotions, and inventory alerts that keep your customer base engaged and driving repeat business." },
+  { name: "ActiveCampaign", domain: "activecampaign.com", cat: "email", desc: "Advanced email automation with behavioral triggers. When a prospect views a specific vehicle on your site, ActiveCampaign can send a personalized follow-up with that exact model's details, financing options, and a link to book a test drive — all automatically." },
+  { name: "Klaviyo", domain: "klaviyo.com", cat: "email", desc: "E-commerce-focused email and SMS platform ideal for parts and accessories dealers. Klaviyo tracks purchase behavior to send targeted upsell campaigns, abandoned cart reminders, and product recommendations based on what customers have bought or browsed." },
+  { name: "Twilio", domain: "twilio.com", cat: "email", desc: "Programmable SMS and voice platform for instant lead response. When a new inquiry comes in, Twilio sends an automated text within 60 seconds confirming receipt and asking qualifying questions — dramatically increasing your contact rate before the lead goes cold." },
+  { name: "SendGrid", domain: "sendgrid.com", cat: "email", desc: "Transactional email delivery for appointment confirmations, service updates, and order notifications. SendGrid ensures your operational emails land in inboxes — not spam folders — with delivery rates above 99% and full engagement tracking." },
+  { name: "Brevo", domain: "brevo.com", cat: "email", desc: "All-in-one email, SMS, and WhatsApp marketing platform. For Philippine dealerships where WhatsApp and Viber are primary communication channels, Brevo lets us automate multi-channel follow-ups that reach customers on whatever platform they prefer." },
+
+  // SOCIAL MEDIA (5)
+  { name: "Hootsuite", domain: "hootsuite.com", cat: "social", desc: "Social media management across Facebook, Instagram, Twitter, and LinkedIn from one dashboard. We schedule inventory showcases, customer delivery photos, and behind-the-scenes content across all your profiles with consistent posting cadence and engagement monitoring." },
+  { name: "Sprout Social", domain: "sproutsocial.com", cat: "social", desc: "Enterprise social management with deep analytics, social listening, and team collaboration. Sprout Social helps us track what customers say about your dealership online, respond to reviews and messages promptly, and measure which content drives actual showroom traffic." },
+  { name: "Buffer", domain: "buffer.com", cat: "social", desc: "Streamlined scheduling and analytics for lean marketing teams. We use Buffer to maintain a consistent posting schedule across your social profiles — keeping your dealership visible and active without overwhelming your staff with content production demands." },
+  { name: "Later", domain: "later.com", cat: "social", desc: "Visual-first social scheduling designed for Instagram and TikTok. Later's visual planner lets us craft a cohesive feed aesthetic for your dealership — planning vehicle showcases, team spotlights, and customer stories into a grid that looks professional and intentional." },
+  { name: "Canva", domain: "canva.com", cat: "social", desc: "Design platform for creating branded social media graphics, service flyers, event banners, and ad creatives. We build brand templates in Canva that your team can use to create on-brand content quickly — vehicle arrival announcements, seasonal sale graphics, and promotional posts." },
+
+  // ANALYTICS (5)
+  { name: "Google Analytics", domain: "analytics.google.com", cat: "analytics", desc: "Website traffic and conversion tracking that shows exactly how visitors find you, what pages they view, and where they drop off. We set up custom automotive dashboards tracking VDP views, lead form submissions, phone calls, and chat initiations with full source attribution." },
+  { name: "Google Tag Manager", domain: "tagmanager.google.com", cat: "analytics", desc: "Tag deployment and event tracking without touching your website code. GTM lets us add conversion pixels, track button clicks, monitor scroll depth on inventory pages, and fire remarketing tags — all managed from one interface with version control." },
+  { name: "Hotjar", domain: "hotjar.com", cat: "analytics", desc: "Heatmaps, session recordings, and user feedback tools that reveal how real visitors interact with your website. We use Hotjar to identify friction points — like confusing navigation, ignored CTAs, or form fields that cause abandonment — and fix them for higher conversion rates." },
+  { name: "Looker Studio", domain: "lookerstudio.google.com", cat: "analytics", desc: "Custom reporting dashboards that pull data from Google Ads, Analytics, Search Console, and your CRM into one live view. Your monthly performance report — cost per lead, ROAS, conversion trends, and campaign comparisons — is always one click away." },
+  { name: "CallRail", domain: "callrail.com", cat: "analytics", desc: "Phone call tracking and recording that ties every call back to the ad, keyword, or landing page that generated it. For dealerships where phone calls are a primary conversion, CallRail closes the attribution gap and proves which campaigns actually drive phone inquiries." },
+
+  // AUTOMATION (5)
+  { name: "Zapier", domain: "zapier.com", cat: "automation", desc: "No-code automation connecting your marketing tools together. When a Facebook lead ad fires, Zapier instantly pushes that lead into your CRM, sends a text via Twilio, notifies your sales team on Slack, and adds them to an email nurture sequence — all without human intervention." },
+  { name: "Make", domain: "make.com", cat: "automation", desc: "Visual workflow automation with more complex logic than Zapier. We build multi-step automations that route leads based on vehicle interest, schedule follow-ups based on engagement, and sync inventory data between your website, ads, and CRM in real time." },
+  { name: "n8n", domain: "n8n.io", cat: "automation", desc: "Self-hosted workflow automation for dealerships that need full data control. n8n runs on your infrastructure, keeping customer data private while automating lead routing, inventory syncs, review requests, and appointment scheduling across your entire tech stack." },
+  { name: "Calendly", domain: "calendly.com", cat: "automation", desc: "Automated appointment scheduling that eliminates back-and-forth. We embed Calendly on your landing pages and in follow-up emails so prospects can book test drives, service appointments, or strategy calls directly — synced to your team's availability in real time." },
+  { name: "Intercom", domain: "intercom.com", cat: "automation", desc: "AI-powered chatbot and live chat for your dealership website. Intercom greets visitors, answers common questions about inventory and financing, captures lead information, and routes qualified prospects to your sales team — operating 24/7 even when your showroom is closed." },
+
+  // CONTENT & AI (5)
+  { name: "ChatGPT", domain: "chat.openai.com", cat: "content", desc: "AI content generation for ad copy, vehicle descriptions, blog posts, and email sequences. We use GPT to draft high-volume content at scale — like unique descriptions for every vehicle in your inventory — then refine it with automotive expertise and brand voice." },
+  { name: "Claude", domain: "claude.ai", cat: "content", desc: "Advanced AI assistant for strategy analysis, competitive research, and content planning. We use Claude for deep-dive market analysis, creating comprehensive content strategies, and building data-driven recommendations tailored to your dealership's specific market position." },
+  { name: "Jasper", domain: "jasper.ai", cat: "content", desc: "AI marketing platform built for brand-consistent content at scale. Jasper maintains your dealership's voice and tone across all content — from ad headlines to blog articles to social captions — ensuring everything sounds like your brand, not a generic AI output." },
+  { name: "WordPress", domain: "wordpress.org", cat: "content", desc: "Content management system powering your dealership blog, landing pages, and SEO content. We build WordPress sites optimized for automotive SEO with model-specific pages, service area targeting, and conversion-focused layouts that turn organic traffic into leads." },
+  { name: "Loom", domain: "loom.com", cat: "content", desc: "Video messaging for personalized prospect outreach and team communication. Your sales team can send 60-second vehicle walkaround videos directly to interested leads — creating a personal connection that text emails simply can't match and dramatically improving response rates." },
+
+  // WEB & DESIGN (5)
+  { name: "Figma", domain: "figma.com", cat: "web", desc: "Collaborative design platform where we prototype your website layouts, ad creatives, and landing pages before development. You review and approve designs in real time, ensuring every pixel matches your brand before we build it." },
+  { name: "Webflow", domain: "webflow.com", cat: "web", desc: "Visual web development platform for building fast, responsive dealership websites without traditional coding bottlenecks. Webflow sites load quickly, look premium, and include built-in SEO tools — giving your dealership a competitive edge in both design and search performance." },
+  { name: "Unbounce", domain: "unbounce.com", cat: "web", desc: "Landing page builder with AI-powered optimization. We create dedicated landing pages for each ad campaign — model-specific pages, service promotions, trade-in offers — and Unbounce's Smart Traffic feature automatically routes visitors to the page variant most likely to convert them." },
+  { name: "Shopify", domain: "shopify.com", cat: "web", desc: "E-commerce platform for parts and accessories dealers selling online. We build Shopify stores with automotive-specific catalog structures, fitment filters, and shipping integrations that make it easy for customers to find and buy the exact parts they need." },
+  { name: "Typeform", domain: "typeform.com", cat: "web", desc: "Conversational forms that turn boring lead capture into an engaging experience. Our Typeform-powered trade-in estimators and vehicle finder quizzes have 3x higher completion rates than standard forms — because they feel like a conversation, not paperwork." },
+
+  // REPUTATION (4)
+  { name: "Google Business", domain: "business.google.com", cat: "reputation", desc: "Your Google Business Profile is the single most important local search asset. We optimize it with the right categories, service areas, photos, Q&A, and weekly posts — then build a review generation system that steadily grows your star rating and review count." },
+  { name: "Trustpilot", domain: "trustpilot.com", cat: "reputation", desc: "Online reputation platform that collects and showcases verified customer reviews. We integrate Trustpilot with your sales process so every delivered vehicle automatically triggers a review request — building social proof that influences future buyers researching your dealership." },
+  { name: "Yelp", domain: "yelp.com", cat: "reputation", desc: "Review management for service-focused automotive businesses. We optimize your Yelp profile, respond to every review professionally, and build a strategy that turns happy service customers into vocal advocates — critical for auto body shops, detailers, and service centers." },
+  { name: "Birdeye", domain: "birdeye.com", cat: "reputation", desc: "All-in-one reputation management with review generation, monitoring, and response across 200+ sites. Birdeye automates review requests via text after every transaction and aggregates all your reviews into one dashboard so nothing gets missed or unanswered." },
+];
+
+const ToolStack = () => {
+  const [activeCat, setActiveCat] = useState("advertising");
+  const [activeTool, setActiveTool] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const filteredTools = marketingTools.filter((t) => t.cat === activeCat);
+  const tool = filteredTools[activeTool] || filteredTools[0];
+  const catObj = toolCategories.find((c) => c.id === activeCat);
+
+  // Auto-rotate tools within category
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveTool((prev) => (prev + 1) % filteredTools.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isPaused, filteredTools.length, activeCat]);
+
+  // Reset tool index on category change
+  useEffect(() => { setActiveTool(0); }, [activeCat]);
+
+  return (
+    <section className="section-pad" style={{ padding: "80px 160px 70px", background: C.bgDark, position: "relative", overflow: "hidden" }}>
+      {/* Background accent */}
+      <div style={{ position: "absolute", bottom: "-20%", right: "-5%", width: 600, height: 600, background: "radial-gradient(circle, rgba(212,25,32,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+      <Reveal>
+        <div style={{ textAlign: "center", marginBottom: 50 }}>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Our Arsenal</div>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>Marketing Tools We <span style={{ color: C.red }}>Deploy For You</span></h2>
+          <p style={{ marginTop: 16, fontSize: 16, color: "rgba(255,255,255,0.5)", maxWidth: 600, margin: "16px auto 0", lineHeight: 1.7 }}>We don't just know these platforms — we've built automotive-specific systems on every one of them. {marketingTools.length} tools. One integrated engine.</p>
+        </div>
+      </Reveal>
+
+      {/* Scrolling logo marquee */}
+      <Reveal delay={0.1}>
+        <div style={{ position: "relative", marginBottom: 40, overflow: "hidden", maskImage: "linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)", WebkitMaskImage: "linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)" }}>
+          <div className="tool-marquee" style={{ display: "flex", gap: 20, width: "max-content" }}>
+            {[...marketingTools, ...marketingTools].map((t, i) => (
+              <div
+                key={`${t.name}-${i}`}
+                onClick={() => { setActiveCat(t.cat); setActiveTool(filteredTools.findIndex((f) => f.name === t.name) >= 0 ? filteredTools.findIndex((f) => f.name === t.name) : 0); setIsPaused(true); setTimeout(() => setIsPaused(false), 6000); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "10px 18px",
+                  background: t.name === tool.name ? "rgba(212,25,32,0.15)" : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${t.name === tool.name ? "rgba(212,25,32,0.4)" : "rgba(255,255,255,0.06)"}`,
+                  borderRadius: 10, cursor: "pointer", flexShrink: 0, transition: "all 0.3s",
+                }}
+              >
+                <img src={FAVICON(t.domain)} alt={t.name} width={20} height={20} style={{ borderRadius: 4 }} loading="lazy" />
+                <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 500, color: t.name === tool.name ? C.white : "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>{t.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
+      {/* Category tabs */}
+      <Reveal delay={0.15}>
+        <div className="tool-cats" style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 36 }}>
+          {toolCategories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => { setActiveCat(cat.id); setIsPaused(true); setTimeout(() => setIsPaused(false), 6000); }}
+              style={{
+                padding: "8px 18px", borderRadius: 8, border: `1px solid ${activeCat === cat.id ? cat.color : "rgba(255,255,255,0.1)"}`,
+                background: activeCat === cat.id ? `${cat.color}18` : "transparent",
+                color: activeCat === cat.id ? cat.color : "rgba(255,255,255,0.4)",
+                fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase",
+                cursor: "pointer", transition: "all 0.3s",
+              }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* Featured tool detail */}
+      <Reveal delay={0.2}>
+        <div
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          style={{ display: "flex", gap: 40, background: C.bgCard, borderRadius: 16, border: `1px solid ${C.blackMed}`, overflow: "hidden", minHeight: 280 }}
+        >
+          {/* Left: tool list for category */}
+          <div style={{ width: 260, padding: "28px 0", borderRight: `1px solid ${C.blackMed}`, overflowY: "auto", flexShrink: 0 }}>
+            {filteredTools.map((t, i) => (
+              <div
+                key={t.name}
+                onClick={() => { setActiveTool(i); setIsPaused(true); setTimeout(() => setIsPaused(false), 6000); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12, padding: "12px 24px", cursor: "pointer",
+                  background: i === activeTool ? "rgba(212,25,32,0.08)" : "transparent",
+                  borderLeft: i === activeTool ? `3px solid ${C.red}` : "3px solid transparent",
+                  transition: "all 0.25s",
+                }}
+              >
+                <img src={FAVICON(t.domain)} alt={t.name} width={22} height={22} style={{ borderRadius: 4, flexShrink: 0 }} loading="lazy" />
+                <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, fontWeight: i === activeTool ? 600 : 400, color: i === activeTool ? C.white : "rgba(255,255,255,0.5)", transition: "color 0.25s" }}>{t.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Right: detail panel */}
+          <div style={{ flex: 1, padding: "36px 40px 36px 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+              <div style={{ width: 52, height: 52, borderRadius: 12, background: C.black, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${C.blackMed}` }}>
+                <img src={FAVICON(tool.domain)} alt={tool.name} width={28} height={28} style={{ borderRadius: 4 }} loading="lazy" />
+              </div>
+              <div>
+                <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: C.white, lineHeight: 1.2 }}>{tool.name}</h3>
+                <span style={{ fontSize: 12, fontWeight: 600, color: catObj?.color || C.red, textTransform: "uppercase", letterSpacing: 2 }}>{catObj?.label}</span>
+              </div>
+            </div>
+            <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(255,255,255,0.6)", maxWidth: 560 }}>{tool.desc}</p>
+            {/* Progress dots */}
+            <div style={{ display: "flex", gap: 6, marginTop: 24 }}>
+              {filteredTools.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => { setActiveTool(i); setIsPaused(true); setTimeout(() => setIsPaused(false), 6000); }}
+                  style={{
+                    width: i === activeTool ? 24 : 8, height: 8, borderRadius: 4,
+                    background: i === activeTool ? C.red : "rgba(255,255,255,0.12)",
+                    transition: "all 0.3s", cursor: "pointer",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+};
+
+// ============================================================
 // NICHE SHOWCASE — Auto-Rotating Automotive Sub-Industries
 // ============================================================
 const UNSPLASH = (id) => `https://images.unsplash.com/photo-${id}?w=1200&auto=format&fit=crop&q=80`;
@@ -828,6 +1062,9 @@ const HomePage = () => {
 
       {/* NICHE SHOWCASE */}
       <NicheShowcase navigate={navigate} />
+
+      {/* ============ MARKETING TOOL STACK ============ */}
+      <ToolStack />
 
       {/* ============ THE SYSTEM WE BUILD FOR YOU ============ */}
       <section className="section-pad" style={{ padding: "80px 160px", background: C.black, position: "relative", overflow: "hidden" }}>
@@ -1596,6 +1833,18 @@ export default function App() {
         .dash-form select:hover { border-color: #3a3a3a; }
         .dash-submit:hover { box-shadow: 0 12px 32px rgba(212,25,32,0.55); transform: scale(1.04); transition: all 0.3s ease; }
 
+        /* Tool marquee infinite scroll */
+        @keyframes marqueeScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .tool-marquee {
+          animation: marqueeScroll 90s linear infinite;
+        }
+        .tool-marquee:hover {
+          animation-play-state: paused;
+        }
+
         /* Dashboard glow — sports car interior at night */
         .carbon-fiber {
           background-color: #050505;
@@ -1660,6 +1909,10 @@ export default function App() {
             gap: 24px !important; 
           }
           
+          /* Tool stack responsive */
+          .tool-cats { gap: 6px !important; }
+          .tool-cats button { font-size: 11px !important; padding: 6px 12px !important; }
+
           /* Niche showcase */
           .niche-content { flex-direction: column !important; gap: 30px !important; }
           .niche-content > div:first-child { 
