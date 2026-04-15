@@ -1064,67 +1064,57 @@ const HomePage = () => {
       <ToolStack />
 
       {/* ============ THE SYSTEM WE BUILD FOR YOU ============ */}
-      <section className="section-pad" style={{ padding: "80px 160px", background: C.black, position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 0, right: 0, width: "35%", height: "100%", background: C.red, clipPath: "polygon(50% 0, 100% 0, 100% 100%, 10% 100%)", opacity: 0.06 }} />
+      <section className="section-pad" style={{ padding: "100px 160px", background: C.black, position: "relative", overflow: "hidden" }}>
+        {/* Subtle background accent */}
+        <div style={{ position: "absolute", top: "20%", left: "-5%", width: 500, height: 500, background: "radial-gradient(circle, rgba(212,25,32,0.05) 0%, transparent 65%)", pointerEvents: "none" }} />
 
+        {/* Header */}
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 60 }}>
-            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>The System</div>
-            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15 }}>A Marketing Engine That <span style={{ color: C.red }}>Runs While You Focus on Your Business</span></h2>
-            <p style={{ marginTop: 16, fontSize: 17, color: "rgba(255,255,255,0.55)", maxWidth: 600, margin: "16px auto 0", lineHeight: 1.7 }}>Picture this: your ads are reaching the right people, every lead gets a reply in seconds, your dashboard shows you exactly what's working, and your customers keep coming back. That's not a dream. It's a system. And every piece connects to the next.</p>
+          <div style={{ maxWidth: 820, margin: "0 auto 70px", textAlign: "center" }}>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 20 }}>The System</div>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 28 }}>A Marketing Engine That <span style={{ color: C.red }}>Runs While You Focus on Your Business.</span></h2>
+            <div style={{ width: 60, height: 3, background: C.red, margin: "0 auto 28px", borderRadius: 2 }} />
+            <p style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.55)", fontStyle: "italic", maxWidth: 680, margin: "0 auto" }}>Your ads reach the right people. Every lead gets a reply in seconds. Your dashboard shows what's working. Customers keep coming back. That's not a dream — it's a system.</p>
           </div>
         </Reveal>
 
-        {/* AI System Block */}
-        <Reveal>
-          <div className="flex-section" style={{ display: "flex", alignItems: "stretch", gap: 50, marginBottom: 60 }}>
-            <div style={{ flex: "0 0 400px", borderRadius: 16, background: `linear-gradient(135deg, ${C.redDark} 0%, ${C.red} 100%)`, padding: 50, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, border: "2px solid rgba(255,255,255,0.1)", borderRadius: "50%" }} />
-              <div style={{ position: "absolute", bottom: -30, left: -30, width: 140, height: 140, border: "2px solid rgba(255,255,255,0.06)", borderRadius: "50%" }} />
-              <svg viewBox="0 0 24 24" width={80} height={80} fill="rgba(255,255,255,0.15)" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.5-9.11 0-12.58 3.51-3.47 9.14-3.49 12.65-.06L21 3v7.12z" />
-              </svg>
-              <div style={{ marginTop: 24, fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, textAlign: "center", textTransform: "uppercase", letterSpacing: 1 }}>AI-Powered Engine</div>
-            </div>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>Acquisition + Conversion</div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 20 }}>You Wake Up to Booked Appointments. Not Unread Messages.</h3>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.7)", marginBottom: 20 }}>Here's what your mornings look like when the system is running: you check your phone and see 4 new leads came in overnight. Two of them already have appointments booked. One asked a question and got an instant reply that moved them forward. Your dashboard shows your cost per lead dropped 12% this week because the AI shifted budget toward the ad set that's performing best.</p>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>That's not a best-case scenario. That's what happens when your Google Ads run on hourly bid optimization, your landing pages are built to convert, and every inquiry triggers an automated qualification and booking flow. The system does the heavy lifting. You focus on delivering great service to the customers who walk in.</p>
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                {["Hourly bid optimization", "60-second lead response", "Live performance dashboard", "Full conversion tracking"].map((tag) => (
-                  <span key={tag} style={{ background: "rgba(212,25,32,0.15)", color: C.redLight, padding: "8px 18px", borderRadius: 8, fontSize: 14, fontWeight: 600 }}>{tag}</span>
-                ))}
+        {/* Vertical numbered points */}
+        <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexDirection: "column", gap: 0 }}>
+          {[
+            {
+              num: "01",
+              headline: "You Wake Up to Booked Appointments.",
+              desc: "AI-powered Google and Meta ads run on hourly bid optimization, and every inquiry triggers an automated qualification and booking flow. The system does the heavy lifting while you sleep.",
+            },
+            {
+              num: "02",
+              headline: "Your Dashboard Shows Exactly What's Working.",
+              desc: "Cost per lead, ROAS, and conversion rates — updated live the moment something changes. Open it on your phone at midnight if you want.",
+            },
+            {
+              num: "03",
+              headline: "US-Tested Systems. Built for the Philippines.",
+              desc: "Our team ran full-scale campaigns for US automotive businesses — landing pages that converted at 8%, CRMs tracking every touchpoint. We adapted all of it for how Filipino buyers actually behave.",
+            },
+            {
+              num: "04",
+              headline: "Everything We Build Belongs to You.",
+              desc: "Your Google Ads, your Meta Business Manager, your analytics, your CRM — all under your name. We're managers, not owners. One click and it's fully yours, anytime.",
+            },
+          ].map((point, i) => (
+            <Reveal key={i} delay={i * 0.1}>
+              <div style={{ display: "flex", gap: 36, padding: "44px 0", borderBottom: i < 3 ? `1px solid rgba(255,255,255,0.06)` : "none", alignItems: "flex-start" }}>
+                {/* Large number */}
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 72, fontWeight: 700, color: "rgba(212,25,32,0.15)", lineHeight: 1, flexShrink: 0, width: 90, textAlign: "right", paddingTop: 2 }}>{point.num}</div>
+                {/* Content with red left border */}
+                <div style={{ borderLeft: `3px solid ${C.red}`, paddingLeft: 28, flex: 1 }}>
+                  <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 28, fontWeight: 700, color: C.white, lineHeight: 1.2, marginBottom: 12 }}>{point.headline}</h3>
+                  <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,0.5)", maxWidth: 560 }}>{point.desc}</p>
+                </div>
               </div>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* Background + Ownership Block */}
-        <Reveal delay={0.15}>
-          <div style={{ display: "flex", alignItems: "stretch", gap: 50, flexDirection: "row-reverse" }}>
-            <div style={{ flex: "0 0 400px", borderRadius: 16, background: `linear-gradient(135deg, ${C.black} 0%, ${C.blackMed} 100%)`, padding: 50, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <div style={{ position: "absolute", top: -20, left: -20, width: 100, height: 100, border: "2px solid rgba(212,25,32,0.15)", borderRadius: "50%" }} />
-              <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 20 }}>
-                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 44, fontWeight: 700, color: C.red }}>US</div>
-                <svg viewBox="0 0 24 24" width={32} height={32} fill="rgba(255,255,255,0.3)" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" /></svg>
-                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 44, fontWeight: 700, color: C.white }}>PH</div>
-              </div>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, color: "rgba(255,255,255,0.5)", textAlign: "center", textTransform: "uppercase", letterSpacing: 1 }}>Proven Systems. Brought Home.</div>
-            </div>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>Our Background + Your Ownership</div>
-              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 20 }}>The Same Systems That Scale US Companies. Now Built for Your Business Here.</h3>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.7)", marginBottom: 20 }}>Our team comes from managing full-scale campaigns for US automotive and service businesses. We built landing pages that converted at 8%. We set up CRMs that tracked every touchpoint from first click to closed deal. We reported to owners whose only question was: how many more customers did we get this month? That experience shapes everything we build. When we set up your campaign structure, your tracking, your follow-up sequences, it's not guesswork. It's a system we've already tested at scale.</p>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>We adapted all of it for how Filipino buyers actually behave. The platforms they use, the way they compare, the questions they ask, the trust signals that matter here. And everything we build belongs to you. Your Google Ads account, your Meta Business Manager, your analytics, your automations. All under your name. We're managers on your account, not owners. If you ever want to take over or move on, one click and it's fully yours.</p>
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                {["US campaign experience", "PH market adapted", "Full client ownership", "Zero lock-in contracts"].map((tag) => (
-                  <span key={tag} style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", padding: "8px 18px", borderRadius: 8, fontSize: 14, fontWeight: 600, border: "1px solid rgba(255,255,255,0.1)" }}>{tag}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Reveal>
+            </Reveal>
+          ))}
+        </div>
       </section>
 
       {/* ============ WHAT'S INCLUDED ============ */}
