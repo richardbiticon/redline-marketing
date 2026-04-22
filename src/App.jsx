@@ -250,11 +250,16 @@ const Navbar = () => {
           );
         })}
       </div>
-      <div onClick={() => navigate(PAGES.contact)} className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
-        <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Icon name="mail" size={20} color={C.white} />
+      <div className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <a href="/login" className="nav-login-link" style={{ color: C.white, fontWeight: 600, fontSize: 14, textTransform: "uppercase", letterSpacing: 1.5, fontFamily: "'Oswald', sans-serif", textDecoration: "none", padding: "8px 16px", borderRadius: 6, border: `1px solid ${C.blackMed}`, transition: "all 0.2s" }}>
+          Client Log In
+        </a>
+        <div onClick={() => navigate(PAGES.contact)} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+          <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Icon name="mail" size={20} color={C.white} />
+          </div>
+          <span style={{ fontWeight: 700, fontSize: 15, color: C.white }}>Contact Us</span>
         </div>
-        <span style={{ fontWeight: 700, fontSize: 15, color: C.white }}>Contact Us</span>
       </div>
       {/* Mobile hamburger */}
       <div className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} style={{ display: "none", flexDirection: "column", gap: 5, cursor: "pointer", zIndex: 1001, padding: 8 }}>
@@ -273,6 +278,9 @@ const Navbar = () => {
               </span>
             );
           })}
+          <a href="/login" style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 600, color: C.black, textTransform: "uppercase", letterSpacing: 2, textDecoration: "none", padding: "10px 24px", border: `2px solid ${C.black}`, borderRadius: 8 }}>
+            Client Log In
+          </a>
           <div onClick={() => { navigate(PAGES.contact); setMobileOpen(false); }} style={{ marginTop: 12 }}>
             <RedButton>Contact Us</RedButton>
           </div>
@@ -1213,6 +1221,99 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* ============ CLIENT PORTAL CTA ============ */}
+      <section className="section-pad client-portal-section" style={{ position: "relative", padding: "100px 160px", background: C.black, overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 20% 0%, ${C.redDark}33 0%, transparent 60%), radial-gradient(ellipse at 100% 100%, ${C.red}22 0%, transparent 55%)`, pointerEvents: "none" }} />
+        <div className="portal-grid" style={{ position: "relative", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1240, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", border: `1px solid ${C.red}55`, background: `${C.red}18`, borderRadius: 999, marginBottom: 20 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.red }} />
+              <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 2 }}>New · Client Portal</span>
+            </div>
+            <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 52, fontWeight: 700, color: C.white, lineHeight: 1.1, marginBottom: 20, textTransform: "uppercase" }}>
+              Your Campaigns.<br /><span style={{ color: C.red }}>Your Portal.</span> One Log In.
+            </h2>
+            <p style={{ fontSize: 17, color: C.g300, lineHeight: 1.7, marginBottom: 28, maxWidth: 560 }}>
+              Every Red Line client gets a private portal. Track active campaigns, leads, and spend in real time. Chat directly with your account rep. Upload your logo and watch an AI-powered theme personalize the entire dashboard to match your brand.
+            </p>
+            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 32px 0", display: "grid", gap: 12 }}>
+              {[
+                "Live campaign performance — leads, CPL, spend, impressions",
+                "Direct chat with your dedicated account manager",
+                "AI Branding Studio — upload your logo, Claude does the rest (Pro)",
+                "Pay by PayPal, GCash, or local bank transfer",
+              ].map((t) => (
+                <li key={t} style={{ display: "flex", gap: 12, alignItems: "flex-start", color: C.white, fontSize: 15, lineHeight: 1.5 }}>
+                  <span style={{ flexShrink: 0, marginTop: 2, width: 18, height: 18, borderRadius: "50%", background: C.red, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.white, fontSize: 11, fontWeight: 700 }}>✓</span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <a href="/signup" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "18px 32px", background: C.red, color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, textDecoration: "none", borderRadius: 8, textTransform: "uppercase", letterSpacing: 1.5, boxShadow: `0 12px 32px -8px ${C.red}80` }}>
+                Sign Up Free
+              </a>
+              <a href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "18px 32px", background: "transparent", color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, textDecoration: "none", borderRadius: 8, border: `2px solid ${C.blackMed}`, textTransform: "uppercase", letterSpacing: 1.5 }}>
+                Log In
+              </a>
+            </div>
+            <div style={{ marginTop: 16, fontSize: 13, color: C.g300 }}>
+              Free forever. Upgrade to Pro for AI theming + 10,000 credits/month.
+            </div>
+          </Reveal>
+
+          {/* Mock portal preview */}
+          <Reveal>
+            <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", border: `1px solid ${C.blackMed}`, background: C.bgCard, boxShadow: `0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px ${C.red}22` }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 14px", borderBottom: `1px solid ${C.blackMed}`, background: C.bgDark2 }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
+                <span style={{ marginLeft: 12, fontSize: 11, color: C.g300, fontFamily: "monospace" }}>app.redline.ph / portal</span>
+              </div>
+              <div style={{ padding: 20 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 14 }}>
+                  {[
+                    { label: "Active", value: "4", accent: null },
+                    { label: "Leads MTD", value: "241", accent: "+38%" },
+                    { label: "Avg CPL", value: "₱129", accent: "-12%" },
+                  ].map((k) => (
+                    <div key={k.label} style={{ padding: 12, background: C.bgDark2, borderRadius: 8, border: `1px solid ${C.blackMed}` }}>
+                      <div style={{ fontSize: 9, color: C.g300, textTransform: "uppercase", letterSpacing: 1.5 }}>{k.label}</div>
+                      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, marginTop: 2 }}>{k.value}</div>
+                      {k.accent && <div style={{ fontSize: 10, color: "#4ade80" }}>{k.accent}</div>}
+                    </div>
+                  ))}
+                </div>
+                {[
+                  { name: "Q2 Pre-owned Inventory Push", sub: "Meta Ads · ₱18,420 of ₱30,000", pct: 61 },
+                  { name: "Service Bay Oil Change", sub: "Google Ads · ₱7,200 of ₱15,000", pct: 48 },
+                  { name: "Showroom Reels — April", sub: "Social · 38 leads", pct: 82 },
+                ].map((c) => (
+                  <div key={c.name} style={{ padding: 12, background: C.bgDark2, borderRadius: 8, border: `1px solid ${C.blackMed}`, marginBottom: 8 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: C.white, fontWeight: 600 }}>
+                      <span>{c.name}</span>
+                      <span style={{ color: C.g300 }}>{c.pct}%</span>
+                    </div>
+                    <div style={{ fontSize: 10, color: C.g300, marginTop: 2 }}>{c.sub}</div>
+                    <div style={{ height: 4, background: C.blackMed, borderRadius: 2, marginTop: 8, overflow: "hidden" }}>
+                      <div style={{ width: `${c.pct}%`, height: "100%", background: `linear-gradient(90deg, ${C.red}, ${C.redDark})` }} />
+                    </div>
+                  </div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 12, borderTop: `1px solid ${C.blackMed}`, marginTop: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 8px #4ade80" }} />
+                    <span style={{ fontSize: 11, color: C.g300 }}>Jules (rep) is online</span>
+                  </div>
+                  <span style={{ fontSize: 11, color: C.red, fontWeight: 600 }}>✦ AI-personalized</span>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ============ FINAL CTA ============ */}
       <section className="section-pad" style={{ padding: "80px 160px", background: C.bgCard, textAlign: "center" }}>
         <Reveal>
@@ -1885,7 +1986,12 @@ export default function App() {
           /* Navbar: hide desktop links */
           .nav-links-desktop { display: none !important; }
           .mobile-toggle { display: flex !important; }
-          
+
+          /* Client portal section: stack on mobile */
+          .portal-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .client-portal-section { padding: 60px 24px !important; }
+          .client-portal-section h2 { font-size: 32px !important; }
+
           /* Footer */
           .footer-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
           

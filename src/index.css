@@ -36,6 +36,15 @@ html, body, #root {
   text-shadow: 0 0 12px rgba(212, 25, 32, 0.55);
 }
 
+.nav-login-link {
+  transition: all 0.2s ease;
+}
+.nav-login-link:hover {
+  border-color: #D41920 !important;
+  color: #FF2D35 !important;
+  box-shadow: 0 0 16px rgba(212, 25, 32, 0.3);
+}
+
 /* --- Racing design elements --- */
 
 @keyframes speedLaneMarch {

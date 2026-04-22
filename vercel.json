@@ -1,5 +1,12 @@
 {
   "rewrites": [
+    { "source": "/login", "destination": "https://redline-portal.vercel.app/login" },
+    { "source": "/signup", "destination": "https://redline-portal.vercel.app/signup" },
+    { "source": "/portal", "destination": "https://redline-portal.vercel.app/portal" },
+    { "source": "/portal/:path*", "destination": "https://redline-portal.vercel.app/portal/:path*" },
+    { "source": "/admin", "destination": "https://redline-portal.vercel.app/admin" },
+    { "source": "/admin/:path*", "destination": "https://redline-portal.vercel.app/admin/:path*" },
+    { "source": "/api/:path*", "destination": "https://redline-portal.vercel.app/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
