@@ -23,6 +23,9 @@ const PAGES = {
   blog: "/blog",
   blogPost: "/blog/post",
   contact: "/contact",
+  login: "/login",
+  signup: "/signup",
+  portal: "/portal",
 };
 
 // Map service URL slugs to PAGES keys for ServiceDetailPage
@@ -251,9 +254,9 @@ const Navbar = () => {
         })}
       </div>
       <div className="nav-links-desktop" style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <a href="/login" className="nav-login-link" style={{ color: C.white, fontWeight: 600, fontSize: 14, textTransform: "uppercase", letterSpacing: 1.5, fontFamily: "'Oswald', sans-serif", textDecoration: "none", padding: "8px 16px", borderRadius: 6, border: `1px solid ${C.blackMed}`, transition: "all 0.2s" }}>
+        <span onClick={() => navigate(PAGES.login)} className="nav-login-link" style={{ color: C.white, fontWeight: 600, fontSize: 14, textTransform: "uppercase", letterSpacing: 1.5, fontFamily: "'Oswald', sans-serif", cursor: "pointer", padding: "8px 16px", borderRadius: 6, border: `1px solid ${C.blackMed}`, transition: "all 0.2s", display: "inline-block" }}>
           Client Log In
-        </a>
+        </span>
         <div onClick={() => navigate(PAGES.contact)} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
           <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Icon name="mail" size={20} color={C.white} />
@@ -278,9 +281,9 @@ const Navbar = () => {
               </span>
             );
           })}
-          <a href="/login" style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 600, color: C.black, textTransform: "uppercase", letterSpacing: 2, textDecoration: "none", padding: "10px 24px", border: `2px solid ${C.black}`, borderRadius: 8 }}>
+          <span onClick={() => { navigate(PAGES.login); setMobileOpen(false); }} style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 600, color: C.black, textTransform: "uppercase", letterSpacing: 2, cursor: "pointer", padding: "10px 24px", border: `2px solid ${C.black}`, borderRadius: 8 }}>
             Client Log In
-          </a>
+          </span>
           <div onClick={() => { navigate(PAGES.contact); setMobileOpen(false); }} style={{ marginTop: 12 }}>
             <RedButton>Contact Us</RedButton>
           </div>
@@ -1250,12 +1253,12 @@ const HomePage = () => {
               ))}
             </ul>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              <a href="/signup" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "18px 32px", background: C.red, color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, textDecoration: "none", borderRadius: 8, textTransform: "uppercase", letterSpacing: 1.5, boxShadow: `0 12px 32px -8px ${C.red}80` }}>
+              <button onClick={() => navigate(PAGES.signup)} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "18px 32px", background: C.red, color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, border: "none", borderRadius: 8, textTransform: "uppercase", letterSpacing: 1.5, boxShadow: `0 12px 32px -8px ${C.red}80`, cursor: "pointer" }}>
                 Sign Up Free
-              </a>
-              <a href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "18px 32px", background: "transparent", color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, textDecoration: "none", borderRadius: 8, border: `2px solid ${C.blackMed}`, textTransform: "uppercase", letterSpacing: 1.5 }}>
+              </button>
+              <button onClick={() => navigate(PAGES.login)} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "18px 32px", background: "transparent", color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, borderRadius: 8, border: `2px solid ${C.blackMed}`, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}>
                 Log In
-              </a>
+              </button>
             </div>
             <div style={{ marginTop: 16, fontSize: 13, color: C.g300 }}>
               Free forever. Upgrade to Pro for AI theming + 10,000 credits/month.
@@ -1889,6 +1892,358 @@ const BlogPostPage = () => {
 // ============================================================
 // MAIN APP
 // ============================================================
+// ============================================================
+// PAGE: LOGIN
+// ============================================================
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  // Pre-fill email from ?email query for nicer UX from signup
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const e = q.get("email");
+    if (e) setEmail(e);
+  }, [pathname]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+    if (!email || !password) {
+      setError("Please fill in both fields.");
+      return;
+    }
+    setSubmitting(true);
+    // Demo: any credentials "work". Persist a simple flag so the portal page recognizes the user.
+    try { localStorage.setItem("redline_user", JSON.stringify({ email, loggedInAt: new Date().toISOString() })); } catch { /* ignore */ }
+    setTimeout(() => { navigate(PAGES.portal); }, 400);
+  };
+
+  return (
+    <section style={{ display: "flex", minHeight: "calc(100vh - 96px)", background: C.black }}>
+      {/* Left: brand panel */}
+      <div className="auth-left" style={{ flex: 1, position: "relative", padding: "60px 80px", display: "flex", flexDirection: "column", justifyContent: "space-between", overflow: "hidden", background: `linear-gradient(135deg, ${C.bgDark} 0%, ${C.redDark}55 100%)` }}>
+        <div style={{ position: "absolute", inset: 0, opacity: 0.15, backgroundImage: `radial-gradient(circle at 20% 30%, ${C.red} 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${C.redDark} 0%, transparent 50%)` }} />
+        <div style={{ position: "relative" }}>
+          <div onClick={() => navigate(PAGES.home)} style={{ display: "inline-flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+            <Logo size={56} />
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Red Line Marketing</div>
+          </div>
+        </div>
+        <div style={{ position: "relative", maxWidth: 480 }}>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>Client Portal</div>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 46, fontWeight: 700, color: C.white, lineHeight: 1.1, marginBottom: 20, textTransform: "uppercase" }}>
+            Your dealership's<br /><span style={{ color: C.red }}>marketing command center.</span>
+          </h2>
+          <p style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,0.75)" }}>
+            Real-time campaigns, lead tracking, direct line to your account rep, and AI-powered brand theming — all in one log in.
+          </p>
+        </div>
+        <div style={{ position: "relative", fontSize: 13, color: C.g300, fontStyle: "italic" }}>
+          "We hit 241 qualified leads in one month. Red Line is our most reliable channel." — Grace Tan, Velocity Autos
+        </div>
+      </div>
+
+      {/* Right: form */}
+      <div className="auth-right" style={{ width: 480, padding: "80px 56px", display: "flex", flexDirection: "column", justifyContent: "center", borderLeft: `1px solid ${C.blackMed}` }}>
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>Welcome Back</div>
+        <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white, marginBottom: 8, textTransform: "uppercase" }}>Log In</h1>
+        <p style={{ fontSize: 14, color: C.g300, marginBottom: 32 }}>Access your campaigns, chat, and wallet.</p>
+
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <AuthField label="Email" type="email" value={email} onChange={(v) => setEmail(v)} placeholder="you@yourdealership.com" />
+          <AuthField label="Password" type="password" value={password} onChange={(v) => setPassword(v)} placeholder="••••••••" />
+          {error && <div style={{ padding: "10px 14px", background: `${C.red}22`, border: `1px solid ${C.red}55`, borderRadius: 6, fontSize: 13, color: C.redLight }}>{error}</div>}
+          <button type="submit" disabled={submitting} style={{ marginTop: 10, padding: "16px 24px", background: submitting ? C.redDark : C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: submitting ? "wait" : "pointer", boxShadow: `0 12px 32px -10px ${C.red}99`, transition: "all 0.2s" }}>
+            {submitting ? "Logging in…" : "Log In"}
+          </button>
+        </form>
+
+        <div style={{ marginTop: 28, fontSize: 13, color: C.g300, textAlign: "center" }}>
+          New to Red Line?{" "}
+          <span onClick={() => navigate(PAGES.signup)} style={{ color: C.red, fontWeight: 600, cursor: "pointer" }}>Sign up free</span>
+        </div>
+        <div style={{ marginTop: 10, fontSize: 11, color: C.g300, textAlign: "center", opacity: 0.7 }}>
+          Demo mode — any email + password logs you in.
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================================
+// PAGE: SIGNUP
+// ============================================================
+const SignupPage = () => {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: "", company: "", email: "", password: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+    if (!form.name || !form.company || !form.email || !form.password) {
+      setError("Please fill in every field.");
+      return;
+    }
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      localStorage.setItem("redline_user", JSON.stringify({
+        email: form.email, name: form.name, company: form.company, signedUpAt: new Date().toISOString(),
+      }));
+    } catch { /* ignore */ }
+    setTimeout(() => { navigate(PAGES.portal); }, 500);
+  };
+
+  return (
+    <section style={{ display: "flex", minHeight: "calc(100vh - 96px)", background: C.black }}>
+      <div className="auth-left" style={{ flex: 1, position: "relative", padding: "60px 80px", display: "flex", flexDirection: "column", justifyContent: "space-between", overflow: "hidden", background: `linear-gradient(135deg, ${C.bgDark} 0%, ${C.redDark}55 100%)` }}>
+        <div style={{ position: "absolute", inset: 0, opacity: 0.15, backgroundImage: `radial-gradient(circle at 20% 30%, ${C.red} 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${C.redDark} 0%, transparent 50%)` }} />
+        <div style={{ position: "relative" }}>
+          <div onClick={() => navigate(PAGES.home)} style={{ display: "inline-flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+            <Logo size={56} />
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Red Line Marketing</div>
+          </div>
+        </div>
+        <div style={{ position: "relative", maxWidth: 480 }}>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14 }}>Free Account</div>
+          <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 46, fontWeight: 700, color: C.white, lineHeight: 1.1, marginBottom: 20, textTransform: "uppercase" }}>
+            Free forever.<br /><span style={{ color: C.red }}>No card required.</span>
+          </h2>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 12 }}>
+            {[
+              "Browse every service — from ₱15K social to ₱80K website builds",
+              "Chat with your dedicated account rep",
+              "Pay-as-you-go with credit top-ups (PayPal, GCash, bank)",
+              "Upgrade to Pro for AI theming + 10,000 credits/month",
+            ].map((t) => (
+              <li key={t} style={{ display: "flex", gap: 12, alignItems: "flex-start", color: C.white, fontSize: 15, lineHeight: 1.5 }}>
+                <span style={{ flexShrink: 0, marginTop: 2, width: 18, height: 18, borderRadius: "50%", background: C.red, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.white, fontSize: 11, fontWeight: 700 }}>✓</span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ position: "relative", fontSize: 13, color: C.g300 }}>Join 40+ automotive businesses already on the platform.</div>
+      </div>
+
+      <div className="auth-right" style={{ width: 480, padding: "60px 56px", display: "flex", flexDirection: "column", justifyContent: "center", borderLeft: `1px solid ${C.blackMed}` }}>
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>30 Seconds</div>
+        <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white, marginBottom: 8, textTransform: "uppercase" }}>Create Your Account</h1>
+        <p style={{ fontSize: 14, color: C.g300, marginBottom: 28 }}>Free forever. Upgrade to Pro anytime.</p>
+
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <AuthField label="Your name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Juan dela Cruz" />
+          <AuthField label="Business name" value={form.company} onChange={(v) => setForm({ ...form, company: v })} placeholder="AutoHaus Manila" />
+          <AuthField label="Work email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} placeholder="you@yourdealership.com" />
+          <AuthField label="Password" type="password" value={form.password} onChange={(v) => setForm({ ...form, password: v })} placeholder="8+ characters" />
+          {error && <div style={{ padding: "10px 14px", background: `${C.red}22`, border: `1px solid ${C.red}55`, borderRadius: 6, fontSize: 13, color: C.redLight }}>{error}</div>}
+          <button type="submit" disabled={submitting} style={{ marginTop: 10, padding: "16px 24px", background: submitting ? C.redDark : C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: submitting ? "wait" : "pointer", boxShadow: `0 12px 32px -10px ${C.red}99` }}>
+            {submitting ? "Creating account…" : "Sign Up Free"}
+          </button>
+        </form>
+
+        <div style={{ marginTop: 24, fontSize: 13, color: C.g300, textAlign: "center" }}>
+          Already have an account?{" "}
+          <span onClick={() => navigate(PAGES.login)} style={{ color: C.red, fontWeight: 600, cursor: "pointer" }}>Log in</span>
+        </div>
+        <p style={{ marginTop: 12, fontSize: 11, color: C.g300, textAlign: "center", opacity: 0.7 }}>
+          By signing up you agree to our Terms and Privacy Policy.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+// Reusable auth input
+const AuthField = ({ label, value, onChange, type = "text", placeholder }) => (
+  <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+    <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 1.5 }}>{label}</span>
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      style={{ padding: "13px 16px", background: C.bgDark2, color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontSize: 15, fontFamily: "'Barlow', sans-serif", outline: "none", transition: "border 0.2s" }}
+      onFocus={(e) => { e.target.style.borderColor = C.red; }}
+      onBlur={(e) => { e.target.style.borderColor = C.blackMed; }}
+    />
+  </label>
+);
+
+// ============================================================
+// PAGE: PORTAL (dashboard stub — real backend still to come)
+// ============================================================
+const PortalPage = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("redline_user");
+      if (!raw) { navigate(PAGES.login); return; }
+      setUser(JSON.parse(raw));
+    } catch { navigate(PAGES.login); }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    try { localStorage.removeItem("redline_user"); } catch { /* ignore */ }
+    navigate(PAGES.home);
+  };
+
+  if (!user) return null;
+  const firstName = (user.name || user.email || "there").split(" ")[0].split("@")[0];
+
+  const kpis = [
+    { label: "Active Campaigns", value: "4", accent: null },
+    { label: "Leads This Month", value: "241", accent: "+38%" },
+    { label: "Avg CPL", value: "₱129", accent: "-12%" },
+    { label: "Wallet Credits", value: "0", accent: "Free tier" },
+  ];
+  const campaigns = [
+    { name: "Q2 Pre-owned Inventory Push", sub: "Meta Ads · ₱18,420 of ₱30,000", pct: 61, status: "Active" },
+    { name: "Service Bay Oil Change Promo", sub: "Google Ads · ₱7,200 of ₱15,000", pct: 48, status: "Active" },
+    { name: "Showroom Reels — April", sub: "Social Media · 38 leads", pct: 82, status: "Active" },
+    { name: "Fleet Sales Landing Page", sub: "Draft · Starts May 1", pct: 0, status: "Draft" },
+  ];
+
+  return (
+    <section style={{ background: C.bgDark, minHeight: "calc(100vh - 96px)", padding: "40px 80px" }}>
+      {/* Welcome header */}
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20, marginBottom: 32, borderBottom: `1px solid ${C.blackMed}`, paddingBottom: 24 }}>
+        <div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10 }}>Your Portal</div>
+          <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 40, fontWeight: 700, color: C.white, textTransform: "uppercase", lineHeight: 1.1 }}>
+            Welcome back, <span style={{ color: C.red }}>{firstName}</span>
+          </h1>
+          <p style={{ fontSize: 15, color: C.g300, marginTop: 6 }}>
+            {user.company ? `${user.company} · ` : ""}Free tier — upgrade to Pro to unlock the full portal.
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <button style={{ padding: "12px 20px", background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer", boxShadow: `0 10px 24px -10px ${C.red}99` }}>
+            ✦ Upgrade to Pro
+          </button>
+          <button onClick={handleLogout} style={{ padding: "12px 20px", background: "transparent", color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}>
+            Log out
+          </button>
+        </div>
+      </div>
+
+      {/* KPIs */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 32 }} className="portal-kpi-grid">
+        {kpis.map((k) => (
+          <div key={k.label} style={{ padding: 20, background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 12 }}>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 10, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2 }}>{k.label}</div>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 32, fontWeight: 700, color: C.white, marginTop: 6 }}>{k.value}</div>
+            {k.accent && <div style={{ fontSize: 11, color: k.accent.startsWith("+") || k.accent.startsWith("-") ? "#4ade80" : C.g300, marginTop: 2 }}>{k.accent}</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* Two-col: campaigns + side rail */}
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }} className="portal-main-grid">
+        {/* Campaigns */}
+        <div style={{ background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 12, overflow: "hidden" }}>
+          <div style={{ padding: "18px 24px", borderBottom: `1px solid ${C.blackMed}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Active Campaigns</h3>
+            <span style={{ fontSize: 12, color: C.g300 }}>Updated just now</span>
+          </div>
+          <div>
+            {campaigns.map((c) => (
+              <div key={c.name} style={{ padding: "16px 24px", borderBottom: `1px solid ${C.blackMed}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                  <div>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: C.white }}>{c.name}</div>
+                    <div style={{ fontSize: 12, color: C.g300, marginTop: 2 }}>{c.sub}</div>
+                  </div>
+                  <span style={{ padding: "3px 10px", fontSize: 10, fontFamily: "'Oswald', sans-serif", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, borderRadius: 999, background: c.status === "Active" ? `${C.red}22` : C.blackMed, color: c.status === "Active" ? C.redLight : C.g300, border: c.status === "Active" ? `1px solid ${C.red}55` : "none" }}>{c.status}</span>
+                </div>
+                {c.pct > 0 && (
+                  <div style={{ marginTop: 10, height: 4, background: C.blackMed, borderRadius: 2, overflow: "hidden" }}>
+                    <div style={{ width: `${c.pct}%`, height: "100%", background: `linear-gradient(90deg, ${C.red}, ${C.redDark})` }} />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Side rail */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Rep */}
+          <div style={{ padding: 20, background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 12 }}>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 10, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Your Account Rep</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: `${C.red}22`, border: `1px solid ${C.red}55`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Oswald', sans-serif", fontWeight: 700, color: C.redLight }}>JS</div>
+              <div>
+                <div style={{ fontSize: 14, color: C.white, fontWeight: 600 }}>Jules Santos</div>
+                <div style={{ fontSize: 11, color: "#4ade80", display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80" }} />
+                  Online
+                </div>
+              </div>
+            </div>
+            <button style={{ width: "100%", marginTop: 14, padding: "10px 14px", background: "transparent", color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}>Open Chat</button>
+          </div>
+
+          {/* Pro upsell */}
+          <div style={{ padding: 20, background: `linear-gradient(135deg, ${C.bgCard} 0%, ${C.redDark}33 100%)`, border: `1px solid ${C.red}55`, borderRadius: 12, position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 100% 0%, ${C.red}33 0%, transparent 60%)`, pointerEvents: "none" }} />
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "inline-block", padding: "3px 10px", background: C.red, color: C.white, fontSize: 10, fontFamily: "'Oswald', sans-serif", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, borderRadius: 999, marginBottom: 10 }}>✦ Pro</div>
+              <h4 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 20, fontWeight: 700, color: C.white, marginBottom: 8, textTransform: "uppercase", lineHeight: 1.2 }}>Unlock the full portal</h4>
+              <p style={{ fontSize: 13, color: C.g300, marginBottom: 14, lineHeight: 1.6 }}>
+                AI brand theming, auto-generated brand guide, priority chat, and 10,000 credits every month — ₱4,999/mo.
+              </p>
+              <button style={{ width: "100%", padding: "12px 16px", background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer", boxShadow: `0 10px 24px -10px ${C.red}99` }}>Upgrade to Pro</button>
+            </div>
+          </div>
+
+          {/* Quick actions */}
+          <div style={{ padding: 20, background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 12 }}>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 10, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2, marginBottom: 14 }}>Quick Actions</div>
+            {[
+              { label: "Top up credits", desc: "Start from ₱5,000" },
+              { label: "Browse services", desc: "9 services available" },
+              { label: "Upload logo", desc: "Pro · AI theming" },
+            ].map((a) => (
+              <div key={a.label} style={{ padding: "10px 0", borderTop: `1px solid ${C.blackMed}`, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontSize: 13, color: C.white, fontWeight: 600 }}>{a.label}</div>
+                  <div style={{ fontSize: 11, color: C.g300, marginTop: 1 }}>{a.desc}</div>
+                </div>
+                <span style={{ color: C.red, fontSize: 18 }}>›</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile responsive */}
+      <style>{`
+        @media (max-width: 900px) {
+          .portal-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .portal-main-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 700px) {
+          .auth-left { display: none !important; }
+          .auth-right { width: 100% !important; padding: 40px 24px !important; }
+        }
+      `}</style>
+    </section>
+  );
+};
+
 // Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -2089,6 +2444,9 @@ export default function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/post" element={<BlogPostPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/portal" element={<PortalPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
