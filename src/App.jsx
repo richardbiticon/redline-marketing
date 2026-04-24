@@ -2638,86 +2638,116 @@ const StepDateTime = ({ date, setDate, time, setTime, timezone }) => {
 
   return (
     <div>
-      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Pick a date & time</div>
-      <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>
-        Times shown in your timezone: <span style={{ color: C.white, fontWeight: 600 }}>{timezone}</span>. Calls are 30 minutes.
+      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: "-0.01em", lineHeight: 1.1 }}>Pick a date & time</div>
+      <p style={{ marginTop: 10, fontSize: 14.5, color: C.g300, lineHeight: 1.6 }}>
+        Shown in your timezone: <span style={{ color: C.white, fontWeight: 600 }}>{timezone}</span> · Calls run 30 minutes.
       </p>
 
       {/* Day chips */}
-      <div style={{ marginTop: 24, display: "flex", gap: 10, overflowX: "auto", paddingBottom: 6 }}>
+      <div style={{ marginTop: 32, display: "flex", gap: 10, overflowX: "auto", paddingBottom: 8, scrollbarWidth: "thin" }}>
         {days.map((d) => {
           const iso = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
           const selected = date === iso;
           return (
-            <button
+            <motion.button
               key={iso}
               onClick={() => { setDate(iso); setTime(null); }}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.18 }}
               style={{
                 flex: "0 0 auto",
                 cursor: "pointer",
-                padding: "12px 16px",
-                minWidth: 86,
-                borderRadius: 10,
-                background: selected ? C.red : C.bgCardAlt,
-                border: `1.5px solid ${selected ? C.red : C.blackMed}`,
-                boxShadow: selected ? `0 10px 24px -10px ${C.red}99` : "none",
-                transition: "all 0.2s ease",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 2,
-                fontFamily: "'Oswald', sans-serif",
+                padding: 0,
+                minWidth: 92,
+                borderRadius: 12,
+                border: "none",
+                background: "transparent",
+                position: "relative",
               }}
             >
-              <span style={{ fontSize: 10, fontWeight: 600, color: selected ? "rgba(255,255,255,0.8)" : C.g300, textTransform: "uppercase", letterSpacing: 2 }}>{formatDayShort(d)}</span>
-              <span style={{ fontSize: 22, fontWeight: 700, color: selected ? C.white : C.white, lineHeight: 1 }}>{formatDayNum(d)}</span>
-              <span style={{ fontSize: 10, fontWeight: 600, color: selected ? "rgba(255,255,255,0.8)" : C.g400, textTransform: "uppercase", letterSpacing: 2 }}>{formatMonthShort(d)}</span>
-            </button>
+              <div style={{
+                padding: 1.5,
+                borderRadius: 12,
+                background: selected
+                  ? `linear-gradient(135deg, ${C.red} 0%, ${C.redDark}aa 50%, rgba(255,255,255,0.06) 100%)`
+                  : "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+                boxShadow: selected ? `0 14px 28px -12px ${C.red}aa` : "none",
+                transition: "background 0.25s ease, box-shadow 0.25s ease",
+              }}>
+                <div style={{
+                  padding: "12px 14px 14px",
+                  borderRadius: 11,
+                  background: selected ? `linear-gradient(180deg, ${C.bgCardAlt} 0%, #18090b 100%)` : C.bgCardAlt,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 3,
+                  fontFamily: "'Oswald', sans-serif",
+                }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: selected ? C.redLight : C.g400, textTransform: "uppercase", letterSpacing: 2 }}>{formatDayShort(d)}</span>
+                  <span style={{ fontSize: 26, fontWeight: 700, color: C.white, lineHeight: 1 }}>{formatDayNum(d)}</span>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: selected ? C.redLight : C.g400, textTransform: "uppercase", letterSpacing: 2 }}>{formatMonthShort(d)}</span>
+                </div>
+              </div>
+            </motion.button>
           );
         })}
       </div>
 
       {/* Time slots */}
       {date ? (
-        <div style={{ marginTop: 28 }}>
-          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>
-            Available slots — {selectedDayLabel}
+        <motion.div
+          key={date}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{ marginTop: 32 }}
+        >
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 600, color: C.white, textTransform: "uppercase", letterSpacing: 2.5 }}>
+              Available Slots
+            </div>
+            <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, color: C.g300 }}>{selectedDayLabel}</div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(112px, 1fr))", gap: 10 }}>
             {TIME_SLOTS.map((t) => {
               const taken = isSlotTaken(date, t);
               const selected = time === t;
               return (
-                <button
+                <motion.button
                   key={t}
                   disabled={taken}
                   onClick={() => setTime(t)}
+                  whileTap={taken ? {} : { scale: 0.96 }}
+                  animate={selected ? { scale: [1, 1.04, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.28 }}
                   style={{
                     cursor: taken ? "not-allowed" : "pointer",
-                    padding: "12px 8px",
-                    borderRadius: 8,
-                    background: selected ? C.red : taken ? "rgba(255,255,255,0.02)" : C.bgCardAlt,
-                    border: `1.5px solid ${selected ? C.red : taken ? "rgba(255,255,255,0.04)" : C.blackMed}`,
+                    padding: "13px 8px",
+                    borderRadius: 10,
+                    background: selected ? `linear-gradient(180deg, ${C.red} 0%, ${C.redDark} 100%)` : taken ? "rgba(255,255,255,0.015)" : C.bgCardAlt,
+                    border: `1.5px solid ${selected ? C.red : taken ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.06)"}`,
                     color: selected ? C.white : taken ? C.g500 : C.white,
                     fontFamily: "'Oswald', sans-serif",
                     fontSize: 14,
                     fontWeight: 600,
                     letterSpacing: 1,
                     textDecoration: taken ? "line-through" : "none",
-                    opacity: taken ? 0.5 : 1,
-                    transition: "all 0.2s ease",
-                    boxShadow: selected ? `0 8px 20px -8px ${C.red}99` : "none",
+                    opacity: taken ? 0.45 : 1,
+                    transition: "background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease",
+                    boxShadow: selected ? `0 14px 28px -10px ${C.red}aa, inset 0 1px 0 rgba(255,255,255,0.15)` : "none",
                   }}
                 >
                   {formatSlotLabel(t)}
-                </button>
+                </motion.button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div style={{ marginTop: 28, padding: 20, background: C.bgCardAlt, border: `1px dashed ${C.blackMed}`, borderRadius: 10, color: C.g300, fontSize: 14, textAlign: "center" }}>
-          Choose a day to see available slots.
+        <div style={{ marginTop: 32, padding: 24, background: "rgba(255,255,255,0.015)", border: `1px dashed rgba(255,255,255,0.08)`, borderRadius: 12, color: C.g300, fontSize: 14, textAlign: "center", fontFamily: "'Barlow', sans-serif" }}>
+          Choose a day above to see available slots.
         </div>
       )}
     </div>
