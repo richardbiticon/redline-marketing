@@ -2538,48 +2538,97 @@ const BookPage = () => {
   );
 };
 
+const ServiceCard = ({ s, selected, onClick }) => {
+  const ref = useRef(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    setTilt({ ry: (px - 0.5) * 4, rx: (0.5 - py) * 4 });
+  };
+  const onLeave = () => setTilt({ rx: 0, ry: 0 });
+
+  return (
+    <motion.button
+      ref={ref}
+      onClick={onClick}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2 }}
+      style={{
+        textAlign: "left",
+        cursor: "pointer",
+        padding: 0,
+        borderRadius: 14,
+        border: "none",
+        background: "transparent",
+        transform: `perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+        transformStyle: "preserve-3d",
+        transition: "transform 0.2s ease-out",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          padding: 1.5,
+          borderRadius: 14,
+          background: selected
+            ? `linear-gradient(135deg, ${C.red} 0%, ${C.redDark}aa 40%, rgba(255,255,255,0.08) 100%)`
+            : "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+          boxShadow: selected ? `0 20px 40px -15px ${C.red}88` : "0 8px 22px rgba(0,0,0,0.28)",
+          transition: "background 0.3s ease, box-shadow 0.3s ease",
+        }}
+      >
+        <div
+          style={{
+            padding: "22px 22px 20px",
+            borderRadius: 13,
+            background: selected
+              ? `linear-gradient(180deg, ${C.bgCardAlt} 0%, #15090b 100%)`
+              : C.bgCardAlt,
+            minHeight: 162,
+            display: "flex",
+            flexDirection: "column",
+            gap: 14,
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {selected && (
+            <div style={{ position: "absolute", top: 0, right: 0, width: 140, height: 140, background: `radial-gradient(circle at top right, ${C.red}22 0%, transparent 65%)`, pointerEvents: "none" }} />
+          )}
+          {selected && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
+              style={{ position: "absolute", top: 14, right: 14, width: 22, height: 22, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontSize: 12, fontWeight: 700, boxShadow: `0 6px 14px -4px ${C.red}` }}
+            >✓</motion.div>
+          )}
+          <div style={{ width: 44, height: 44, borderRadius: 10, background: selected ? C.red : "rgba(212,25,32,0.12)", border: `1px solid ${selected ? C.red : "rgba(212,25,32,0.25)"}`, display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.25s ease", boxShadow: selected ? `0 8px 18px -6px ${C.red}99` : "none" }}>
+            <Icon name={s.icon} size={22} color={selected ? C.white : C.redLight} />
+          </div>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 0.3, lineHeight: 1.15 }}>{s.title}</div>
+          <div style={{ fontSize: 13.5, color: C.g300, lineHeight: 1.55 }}>{s.desc}</div>
+        </div>
+      </div>
+    </motion.button>
+  );
+};
+
 const StepService = ({ service, setService }) => (
   <div>
-    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>What would you like to focus on?</div>
-    <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>Pick the area you'd most like to talk about. If you're not sure, that's totally fine — we'll figure it out together.</p>
+    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: "-0.01em", lineHeight: 1.1 }}>What would you like to focus on?</div>
+    <p style={{ marginTop: 10, fontSize: 14.5, color: C.g300, lineHeight: 1.6, maxWidth: 520 }}>Pick the area you'd most like to talk about. Not sure? That's fine — we'll figure it out together.</p>
 
-    <div style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
-      {BOOK_SERVICES.map((s) => {
-        const selected = service === s.id;
-        return (
-          <motion.button
-            key={s.id}
-            onClick={() => setService(s.id)}
-            whileHover={{ y: -4 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              textAlign: "left",
-              cursor: "pointer",
-              padding: 20,
-              borderRadius: 12,
-              background: selected ? `linear-gradient(135deg, ${C.bgCardAlt} 0%, ${C.redDark}22 100%)` : C.bgCardAlt,
-              border: `1.5px solid ${selected ? C.red : C.blackMed}`,
-              boxShadow: selected ? `0 12px 30px -10px ${C.red}66, inset 0 0 0 1px ${C.red}33` : "0 6px 18px rgba(0,0,0,0.2)",
-              transition: "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-              minHeight: 150,
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {selected && (
-              <div style={{ position: "absolute", top: 12, right: 12, width: 22, height: 22, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontSize: 12, fontWeight: 700 }}>✓</div>
-            )}
-            <div style={{ width: 42, height: 42, borderRadius: 10, background: selected ? C.red : `${C.red}22`, border: `1px solid ${selected ? C.red : `${C.red}44`}`, display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.25s ease" }}>
-              <Icon name={s.icon} size={22} color={selected ? C.white : C.redLight} />
-            </div>
-            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 17, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 0.5, lineHeight: 1.2 }}>{s.title}</div>
-            <div style={{ fontSize: 13, color: C.g300, lineHeight: 1.55 }}>{s.desc}</div>
-          </motion.button>
-        );
-      })}
+    <div style={{ marginTop: 32, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
+      {BOOK_SERVICES.map((s) => (
+        <ServiceCard key={s.id} s={s} selected={service === s.id} onClick={() => setService(s.id)} />
+      ))}
     </div>
   </div>
 );
