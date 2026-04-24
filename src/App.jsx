@@ -2725,13 +2725,117 @@ const StepDetails = ({ details, setDetails, errors, setErrors }) => {
     </div>
   );
 };
-const StepReview = () => <div style={{ color: C.g300 }}>Step 4 placeholder</div>;
-const BookingSuccess = ({ onHome }) => (
-  <section style={{ background: C.bgDark, minHeight: "60vh", padding: 60, color: C.white }}>
-    <h2>Success placeholder</h2>
-    <RedButton onClick={onHome}>Home</RedButton>
-  </section>
-);
+const StepReview = ({ service, date, time, details, timezone, onEditStep }) => {
+  const svc = BOOK_SERVICES.find((s) => s.id === service);
+  const dateLabel = date ? formatDateFull(new Date(date + "T00:00:00")) : "—";
+  const timeLabel = time ? formatSlotLabel(time) : "—";
+
+  const Row = ({ label, value, step, children }) => (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderBottom: `1px solid ${C.blackMed}` }}>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 15, color: C.white, lineHeight: 1.5 }}>{value || children}</div>
+      </div>
+      <button
+        onClick={() => onEditStep(step)}
+        style={{ padding: "6px 12px", background: "transparent", color: C.redLight, border: `1px solid ${C.red}55`, borderRadius: 6, fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}
+      >
+        Edit
+      </button>
+    </div>
+  );
+
+  return (
+    <div>
+      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Review your booking</div>
+      <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>Take one last look. You can edit any section before confirming.</p>
+
+      <div style={{ marginTop: 24 }}>
+        <Row label="Focus" value={svc ? svc.title : "—"} step={1} />
+        <Row label="Date" value={dateLabel} step={2} />
+        <Row label="Time" value={`${timeLabel} (${timezone})`} step={2} />
+        <Row label="Name" value={details.name || "—"} step={3} />
+        <Row label="Company" value={details.company || "—"} step={3} />
+        <Row label="Email" value={details.email || "—"} step={3} />
+        <Row label="Phone" value={details.phone || "—"} step={3} />
+        {details.website && <Row label="Website" value={details.website} step={3} />}
+        {details.notes && (
+          <Row label="Notes" step={3}>
+            <span style={{ whiteSpace: "pre-wrap" }}>{details.notes}</span>
+          </Row>
+        )}
+      </div>
+
+      <div style={{ marginTop: 20, padding: 16, background: `${C.red}10`, border: `1px solid ${C.red}33`, borderRadius: 10, fontSize: 13, color: C.g300, lineHeight: 1.6 }}>
+        By confirming, you're holding a 30-minute spot on our calendar. You'll get a confirmation on the next screen with a calendar file you can add to Google/Apple/Outlook.
+      </div>
+    </div>
+  );
+};
+
+const BookingSuccess = ({ booking, onReset, onHome }) => {
+  const svc = BOOK_SERVICES.find((s) => s.id === booking.service);
+  const dateLabel = formatDateFull(new Date(booking.date + "T00:00:00"));
+  const timeLabel = formatSlotLabel(booking.time);
+
+  return (
+    <section style={{ background: C.bgDark, minHeight: "calc(100vh - 96px)", padding: "60px 24px 100px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: "-10%", left: "50%", transform: "translateX(-50%)", width: 900, height: 600, background: "radial-gradient(ellipse, rgba(212,25,32,0.18) 0%, transparent 65%)", filter: "blur(50px)", pointerEvents: "none" }} />
+
+      <div style={{ maxWidth: 720, margin: "0 auto", position: "relative", zIndex: 1, textAlign: "center" }}>
+        <motion.div
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{ width: 84, height: 84, borderRadius: "50%", background: C.red, margin: "0 auto 28px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 20px 50px -10px ${C.red}99` }}
+        >
+          <svg viewBox="0 0 24 24" width={40} height={40} fill="none" stroke={C.white} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </motion.div>
+
+        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 14 }}>Booking Confirmed</div>
+        <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 44, fontWeight: 700, color: C.white, lineHeight: 1.05, textTransform: "uppercase", letterSpacing: "-0.5px" }}>
+          You're on the <span style={{ color: C.red }}>calendar.</span>
+        </h1>
+        <p style={{ marginTop: 14, fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.65 }}>
+          We've saved your consultation. Add it to your calendar so you don't miss it.
+        </p>
+
+        <div style={{ marginTop: 36, padding: "28px 28px 24px", background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 14, textAlign: "left", boxShadow: "0 24px 60px rgba(0,0,0,0.35)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${C.blackMed}` }}>
+            <div>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2 }}>Confirmation</div>
+              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, letterSpacing: 1.5 }}>{booking.confirmationId}</div>
+            </div>
+            <div style={{ padding: "6px 12px", background: `${C.red}22`, border: `1px solid ${C.red}55`, borderRadius: 999, fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 1.5 }}>30 min • Free</div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "10px 16px", fontSize: 14, color: C.g300 }}>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Focus</div>
+            <div style={{ color: C.white }}>{svc ? svc.title : "Consultation"}</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Date</div>
+            <div style={{ color: C.white }}>{dateLabel}</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Time</div>
+            <div style={{ color: C.white }}>{timeLabel} <span style={{ color: C.g400 }}>({booking.timezone})</span></div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Contact</div>
+            <div style={{ color: C.white }}>{booking.details.email}<br /><span style={{ color: C.g300 }}>{booking.details.phone}</span></div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <RedButton onClick={() => downloadIcs(booking)}>Add to Calendar (.ics)</RedButton>
+          <OutlineButton onClick={onReset}>Book Another</OutlineButton>
+          <button onClick={onHome} style={{ padding: "14px 28px", background: "transparent", color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase" }}>Back Home</button>
+        </div>
+
+        <p style={{ marginTop: 28, fontSize: 12, color: C.g500, lineHeight: 1.6 }}>
+          Saved locally for testing. A real confirmation email will be wired up when the backend is connected.
+        </p>
+      </div>
+    </section>
+  );
+};
 
 const validateDetails = (d) => {
   const e = {};
