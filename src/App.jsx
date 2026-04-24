@@ -2760,21 +2760,27 @@ const StepDetails = ({ details, setDetails, errors, setErrors }) => {
     if (errors[field]) setErrors((err) => { const n = { ...err }; delete n[field]; return n; });
   };
 
-  const fieldLabel = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6, display: "block" };
+  const fieldLabel = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2.5, marginBottom: 8, display: "block" };
   const fieldInput = (hasError) => ({
     width: "100%",
-    padding: "12px 14px",
+    padding: "14px 16px",
     background: C.bgCardAlt,
-    border: `1.5px solid ${hasError ? C.red : C.blackMed}`,
-    borderRadius: 8,
+    border: `1.5px solid ${hasError ? C.red : "rgba(255,255,255,0.08)"}`,
+    borderRadius: 10,
     color: C.white,
     fontFamily: "'Barlow', sans-serif",
     fontSize: 15,
     outline: "none",
-    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+    transition: "border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease",
     boxShadow: hasError ? `0 0 0 3px ${C.red}22` : "none",
   });
-  const errText = { fontSize: 12, color: C.redLight, marginTop: 4, fontFamily: "'Barlow', sans-serif" };
+  const errText = { fontSize: 12, color: C.redLight, marginTop: 6, fontFamily: "'Barlow', sans-serif", display: "flex", alignItems: "center", gap: 5 };
+
+  const onFocus = (e) => { e.target.style.borderColor = C.red; e.target.style.boxShadow = `0 0 0 3px ${C.red}22`; };
+  const onBlur = (hasError) => (e) => {
+    e.target.style.borderColor = hasError ? C.red : "rgba(255,255,255,0.08)";
+    e.target.style.boxShadow = hasError ? `0 0 0 3px ${C.red}22` : "none";
+  };
 
   const Field = ({ label, name, type = "text", required, placeholder, full }) => (
     <div style={{ gridColumn: full ? "1 / -1" : "auto" }}>
@@ -2785,19 +2791,21 @@ const StepDetails = ({ details, setDetails, errors, setErrors }) => {
         type={type}
         value={details[name]}
         onChange={update(name)}
+        onFocus={onFocus}
+        onBlur={onBlur(!!errors[name])}
         placeholder={placeholder}
         style={fieldInput(!!errors[name])}
       />
-      {errors[name] && <div style={errText}>{errors[name]}</div>}
+      {errors[name] && <div style={errText}><span style={{ width: 4, height: 4, borderRadius: "50%", background: C.red }} />{errors[name]}</div>}
     </div>
   );
 
   return (
     <div>
-      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Your details</div>
-      <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>So we know who's joining and can send the calendar invite.</p>
+      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: "-0.01em", lineHeight: 1.1 }}>Your details</div>
+      <p style={{ marginTop: 10, fontSize: 14.5, color: C.g300, lineHeight: 1.6 }}>So we know who's joining and where to send the invite.</p>
 
-      <div style={{ marginTop: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div style={{ marginTop: 32, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
         <Field label="Full name" name="name" required placeholder="Juan Dela Cruz" />
         <Field label="Company" name="company" placeholder="Your business name" />
         <Field label="Email" name="email" type="email" required placeholder="you@company.com" />
@@ -2809,6 +2817,8 @@ const StepDetails = ({ details, setDetails, errors, setErrors }) => {
           <textarea
             value={details.notes}
             onChange={update("notes")}
+            onFocus={onFocus}
+            onBlur={onBlur(false)}
             rows={4}
             placeholder="A quick note about your business, goals, or anything you'd like us to look at before the call."
             style={{ ...fieldInput(false), resize: "vertical", fontFamily: "'Barlow', sans-serif", lineHeight: 1.55 }}
@@ -2816,8 +2826,9 @@ const StepDetails = ({ details, setDetails, errors, setErrors }) => {
         </div>
       </div>
 
-      <div style={{ marginTop: 14, fontSize: 12, color: C.g400, lineHeight: 1.6 }}>
-        <span style={{ color: C.red, marginRight: 4 }}>*</span> Required. We'll only use your info for this call.
+      <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid rgba(255,255,255,0.06)`, fontSize: 12, color: C.g400, lineHeight: 1.6, display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon name="shield" size={14} color={C.g400} />
+        <span><span style={{ color: C.red, marginRight: 4 }}>*</span> Required · We'll only use your info for this call.</span>
       </div>
     </div>
   );
@@ -2827,44 +2838,57 @@ const StepReview = ({ service, date, time, details, timezone, onEditStep }) => {
   const dateLabel = date ? formatDateFull(new Date(date + "T00:00:00")) : "—";
   const timeLabel = time ? formatSlotLabel(time) : "—";
 
-  const Row = ({ label, value, step, children }) => (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "16px 0", borderBottom: `1px solid ${C.blackMed}` }}>
+  const Row = ({ label, value, step, children, first }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, padding: "18px 0", borderTop: first ? "none" : `1px solid rgba(255,255,255,0.06)` }}
+    >
       <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2, marginBottom: 4 }}>{label}</div>
-        <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 15, color: C.white, lineHeight: 1.5 }}>{value || children}</div>
+        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2.5, marginBottom: 6 }}>{label}</div>
+        <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 15, color: C.white, lineHeight: 1.55 }}>{value || children}</div>
       </div>
       <button
         onClick={() => onEditStep(step)}
-        style={{ padding: "6px 12px", background: "transparent", color: C.redLight, border: `1px solid ${C.red}55`, borderRadius: 6, fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}
+        style={{ padding: "7px 14px", background: "transparent", color: C.redLight, border: `1px solid ${C.red}55`, borderRadius: 999, fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.8, cursor: "pointer", transition: "all 0.2s ease", flexShrink: 0 }}
+        onMouseEnter={(e) => { e.target.style.background = `${C.red}22`; e.target.style.borderColor = C.red; }}
+        onMouseLeave={(e) => { e.target.style.background = "transparent"; e.target.style.borderColor = `${C.red}55`; }}
       >
         Edit
       </button>
-    </div>
+    </motion.div>
   );
 
   return (
     <div>
-      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Review your booking</div>
-      <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>Take one last look. You can edit any section before confirming.</p>
+      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: "-0.01em", lineHeight: 1.1 }}>Review your booking</div>
+      <p style={{ marginTop: 10, fontSize: 14.5, color: C.g300, lineHeight: 1.6 }}>Take one last look. Edit any section before confirming.</p>
 
-      <div style={{ marginTop: 24 }}>
-        <Row label="Focus" value={svc ? svc.title : "—"} step={1} />
+      <div style={{ marginTop: 28, padding: "4px 22px", background: "rgba(255,255,255,0.015)", border: `1px solid rgba(255,255,255,0.06)`, borderRadius: 12 }}>
+        <Row first label="Focus" value={svc ? svc.title : "—"} step={1} />
         <Row label="Date" value={dateLabel} step={2} />
-        <Row label="Time" value={`${timeLabel} (${timezone})`} step={2} />
+        <Row label="Time" value={`${timeLabel}  ·  ${timezone}`} step={2} />
         <Row label="Name" value={details.name || "—"} step={3} />
-        <Row label="Company" value={details.company || "—"} step={3} />
+        {details.company && <Row label="Company" value={details.company} step={3} />}
         <Row label="Email" value={details.email || "—"} step={3} />
         <Row label="Phone" value={details.phone || "—"} step={3} />
         {details.website && <Row label="Website" value={details.website} step={3} />}
         {details.notes && (
           <Row label="Notes" step={3}>
-            <span style={{ whiteSpace: "pre-wrap" }}>{details.notes}</span>
+            <span style={{ whiteSpace: "pre-wrap", color: C.g300 }}>{details.notes}</span>
           </Row>
         )}
       </div>
 
-      <div style={{ marginTop: 20, padding: 16, background: `${C.red}10`, border: `1px solid ${C.red}33`, borderRadius: 10, fontSize: 13, color: C.g300, lineHeight: 1.6 }}>
-        By confirming, you're holding a 30-minute spot on our calendar. You'll get a confirmation on the next screen with a calendar file you can add to Google/Apple/Outlook.
+      <div style={{ marginTop: 20, padding: "16px 18px", background: `linear-gradient(135deg, ${C.red}12 0%, ${C.red}04 100%)`, border: `1px solid ${C.red}33`, borderRadius: 12, fontSize: 13, color: C.g300, lineHeight: 1.6, display: "flex", alignItems: "flex-start", gap: 12 }}>
+        <div style={{ flexShrink: 0, width: 28, height: 28, borderRadius: 8, background: `${C.red}22`, border: `1px solid ${C.red}44`, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 2 }}>
+          <Icon name="clock" size={14} color={C.redLight} />
+        </div>
+        <div>
+          <div style={{ color: C.white, fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 4 }}>What happens next</div>
+          You'll hold a 30-minute spot on our calendar. The next screen shows your confirmation and a calendar file for Google, Apple, or Outlook.
+        </div>
       </div>
     </div>
   );
