@@ -2565,7 +2565,97 @@ const StepService = ({ service, setService }) => (
     </div>
   </div>
 );
-const StepDateTime = () => <div style={{ color: C.g300 }}>Step 2 placeholder</div>;
+const StepDateTime = ({ date, setDate, time, setTime, timezone }) => {
+  const days = getNextBusinessDays(10);
+  const selectedDayLabel = date ? formatDateFull(new Date(date + "T00:00:00")) : null;
+
+  return (
+    <div>
+      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Pick a date & time</div>
+      <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>
+        Times shown in your timezone: <span style={{ color: C.white, fontWeight: 600 }}>{timezone}</span>. Calls are 30 minutes.
+      </p>
+
+      {/* Day chips */}
+      <div style={{ marginTop: 24, display: "flex", gap: 10, overflowX: "auto", paddingBottom: 6 }}>
+        {days.map((d) => {
+          const iso = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+          const selected = date === iso;
+          return (
+            <button
+              key={iso}
+              onClick={() => { setDate(iso); setTime(null); }}
+              style={{
+                flex: "0 0 auto",
+                cursor: "pointer",
+                padding: "12px 16px",
+                minWidth: 86,
+                borderRadius: 10,
+                background: selected ? C.red : C.bgCardAlt,
+                border: `1.5px solid ${selected ? C.red : C.blackMed}`,
+                boxShadow: selected ? `0 10px 24px -10px ${C.red}99` : "none",
+                transition: "all 0.2s ease",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 2,
+                fontFamily: "'Oswald', sans-serif",
+              }}
+            >
+              <span style={{ fontSize: 10, fontWeight: 600, color: selected ? "rgba(255,255,255,0.8)" : C.g300, textTransform: "uppercase", letterSpacing: 2 }}>{formatDayShort(d)}</span>
+              <span style={{ fontSize: 22, fontWeight: 700, color: selected ? C.white : C.white, lineHeight: 1 }}>{formatDayNum(d)}</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: selected ? "rgba(255,255,255,0.8)" : C.g400, textTransform: "uppercase", letterSpacing: 2 }}>{formatMonthShort(d)}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Time slots */}
+      {date ? (
+        <div style={{ marginTop: 28 }}>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>
+            Available slots — {selectedDayLabel}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 10 }}>
+            {TIME_SLOTS.map((t) => {
+              const taken = isSlotTaken(date, t);
+              const selected = time === t;
+              return (
+                <button
+                  key={t}
+                  disabled={taken}
+                  onClick={() => setTime(t)}
+                  style={{
+                    cursor: taken ? "not-allowed" : "pointer",
+                    padding: "12px 8px",
+                    borderRadius: 8,
+                    background: selected ? C.red : taken ? "rgba(255,255,255,0.02)" : C.bgCardAlt,
+                    border: `1.5px solid ${selected ? C.red : taken ? "rgba(255,255,255,0.04)" : C.blackMed}`,
+                    color: selected ? C.white : taken ? C.g500 : C.white,
+                    fontFamily: "'Oswald', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    letterSpacing: 1,
+                    textDecoration: taken ? "line-through" : "none",
+                    opacity: taken ? 0.5 : 1,
+                    transition: "all 0.2s ease",
+                    boxShadow: selected ? `0 8px 20px -8px ${C.red}99` : "none",
+                  }}
+                >
+                  {formatSlotLabel(t)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div style={{ marginTop: 28, padding: 20, background: C.bgCardAlt, border: `1px dashed ${C.blackMed}`, borderRadius: 10, color: C.g300, fontSize: 14, textAlign: "center" }}>
+          Choose a day to see available slots.
+        </div>
+      )}
+    </div>
+  );
+};
 const StepDetails = () => <div style={{ color: C.g300 }}>Step 3 placeholder</div>;
 const StepReview = () => <div style={{ color: C.g300 }}>Step 4 placeholder</div>;
 const BookingSuccess = ({ onHome }) => (
