@@ -2364,19 +2364,34 @@ const downloadIcs = (booking) => {
 
 // --- BOOKING PROGRESS RAIL ---
 const BookProgress = ({ step, labels }) => (
-  <div style={{ display: "flex", gap: 10, marginBottom: 40 }}>
+  <div style={{ display: "flex", gap: 12, marginBottom: 48 }}>
     {labels.map((label, i) => {
       const idx = i + 1;
       const active = idx === step;
       const done = idx < step;
       return (
-        <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
-          <div style={{ height: 3, borderRadius: 2, background: done || active ? C.red : C.blackMed, boxShadow: active ? `0 0 12px ${C.red}aa` : "none", transition: "all 0.35s ease" }} />
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 22, height: 22, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 700, background: done ? C.red : active ? "transparent" : "transparent", color: done ? C.white : active ? C.red : C.g500, border: `1.5px solid ${done || active ? C.red : C.blackMed}` }}>
+        <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ position: "relative", height: 2, borderRadius: 2, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+            <motion.div
+              initial={false}
+              animate={{ width: done ? "100%" : active ? "100%" : "0%" }}
+              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              style={{ position: "absolute", inset: 0, background: `linear-gradient(90deg, ${C.red} 0%, ${C.redLight} 50%, ${C.red} 100%)`, boxShadow: active ? `0 0 12px ${C.red}cc` : done ? `0 0 6px ${C.red}55` : "none" }}
+            />
+            {active && (
+              <motion.div
+                initial={{ x: "-60%" }}
+                animate={{ x: "160%" }}
+                transition={{ duration: 1.8, ease: "linear", repeat: Infinity }}
+                style={{ position: "absolute", top: 0, bottom: 0, width: "40%", background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%)" }}
+              />
+            )}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 22, height: 22, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 700, background: done ? C.red : "transparent", color: done ? C.white : active ? C.red : C.g500, border: `1.5px solid ${done || active ? C.red : "rgba(255,255,255,0.08)"}`, boxShadow: active ? `0 0 0 4px ${C.red}22` : "none", transition: "all 0.35s ease" }}>
               {done ? "✓" : idx}
             </div>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: active ? C.white : done ? C.g300 : C.g500, textTransform: "uppercase", letterSpacing: 1.5 }}>{label}</div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: active ? C.white : done ? C.g300 : C.g500, textTransform: "uppercase", letterSpacing: 2 }}>{label}</div>
           </div>
         </div>
       );
@@ -2475,12 +2490,15 @@ const BookPage = () => {
 
       <div style={{ maxWidth: 960, margin: "0 auto", position: "relative", zIndex: 1 }}>
         {/* Eyebrow + title */}
-        <div style={{ marginBottom: 36 }}>
-          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 14 }}>Book A Consultation</div>
-          <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.05, textTransform: "uppercase", letterSpacing: "-0.5px" }}>
-            Free AI Marketing <span style={{ color: C.red }}>Strategy Call</span>
+        <div style={{ marginBottom: 48 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "6px 14px", background: `${C.red}10`, border: `1px solid ${C.red}33`, borderRadius: 999, marginBottom: 22 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.red, boxShadow: `0 0 8px ${C.red}` }} />
+            <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 3 }}>Book A Consultation</span>
+          </div>
+          <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 64, fontWeight: 700, color: C.white, lineHeight: 1, textTransform: "uppercase", letterSpacing: "-0.02em" }}>
+            Free AI Marketing<br /><span style={{ color: C.red }}>Strategy Call.</span>
           </h1>
-          <p style={{ marginTop: 14, fontSize: 16, color: "rgba(255,255,255,0.55)", maxWidth: 560, lineHeight: 1.65 }}>
+          <p style={{ marginTop: 20, fontSize: 17, color: "rgba(255,255,255,0.55)", maxWidth: 580, lineHeight: 1.6 }}>
             30 minutes. No cost. Leave with a clear picture of what an AI-driven marketing system looks like for your business.
           </p>
         </div>
