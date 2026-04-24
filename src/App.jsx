@@ -2656,7 +2656,75 @@ const StepDateTime = ({ date, setDate, time, setTime, timezone }) => {
     </div>
   );
 };
-const StepDetails = () => <div style={{ color: C.g300 }}>Step 3 placeholder</div>;
+const StepDetails = ({ details, setDetails, errors, setErrors }) => {
+  const update = (field) => (e) => {
+    const value = e.target.value;
+    setDetails((d) => ({ ...d, [field]: value }));
+    if (errors[field]) setErrors((err) => { const n = { ...err }; delete n[field]; return n; });
+  };
+
+  const fieldLabel = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: C.g300, textTransform: "uppercase", letterSpacing: 2, marginBottom: 6, display: "block" };
+  const fieldInput = (hasError) => ({
+    width: "100%",
+    padding: "12px 14px",
+    background: C.bgCardAlt,
+    border: `1.5px solid ${hasError ? C.red : C.blackMed}`,
+    borderRadius: 8,
+    color: C.white,
+    fontFamily: "'Barlow', sans-serif",
+    fontSize: 15,
+    outline: "none",
+    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+    boxShadow: hasError ? `0 0 0 3px ${C.red}22` : "none",
+  });
+  const errText = { fontSize: 12, color: C.redLight, marginTop: 4, fontFamily: "'Barlow', sans-serif" };
+
+  const Field = ({ label, name, type = "text", required, placeholder, full }) => (
+    <div style={{ gridColumn: full ? "1 / -1" : "auto" }}>
+      <label style={fieldLabel}>
+        {label}{required && <span style={{ color: C.red, marginLeft: 4 }}>*</span>}
+      </label>
+      <input
+        type={type}
+        value={details[name]}
+        onChange={update(name)}
+        placeholder={placeholder}
+        style={fieldInput(!!errors[name])}
+      />
+      {errors[name] && <div style={errText}>{errors[name]}</div>}
+    </div>
+  );
+
+  return (
+    <div>
+      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Your details</div>
+      <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>So we know who's joining and can send the calendar invite.</p>
+
+      <div style={{ marginTop: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <Field label="Full name" name="name" required placeholder="Juan Dela Cruz" />
+        <Field label="Company" name="company" placeholder="Your business name" />
+        <Field label="Email" name="email" type="email" required placeholder="you@company.com" />
+        <Field label="Phone" name="phone" type="tel" required placeholder="+63 917 000 0000" />
+        <Field label="Website (optional)" name="website" placeholder="https://yourbusiness.com" full />
+
+        <div style={{ gridColumn: "1 / -1" }}>
+          <label style={fieldLabel}>What would you like to discuss?</label>
+          <textarea
+            value={details.notes}
+            onChange={update("notes")}
+            rows={4}
+            placeholder="A quick note about your business, goals, or anything you'd like us to look at before the call."
+            style={{ ...fieldInput(false), resize: "vertical", fontFamily: "'Barlow', sans-serif", lineHeight: 1.55 }}
+          />
+        </div>
+      </div>
+
+      <div style={{ marginTop: 14, fontSize: 12, color: C.g400, lineHeight: 1.6 }}>
+        <span style={{ color: C.red, marginRight: 4 }}>*</span> Required. We'll only use your info for this call.
+      </div>
+    </div>
+  );
+};
 const StepReview = () => <div style={{ color: C.g300 }}>Step 4 placeholder</div>;
 const BookingSuccess = ({ onHome }) => (
   <section style={{ background: C.bgDark, minHeight: "60vh", padding: 60, color: C.white }}>
