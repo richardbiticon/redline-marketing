@@ -2505,33 +2505,43 @@ const BookPage = () => {
 
         <BookProgress step={step} labels={["Focus", "Date & Time", "Your Details", "Review"]} />
 
-        {/* Step content */}
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-          style={{ background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 14, padding: "32px 32px 28px", boxShadow: "0 24px 64px rgba(0,0,0,0.35)" }}
-        >
-          {step === 1 && <StepService service={service} setService={setService} />}
-          {step === 2 && <StepDateTime date={date} setDate={setDate} time={time} setTime={setTime} timezone={timezone} />}
-          {step === 3 && <StepDetails details={details} setDetails={setDetails} errors={errors} setErrors={setErrors} />}
-          {step === 4 && <StepReview service={service} date={date} time={time} details={details} timezone={timezone} onEditStep={setStep} />}
-        </motion.div>
+        {/* Step content — gradient-bordered card */}
+        <div style={{ padding: 1.5, borderRadius: 18, background: `linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, ${C.red}22 100%)`, boxShadow: "0 30px 70px rgba(0,0,0,0.4)" }}>
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+            style={{ background: `linear-gradient(180deg, ${C.bgCard} 0%, #0c0707 100%)`, borderRadius: 16.5, padding: "36px 36px 32px", position: "relative", overflow: "hidden" }}
+          >
+            <div style={{ position: "absolute", top: 0, right: 0, width: 260, height: 260, background: `radial-gradient(circle at top right, ${C.red}10 0%, transparent 60%)`, pointerEvents: "none" }} />
+            <div style={{ position: "relative" }}>
+              {step === 1 && <StepService service={service} setService={setService} />}
+              {step === 2 && <StepDateTime date={date} setDate={setDate} time={time} setTime={setTime} timezone={timezone} />}
+              {step === 3 && <StepDetails details={details} setDetails={setDetails} errors={errors} setErrors={setErrors} />}
+              {step === 4 && <StepReview service={service} date={date} time={time} details={details} timezone={timezone} onEditStep={setStep} />}
+            </div>
+          </motion.div>
+        </div>
 
         {/* Footer actions */}
         <div style={{ marginTop: 28, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <button
             onClick={step === 1 ? () => navigate(PAGES.home) : goBack}
-            style={{ padding: "14px 24px", background: "transparent", color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}
+            style={{ padding: "14px 24px", background: "transparent", color: C.white, border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2, cursor: "pointer", transition: "all 0.2s ease" }}
+            onMouseEnter={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.2)"; e.target.style.color = C.white; }}
+            onMouseLeave={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.color = C.white; }}
           >
             {step === 1 ? "Cancel" : "← Back"}
           </button>
-          {step < 4 ? (
-            <RedButton onClick={goNext}>Continue →</RedButton>
-          ) : (
-            <RedButton onClick={submit}>Confirm Booking →</RedButton>
-          )}
+          <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2 }}>Step {step} of 4</span>
+            {step < 4 ? (
+              <RedButton large onClick={goNext}>Continue →</RedButton>
+            ) : (
+              <RedButton large onClick={submit}>Confirm Booking →</RedButton>
+            )}
+          </div>
         </div>
       </div>
     </section>
