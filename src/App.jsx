@@ -2899,59 +2899,98 @@ const BookingSuccess = ({ booking, onReset, onHome }) => {
   const dateLabel = formatDateFull(new Date(booking.date + "T00:00:00"));
   const timeLabel = formatSlotLabel(booking.time);
 
+  const Meta = ({ label, children }) => (
+    <>
+      <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2.5, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "start", paddingTop: 3 }}>{label}</div>
+      <div style={{ color: C.white, fontSize: 14.5, lineHeight: 1.55 }}>{children}</div>
+    </>
+  );
+
   return (
-    <section style={{ background: C.bgDark, minHeight: "calc(100vh - 96px)", padding: "60px 24px 100px", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: "-10%", left: "50%", transform: "translateX(-50%)", width: 900, height: 600, background: "radial-gradient(ellipse, rgba(212,25,32,0.18) 0%, transparent 65%)", filter: "blur(50px)", pointerEvents: "none" }} />
+    <section style={{ background: C.bgDark, minHeight: "calc(100vh - 96px)", padding: "72px 24px 100px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: "-15%", left: "50%", transform: "translateX(-50%)", width: 1000, height: 700, background: "radial-gradient(ellipse, rgba(212,25,32,0.16) 0%, transparent 65%)", filter: "blur(60px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "-20%", left: "-10%", width: 600, height: 600, background: "radial-gradient(circle, rgba(180,18,22,0.06) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
 
       <div style={{ maxWidth: 720, margin: "0 auto", position: "relative", zIndex: 1, textAlign: "center" }}>
+        {/* Animated checkmark with draw effect */}
         <motion.div
-          initial={{ scale: 0.6, opacity: 0 }}
+          initial={{ scale: 0.4, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-          style={{ width: 84, height: 84, borderRadius: "50%", background: C.red, margin: "0 auto 28px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 20px 50px -10px ${C.red}99` }}
+          transition={{ duration: 0.55, ease: [0.34, 1.56, 0.64, 1] }}
+          style={{ width: 92, height: 92, borderRadius: "50%", margin: "0 auto 32px", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}
         >
-          <svg viewBox="0 0 24 24" width={40} height={40} fill="none" stroke={C.white} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1.35, opacity: 0 }}
+            transition={{ duration: 1.6, ease: "easeOut", delay: 0.3, repeat: Infinity, repeatDelay: 0.4 }}
+            style={{ position: "absolute", inset: 0, borderRadius: "50%", border: `2px solid ${C.red}`, pointerEvents: "none" }}
+          />
+          <div style={{ width: 84, height: 84, borderRadius: "50%", background: `linear-gradient(135deg, ${C.red} 0%, ${C.redDark} 100%)`, boxShadow: `0 20px 50px -10px ${C.red}cc, inset 0 2px 0 rgba(255,255,255,0.25)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg viewBox="0 0 24 24" width={42} height={42} fill="none" stroke={C.white} strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round">
+              <motion.polyline
+                points="20 6 9 17 4 12"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.55, ease: "easeOut", delay: 0.3 }}
+              />
+            </svg>
+          </div>
         </motion.div>
 
-        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 14 }}>Booking Confirmed</div>
-        <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 44, fontWeight: 700, color: C.white, lineHeight: 1.05, textTransform: "uppercase", letterSpacing: "-0.5px" }}>
-          You're on the <span style={{ color: C.red }}>calendar.</span>
-        </h1>
-        <p style={{ marginTop: 14, fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.65 }}>
-          We've saved your consultation. Add it to your calendar so you don't miss it.
-        </p>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "6px 14px", background: `${C.red}10`, border: `1px solid ${C.red}33`, borderRadius: 999, marginBottom: 20 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.red, boxShadow: `0 0 8px ${C.red}` }} />
+            <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 3 }}>Booking Confirmed</span>
+          </div>
+          <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 56, fontWeight: 700, color: C.white, lineHeight: 1, textTransform: "uppercase", letterSpacing: "-0.02em" }}>
+            You're on the<br /><span style={{ color: C.red }}>calendar.</span>
+          </h1>
+          <p style={{ marginTop: 18, fontSize: 16.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.65, maxWidth: 520, margin: "18px auto 0" }}>
+            We've saved your consultation. Add it to your calendar so you don't miss it.
+          </p>
+        </motion.div>
 
-        <div style={{ marginTop: 36, padding: "28px 28px 24px", background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 14, textAlign: "left", boxShadow: "0 24px 60px rgba(0,0,0,0.35)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${C.blackMed}` }}>
-            <div>
-              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2 }}>Confirmation</div>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, letterSpacing: 1.5 }}>{booking.confirmationId}</div>
+        {/* Premium receipt card with gradient border */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{ marginTop: 40, padding: 1.5, borderRadius: 16, background: `linear-gradient(135deg, ${C.red}aa 0%, ${C.redDark}55 40%, rgba(255,255,255,0.08) 100%)`, boxShadow: `0 30px 80px rgba(0,0,0,0.5), 0 0 60px -20px ${C.red}88` }}
+        >
+          <div style={{ padding: "32px 32px 28px", background: `linear-gradient(180deg, ${C.bgCard} 0%, #0d0607 100%)`, borderRadius: 14.5, textAlign: "left", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, right: 0, width: 300, height: 300, background: `radial-gradient(circle at top right, ${C.red}18 0%, transparent 60%)`, pointerEvents: "none" }} />
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 12, marginBottom: 22, paddingBottom: 20, borderBottom: `1px solid rgba(255,255,255,0.08)` }}>
+                <div>
+                  <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 600, color: C.g400, textTransform: "uppercase", letterSpacing: 2.5, marginBottom: 6 }}>Confirmation</div>
+                  <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, color: C.white, letterSpacing: 2 }}>{booking.confirmationId}</div>
+                </div>
+                <div style={{ padding: "7px 14px", background: `${C.red}22`, border: `1px solid ${C.red}55`, borderRadius: 999, fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 2 }}>30 Min · Free</div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "14px 20px" }}>
+                <Meta label="Focus">{svc ? svc.title : "Consultation"}</Meta>
+                <Meta label="Date">{dateLabel}</Meta>
+                <Meta label="Time">{timeLabel} <span style={{ color: C.g400 }}>· {booking.timezone}</span></Meta>
+                <Meta label="Contact">{booking.details.email}<br /><span style={{ color: C.g300 }}>{booking.details.phone}</span></Meta>
+              </div>
             </div>
-            <div style={{ padding: "6px 12px", background: `${C.red}22`, border: `1px solid ${C.red}55`, borderRadius: 999, fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 600, color: C.redLight, textTransform: "uppercase", letterSpacing: 1.5 }}>30 min • Free</div>
           </div>
+        </motion.div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "10px 16px", fontSize: 14, color: C.g300 }}>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Focus</div>
-            <div style={{ color: C.white }}>{svc ? svc.title : "Consultation"}</div>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Date</div>
-            <div style={{ color: C.white }}>{dateLabel}</div>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Time</div>
-            <div style={{ color: C.white }}>{timeLabel} <span style={{ color: C.g400 }}>({booking.timezone})</span></div>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase", letterSpacing: 2, color: C.g400, fontSize: 11, fontWeight: 600, alignSelf: "center" }}>Contact</div>
-            <div style={{ color: C.white }}>{booking.details.email}<br /><span style={{ color: C.g300 }}>{booking.details.phone}</span></div>
-          </div>
-        </div>
-
-        <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <RedButton onClick={() => downloadIcs(booking)}>Add to Calendar (.ics)</RedButton>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.55 }}
+          style={{ marginTop: 32, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}
+        >
+          <RedButton large onClick={() => downloadIcs(booking)}>Add to Calendar</RedButton>
           <OutlineButton onClick={onReset}>Book Another</OutlineButton>
-          <button onClick={onHome} style={{ padding: "14px 28px", background: "transparent", color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase" }}>Back Home</button>
-        </div>
+          <button onClick={onHome} style={{ padding: "14px 28px", background: "transparent", color: C.white, border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 600, letterSpacing: 1.5, cursor: "pointer", textTransform: "uppercase" }}>Back Home</button>
+        </motion.div>
 
-        <p style={{ marginTop: 28, fontSize: 12, color: C.g500, lineHeight: 1.6 }}>
-          Saved locally for testing. A real confirmation email will be wired up when the backend is connected.
+        <p style={{ marginTop: 32, fontSize: 12, color: C.g500, lineHeight: 1.6 }}>
+          Saved locally for testing. Real confirmation emails activate once the backend is wired up.
         </p>
       </div>
     </section>
