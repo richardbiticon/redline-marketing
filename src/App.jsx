@@ -2324,9 +2324,52 @@ const saveBookingLocal = (booking) => {
   } catch { /* ignore */ }
 };
 
-const isSlotTaken = (date, time) => {
-  const key = `${date}T${time}`;
-  return loadSavedBookings().some((b) => `${b.date}T${b.time}` === key);
+// API client. Falls back to localStorage when the API isn't reachable
+// (e.g. running `npm run dev` without `vercel dev`). In production on Vercel,
+// the API always answers.
+const fetchAvailability = async (date) => {
+  try {
+    const r = await fetch(`/api/availability?date=${encodeURIComponent(date)}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    return { source: "api", taken: data.taken || [] };
+  } catch {
+    const taken = loadSavedBookings().filter((b) => b.date === date).map((b) => b.time);
+    return { source: "local", taken };
+  }
+};
+
+const submitBooking = async (payload) => {
+  try {
+    const r = await fetch("/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 201 && data.booking) return { ok: true, booking: data.booking, source: "api" };
+    if (r.status === 409) return { ok: false, error: data.error || "Slot just taken.", code: "slot_taken" };
+    if (r.status === 429) return { ok: false, error: data.error || "Too many requests.", code: "rate_limited" };
+    if (r.status === 400) return { ok: false, error: "Please check your details.", errors: data.errors };
+    throw new Error(data.error || `HTTP ${r.status}`);
+  } catch (err) {
+    // Offline / no API: fall back to local storage so the demo still works
+    const booking = {
+      id: makeConfirmationId(),
+      service: payload.service || null,
+      date: payload.date,
+      time: payload.time,
+      timezone: payload.timezone || null,
+      name: payload.details.name,
+      company: payload.details.company || null,
+      email: payload.details.email,
+      phone: payload.details.phone,
+      website: payload.details.website || null,
+      notes: payload.details.notes || null,
+    };
+    saveBookingLocal(booking);
+    return { ok: true, booking, source: "local", warning: String(err?.message || err) };
+  }
 };
 
 // Build a downloadable .ics file for the confirmed booking
@@ -2408,7 +2451,24 @@ const BookPage = () => {
   const [details, setDetails] = useState({ name: "", company: "", email: "", phone: "", website: "", notes: "" });
   const [errors, setErrors] = useState({});
   const [confirmation, setConfirmation] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [takenSlots, setTakenSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
   const timezone = getTimezone();
+
+  // Fetch availability whenever the selected date changes
+  useEffect(() => {
+    if (!date) { setTakenSlots([]); return; }
+    let cancelled = false;
+    setLoadingSlots(true);
+    fetchAvailability(date).then((res) => {
+      if (cancelled) return;
+      setTakenSlots(res.taken);
+      setLoadingSlots(false);
+    });
+    return () => { cancelled = true; };
+  }, [date]);
 
   // Hydrate draft from sessionStorage on mount
   useEffect(() => {
@@ -2451,19 +2511,44 @@ const BookPage = () => {
   };
   const goBack = () => setStep((s) => Math.max(1, s - 1));
 
-  const submit = () => {
-    const booking = {
-      confirmationId: makeConfirmationId(),
-      service,
-      date,
-      time,
-      timezone,
-      details,
+  const submit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    const res = await submitBooking({ service, date, time, timezone, details });
+    setSubmitting(false);
+    if (!res.ok) {
+      if (res.code === "slot_taken") {
+        setSubmitError(res.error);
+        // Refresh availability and send the user back to date/time
+        const fresh = await fetchAvailability(date);
+        setTakenSlots(fresh.taken);
+        setTime(null);
+        setStep(2);
+      } else {
+        setSubmitError(res.error || "Something went wrong. Please try again.");
+      }
+      return;
+    }
+    // Success: server returns a normalized booking shape; adapt to the UI shape
+    const b = res.booking;
+    setConfirmation({
+      confirmationId: b.id,
+      service: b.service,
+      date: b.date,
+      time: b.time,
+      timezone: b.timezone || timezone,
+      details: {
+        name: b.name,
+        company: b.company,
+        email: b.email,
+        phone: b.phone,
+        website: b.website,
+        notes: b.notes,
+      },
       createdAt: new Date().toISOString(),
-    };
-    saveBookingLocal(booking);
-    // TODO(backend): POST booking to API, send confirmation emails, add to team calendar
-    setConfirmation(booking);
+      _source: res.source,
+    });
     clearDraft();
   };
 
@@ -2517,20 +2602,33 @@ const BookPage = () => {
             <div style={{ position: "absolute", top: 0, right: 0, width: 260, height: 260, background: `radial-gradient(circle at top right, ${C.red}10 0%, transparent 60%)`, pointerEvents: "none" }} />
             <div style={{ position: "relative" }}>
               {step === 1 && <StepService service={service} setService={setService} />}
-              {step === 2 && <StepDateTime date={date} setDate={setDate} time={time} setTime={setTime} timezone={timezone} />}
+              {step === 2 && <StepDateTime date={date} setDate={setDate} time={time} setTime={setTime} timezone={timezone} takenSlots={takenSlots} loadingSlots={loadingSlots} />}
               {step === 3 && <StepDetails details={details} setDetails={setDetails} errors={errors} setErrors={setErrors} />}
               {step === 4 && <StepReview service={service} date={date} time={time} details={details} timezone={timezone} onEditStep={setStep} />}
             </div>
           </motion.div>
         </div>
 
+        {/* Submit error banner */}
+        {submitError && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ marginTop: 20, padding: "14px 18px", background: `${C.red}15`, border: `1px solid ${C.red}55`, borderRadius: 10, color: C.redLight, fontSize: 14, lineHeight: 1.5, display: "flex", alignItems: "flex-start", gap: 10 }}
+          >
+            <span style={{ flexShrink: 0, width: 18, height: 18, borderRadius: "50%", background: C.red, color: C.white, fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>!</span>
+            <span>{submitError}</span>
+          </motion.div>
+        )}
+
         {/* Footer actions */}
         <div style={{ marginTop: 28, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <button
             onClick={step === 1 ? () => navigate(PAGES.home) : goBack}
-            style={{ padding: "14px 24px", background: "transparent", color: C.white, border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2, cursor: "pointer", transition: "all 0.2s ease" }}
-            onMouseEnter={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.2)"; e.target.style.color = C.white; }}
-            onMouseLeave={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.color = C.white; }}
+            disabled={submitting}
+            style={{ padding: "14px 24px", background: "transparent", color: C.white, border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, textTransform: "uppercase", letterSpacing: 2, cursor: submitting ? "not-allowed" : "pointer", opacity: submitting ? 0.5 : 1, transition: "all 0.2s ease" }}
+            onMouseEnter={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.2)"; }}
+            onMouseLeave={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; }}
           >
             {step === 1 ? "Cancel" : "← Back"}
           </button>
@@ -2539,7 +2637,19 @@ const BookPage = () => {
             {step < 4 ? (
               <RedButton large onClick={goNext}>Continue →</RedButton>
             ) : (
-              <RedButton large onClick={submit}>Confirm Booking →</RedButton>
+              <motion.button
+                onClick={submit}
+                disabled={submitting}
+                whileHover={submitting ? {} : { scale: 1.03 }}
+                whileTap={submitting ? {} : { scale: 0.97 }}
+                transition={{ duration: 0.2 }}
+                style={{ padding: "18px 40px", background: C.red, color: C.white, border: "none", borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 18, fontWeight: 600, letterSpacing: 1.5, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", display: "inline-flex", alignItems: "center", gap: 10, opacity: submitting ? 0.85 : 1, boxShadow: `0 14px 32px -10px ${C.red}aa` }}
+              >
+                {submitting && (
+                  <span style={{ display: "inline-block", width: 14, height: 14, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: C.white, animation: "spin 0.8s linear infinite" }} />
+                )}
+                {submitting ? "Confirming…" : "Confirm Booking →"}
+              </motion.button>
             )}
           </div>
         </div>
@@ -2642,9 +2752,10 @@ const StepService = ({ service, setService }) => (
     </div>
   </div>
 );
-const StepDateTime = ({ date, setDate, time, setTime, timezone }) => {
+const StepDateTime = ({ date, setDate, time, setTime, timezone, takenSlots = [], loadingSlots = false }) => {
   const days = getNextBusinessDays(10);
   const selectedDayLabel = date ? formatDateFull(new Date(date + "T00:00:00")) : null;
+  const takenSet = new Set(takenSlots);
 
   return (
     <div>
@@ -2720,9 +2831,9 @@ const StepDateTime = ({ date, setDate, time, setTime, timezone }) => {
             </div>
             <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, color: C.g300 }}>{selectedDayLabel}</div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(112px, 1fr))", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(112px, 1fr))", gap: 10, opacity: loadingSlots ? 0.5 : 1, transition: "opacity 0.2s" }}>
             {TIME_SLOTS.map((t) => {
-              const taken = isSlotTaken(date, t);
+              const taken = takenSet.has(t);
               const selected = time === t;
               return (
                 <motion.button

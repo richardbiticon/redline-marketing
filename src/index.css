@@ -47,6 +47,10 @@ html, body, #root {
 
 /* --- Racing design elements --- */
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes speedLaneMarch {
   from { background-position: 0 0; }
   to { background-position: -160px 0; }
