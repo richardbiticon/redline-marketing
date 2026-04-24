@@ -26,6 +26,7 @@ const PAGES = {
   login: "/login",
   signup: "/signup",
   portal: "/portal",
+  book: "/book",
 };
 
 // Map service URL slugs to PAGES keys for ServiceDetailPage
@@ -235,6 +236,7 @@ const Navbar = () => {
     { label: "Our Services", page: PAGES.services },
     { label: "Results", page: PAGES.results },
     { label: "Blog", page: PAGES.blog },
+    { label: "Book A Call", page: PAGES.book },
   ];
 
   return (
@@ -305,7 +307,7 @@ const CTABar = () => {
       <div style={{ fontFamily: "'Oswald', sans-serif", color: C.redLight, fontSize: 20, fontWeight: 600, marginBottom: 6 }}>Ready to See What Your Business Looks Like With the Right System?</div>
       <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 36, fontWeight: 700, color: C.white }}>Free Strategy Call. 30 Minutes. A Clear Plan.</div>
     </div>
-    <div onClick={() => navigate(PAGES.contact)} style={{ display: "flex", alignItems: "center", gap: 14, cursor: "pointer" }}>
+    <div onClick={() => navigate(PAGES.book)} style={{ display: "flex", alignItems: "center", gap: 14, cursor: "pointer" }}>
       <div style={{ width: 52, height: 52, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Icon name="mail" size={22} color={C.white} />
       </div>
@@ -1323,7 +1325,7 @@ const HomePage = () => {
           <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 12 }}>Let's Build Something</div>
           <h2 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 16 }}>Your Business Deserves Marketing<br /><span style={{ color: C.red }}>That Matches How Good You Actually Are.</span></h2>
           <p style={{ fontSize: 17, color: C.g300, maxWidth: 600, margin: "0 auto 30px", lineHeight: 1.7 }}>Book a free strategy call and we'll walk through your business together. We'll look at your Google presence, your social platforms, and your current setup. Then we'll show you exactly what a fully built system looks like for your specific business. 30 minutes. No cost. You leave with a clear picture of what's possible.</p>
-          <RedButton large onClick={() => navigate(PAGES.contact)}>Book Your Free Strategy Call</RedButton>
+          <RedButton large onClick={() => navigate(PAGES.book)}>Book Your Free Strategy Call</RedButton>
         </Reveal>
       </section>
     </>
@@ -2244,6 +2246,306 @@ const PortalPage = () => {
   );
 };
 
+// ============================================================
+// PAGE: BOOK A CONSULTATION
+// ============================================================
+
+const BOOK_SERVICES = [
+  { id: "ai-ppc", title: "AI-Powered PPC", desc: "Smarter bidding, automated creative testing, and ML-driven audience targeting.", icon: "chart" },
+  { id: "ai-seo", title: "AI SEO", desc: "Content and technical SEO accelerated with AI research and clustering.", icon: "search" },
+  { id: "ai-content", title: "AI Content", desc: "On-brand social, email, and web copy generated and refined with AI.", icon: "layers" },
+  { id: "ai-reputation", title: "AI Reputation", desc: "Auto-monitor reviews, draft replies, and spot sentiment trends.", icon: "shield" },
+  { id: "ai-strategy", title: "Full AI Strategy", desc: "A complete AI-led marketing system built around your business.", icon: "target" },
+  { id: "unsure", title: "Not Sure Yet", desc: "We'll figure out the right fit together on the call.", icon: "star" },
+];
+
+const BOOK_STORAGE_KEY = "redline_bookings";
+const BOOK_DRAFT_KEY = "redline_booking_draft";
+
+const pad2 = (n) => String(n).padStart(2, "0");
+
+const makeConfirmationId = () => {
+  const chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return `RLM-${out}`;
+};
+
+const getNextBusinessDays = (count = 10) => {
+  const days = [];
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 1); // start tomorrow
+  while (days.length < count) {
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) days.push(new Date(d));
+    d.setDate(d.getDate() + 1);
+  }
+  return days;
+};
+
+const TIME_SLOTS = (() => {
+  const slots = [];
+  for (let h = 9; h < 17; h++) {
+    slots.push(`${pad2(h)}:00`);
+    slots.push(`${pad2(h)}:30`);
+  }
+  return slots;
+})();
+
+const formatSlotLabel = (time) => {
+  const [hStr, m] = time.split(":");
+  const h = parseInt(hStr, 10);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${m} ${ampm}`;
+};
+
+const formatDayShort = (d) => d.toLocaleDateString(undefined, { weekday: "short" });
+const formatDayNum = (d) => d.getDate();
+const formatMonthShort = (d) => d.toLocaleDateString(undefined, { month: "short" });
+const formatDateFull = (d) => d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+
+const getTimezone = () => {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
+  catch { return "UTC"; }
+};
+
+const loadSavedBookings = () => {
+  try { return JSON.parse(localStorage.getItem(BOOK_STORAGE_KEY) || "[]"); }
+  catch { return []; }
+};
+
+const saveBookingLocal = (booking) => {
+  try {
+    const list = loadSavedBookings();
+    list.push(booking);
+    localStorage.setItem(BOOK_STORAGE_KEY, JSON.stringify(list));
+  } catch { /* ignore */ }
+};
+
+const isSlotTaken = (date, time) => {
+  const key = `${date}T${time}`;
+  return loadSavedBookings().some((b) => `${b.date}T${b.time}` === key);
+};
+
+// Build a downloadable .ics file for the confirmed booking
+const downloadIcs = (booking) => {
+  const [y, m, d] = booking.date.split("-").map(Number);
+  const [hh, mm] = booking.time.split(":").map(Number);
+  const start = new Date(y, m - 1, d, hh, mm);
+  const end = new Date(start.getTime() + 30 * 60 * 1000);
+  const toICS = (dt) => `${dt.getFullYear()}${pad2(dt.getMonth() + 1)}${pad2(dt.getDate())}T${pad2(dt.getHours())}${pad2(dt.getMinutes())}00`;
+  const service = BOOK_SERVICES.find((s) => s.id === booking.service)?.title || "Consultation";
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Red Line Marketing//Consultation//EN",
+    "BEGIN:VEVENT",
+    `UID:${booking.confirmationId}@redlinemarketing`,
+    `DTSTAMP:${toICS(new Date())}`,
+    `DTSTART:${toICS(start)}`,
+    `DTEND:${toICS(end)}`,
+    `SUMMARY:Red Line Marketing — ${service}`,
+    `DESCRIPTION:AI Marketing Consultation with Red Line Marketing.\\nConfirmation: ${booking.confirmationId}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const blob = new Blob([lines], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `redline-consultation-${booking.confirmationId}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+// --- BOOKING PROGRESS RAIL ---
+const BookProgress = ({ step, labels }) => (
+  <div style={{ display: "flex", gap: 10, marginBottom: 40 }}>
+    {labels.map((label, i) => {
+      const idx = i + 1;
+      const active = idx === step;
+      const done = idx < step;
+      return (
+        <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ height: 3, borderRadius: 2, background: done || active ? C.red : C.blackMed, boxShadow: active ? `0 0 12px ${C.red}aa` : "none", transition: "all 0.35s ease" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 22, height: 22, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Oswald', sans-serif", fontSize: 11, fontWeight: 700, background: done ? C.red : active ? "transparent" : "transparent", color: done ? C.white : active ? C.red : C.g500, border: `1.5px solid ${done || active ? C.red : C.blackMed}` }}>
+              {done ? "✓" : idx}
+            </div>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 12, fontWeight: 600, color: active ? C.white : done ? C.g300 : C.g500, textTransform: "uppercase", letterSpacing: 1.5 }}>{label}</div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+);
+
+const BookPage = () => {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+  const [service, setService] = useState(null);
+  const [date, setDate] = useState(null); // YYYY-MM-DD
+  const [time, setTime] = useState(null); // HH:MM
+  const [details, setDetails] = useState({ name: "", company: "", email: "", phone: "", website: "", notes: "" });
+  const [errors, setErrors] = useState({});
+  const [confirmation, setConfirmation] = useState(null);
+  const timezone = getTimezone();
+
+  // Hydrate draft from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(BOOK_DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (draft.step) setStep(draft.step);
+      if (draft.service) setService(draft.service);
+      if (draft.date) setDate(draft.date);
+      if (draft.time) setTime(draft.time);
+      if (draft.details) setDetails(draft.details);
+    } catch { /* ignore */ }
+  }, []);
+
+  // Persist draft whenever it changes (but not after successful booking)
+  useEffect(() => {
+    if (confirmation) return;
+    try {
+      sessionStorage.setItem(BOOK_DRAFT_KEY, JSON.stringify({ step, service, date, time, details }));
+    } catch { /* ignore */ }
+  }, [step, service, date, time, details, confirmation]);
+
+  const clearDraft = () => { try { sessionStorage.removeItem(BOOK_DRAFT_KEY); } catch { /* ignore */ } };
+
+  const canContinue = () => {
+    if (step === 1) return !!service;
+    if (step === 2) return !!date && !!time;
+    if (step === 3) {
+      const e = validateDetails(details);
+      setErrors(e);
+      return Object.keys(e).length === 0;
+    }
+    return true;
+  };
+
+  const goNext = () => {
+    if (!canContinue()) return;
+    setStep((s) => Math.min(4, s + 1));
+  };
+  const goBack = () => setStep((s) => Math.max(1, s - 1));
+
+  const submit = () => {
+    const booking = {
+      confirmationId: makeConfirmationId(),
+      service,
+      date,
+      time,
+      timezone,
+      details,
+      createdAt: new Date().toISOString(),
+    };
+    saveBookingLocal(booking);
+    // TODO(backend): POST booking to API, send confirmation emails, add to team calendar
+    setConfirmation(booking);
+    clearDraft();
+  };
+
+  const resetAll = () => {
+    setStep(1);
+    setService(null);
+    setDate(null);
+    setTime(null);
+    setDetails({ name: "", company: "", email: "", phone: "", website: "", notes: "" });
+    setErrors({});
+    setConfirmation(null);
+    clearDraft();
+  };
+
+  if (confirmation) {
+    return <BookingSuccess booking={confirmation} onReset={resetAll} onHome={() => navigate(PAGES.home)} />;
+  }
+
+  return (
+    <section style={{ background: C.bgDark, minHeight: "calc(100vh - 96px)", padding: "60px 24px 100px", position: "relative", overflow: "hidden" }}>
+      {/* Ambient glows */}
+      <div style={{ position: "absolute", top: "-10%", right: "-10%", width: 700, height: 700, background: "radial-gradient(circle, rgba(212,25,32,0.08) 0%, transparent 65%)", filter: "blur(40px)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "-20%", left: "-10%", width: 600, height: 600, background: "radial-gradient(circle, rgba(180,18,22,0.06) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
+
+      <div style={{ maxWidth: 960, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        {/* Eyebrow + title */}
+        <div style={{ marginBottom: 36 }}>
+          <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: C.red, textTransform: "uppercase", letterSpacing: 4, marginBottom: 14 }}>Book A Consultation</div>
+          <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 48, fontWeight: 700, color: C.white, lineHeight: 1.05, textTransform: "uppercase", letterSpacing: "-0.5px" }}>
+            Free AI Marketing <span style={{ color: C.red }}>Strategy Call</span>
+          </h1>
+          <p style={{ marginTop: 14, fontSize: 16, color: "rgba(255,255,255,0.55)", maxWidth: 560, lineHeight: 1.65 }}>
+            30 minutes. No cost. Leave with a clear picture of what an AI-driven marketing system looks like for your business.
+          </p>
+        </div>
+
+        <BookProgress step={step} labels={["Focus", "Date & Time", "Your Details", "Review"]} />
+
+        {/* Step content */}
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{ background: C.bgCard, border: `1px solid ${C.blackMed}`, borderRadius: 14, padding: "32px 32px 28px", boxShadow: "0 24px 64px rgba(0,0,0,0.35)" }}
+        >
+          {step === 1 && <StepService service={service} setService={setService} />}
+          {step === 2 && <StepDateTime date={date} setDate={setDate} time={time} setTime={setTime} timezone={timezone} />}
+          {step === 3 && <StepDetails details={details} setDetails={setDetails} errors={errors} setErrors={setErrors} />}
+          {step === 4 && <StepReview service={service} date={date} time={time} details={details} timezone={timezone} onEditStep={setStep} />}
+        </motion.div>
+
+        {/* Footer actions */}
+        <div style={{ marginTop: 28, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+          <button
+            onClick={step === 1 ? () => navigate(PAGES.home) : goBack}
+            style={{ padding: "14px 24px", background: "transparent", color: C.white, border: `1px solid ${C.blackMed}`, borderRadius: 8, fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1.5, cursor: "pointer" }}
+          >
+            {step === 1 ? "Cancel" : "← Back"}
+          </button>
+          {step < 4 ? (
+            <RedButton onClick={goNext}>Continue →</RedButton>
+          ) : (
+            <RedButton onClick={submit}>Confirm Booking →</RedButton>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Placeholder step components — filled in subsequent steps
+const StepService = ({ service, setService }) => (
+  <div>
+    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Step 1 — Service focus</div>
+    <p style={{ marginTop: 8, fontSize: 14, color: C.g300 }}>Coming in next commit.</p>
+  </div>
+);
+const StepDateTime = () => <div style={{ color: C.g300 }}>Step 2 placeholder</div>;
+const StepDetails = () => <div style={{ color: C.g300 }}>Step 3 placeholder</div>;
+const StepReview = () => <div style={{ color: C.g300 }}>Step 4 placeholder</div>;
+const BookingSuccess = ({ onHome }) => (
+  <section style={{ background: C.bgDark, minHeight: "60vh", padding: 60, color: C.white }}>
+    <h2>Success placeholder</h2>
+    <RedButton onClick={onHome}>Home</RedButton>
+  </section>
+);
+
+const validateDetails = (d) => {
+  const e = {};
+  if (!d.name.trim()) e.name = "Required";
+  if (!d.email.trim()) e.email = "Required";
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) e.email = "Invalid email";
+  if (!d.phone.trim()) e.phone = "Required";
+  return e;
+};
+
 // Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -2447,6 +2749,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/portal" element={<PortalPage />} />
+          <Route path="/book" element={<BookPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
