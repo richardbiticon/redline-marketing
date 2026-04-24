@@ -2520,11 +2520,49 @@ const BookPage = () => {
   );
 };
 
-// Placeholder step components — filled in subsequent steps
 const StepService = ({ service, setService }) => (
   <div>
-    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>Step 1 — Service focus</div>
-    <p style={{ marginTop: 8, fontSize: 14, color: C.g300 }}>Coming in next commit.</p>
+    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 1 }}>What would you like to focus on?</div>
+    <p style={{ marginTop: 8, fontSize: 14, color: C.g300, lineHeight: 1.6 }}>Pick the area you'd most like to talk about. If you're not sure, that's totally fine — we'll figure it out together.</p>
+
+    <div style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
+      {BOOK_SERVICES.map((s) => {
+        const selected = service === s.id;
+        return (
+          <motion.button
+            key={s.id}
+            onClick={() => setService(s.id)}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              textAlign: "left",
+              cursor: "pointer",
+              padding: 20,
+              borderRadius: 12,
+              background: selected ? `linear-gradient(135deg, ${C.bgCardAlt} 0%, ${C.redDark}22 100%)` : C.bgCardAlt,
+              border: `1.5px solid ${selected ? C.red : C.blackMed}`,
+              boxShadow: selected ? `0 12px 30px -10px ${C.red}66, inset 0 0 0 1px ${C.red}33` : "0 6px 18px rgba(0,0,0,0.2)",
+              transition: "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+              minHeight: 150,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            {selected && (
+              <div style={{ position: "absolute", top: 12, right: 12, width: 22, height: 22, borderRadius: "50%", background: C.red, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontSize: 12, fontWeight: 700 }}>✓</div>
+            )}
+            <div style={{ width: 42, height: 42, borderRadius: 10, background: selected ? C.red : `${C.red}22`, border: `1px solid ${selected ? C.red : `${C.red}44`}`, display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.25s ease" }}>
+              <Icon name={s.icon} size={22} color={selected ? C.white : C.redLight} />
+            </div>
+            <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 17, fontWeight: 700, color: C.white, textTransform: "uppercase", letterSpacing: 0.5, lineHeight: 1.2 }}>{s.title}</div>
+            <div style={{ fontSize: 13, color: C.g300, lineHeight: 1.55 }}>{s.desc}</div>
+          </motion.button>
+        );
+      })}
+    </div>
   </div>
 );
 const StepDateTime = () => <div style={{ color: C.g300 }}>Step 2 placeholder</div>;
